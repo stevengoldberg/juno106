@@ -86,6 +86,7 @@ module.exports = function (stream, options, done) {
     ? ''
     : []
 
+  stream.on('aborted', onAborted)
   stream.on('data', onData)
   stream.once('end', onEnd)
   stream.once('error', onEnd)
@@ -96,6 +97,18 @@ module.exports = function (stream, options, done) {
   // yieldable support
   function defer(fn) {
     done = fn
+  }
+
+  function onAborted() {
+    var err = makeError('request aborted', 'request.aborted')
+    err.code = 'ECONNABORTED'
+    err.status = 400
+    err.received = received
+    err.length = err.expected = length
+
+    cleanup()
+    halt(stream)
+    done(err)
   }
 
   function onData(chunk) {
@@ -140,6 +153,7 @@ module.exports = function (stream, options, done) {
   function cleanup() {
     received = buffer = null
 
+    stream.removeListener('aborted', onAborted)
     stream.removeListener('data', onData)
     stream.removeListener('end', onEnd)
     stream.removeListener('error', onEnd)

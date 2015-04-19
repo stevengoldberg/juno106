@@ -1,0 +1,32 @@
+{
+    "connect": {
+        "sever": {
+            "options": {
+                "port": 8888,
+                "keepalive": true
+                
+            }
+        }
+    },
+    
+    "compile-handlebars": {
+        "dev": {
+            "templateData": {
+                "scripts": ["//localhost:35729:livereload.js"]
+            }
+        }
+    },
+    
+    "watch": {
+        
+        "rebuild": {
+            "files": ["templates/**/*.hbs", "js/**/*.js", "css/**/*.scss"],
+            "tasks": ["sass:dev"],
+            "options": {
+                "livereload": {
+                    "port": 35729
+                }
+            }
+        }
+    }
+}
