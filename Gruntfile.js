@@ -1,7 +1,7 @@
 module.exports = function(grunt) {
 
     require('load-grunt-tasks')(grunt, {
-        pattern: ['grunt-*', '!grunt-template-jasmine-requirejs'],
+        pattern: ['grunt-*'],
         scope: 'devDependencies'
     });
 
@@ -155,14 +155,14 @@ module.exports = function(grunt) {
         },
 
         // Run the JS unit tests.
-        jasmine: {
+        /*jasmine: {
 
             options: {
                 display: 'full',
                 outfile: '_SpecRunner.html',
-                keepRunner: true,
-                specs: 'spec/**/*-spec.js',
-                helpers: [ 'spec/*helper.js'],
+                keepRunner: true,*/
+                //specs: 'spec/**/*-spec.js',
+                /*helpers: [ 'spec/*helper.js'],
                 template: require('grunt-template-jasmine-requirejs'),
                 templateOptions: {
                     requireConfigFile: 'js/init.js',
@@ -183,7 +183,7 @@ module.exports = function(grunt) {
             },
 
             prod: {}
-        },
+        },*/
 
         // Run these tasks concurrently.
         concurrent: {
@@ -197,7 +197,7 @@ module.exports = function(grunt) {
             },
 
             dev: {
-                tasks: ['watch:rebuild', 'watch:test']
+                tasks: ['watch:rebuild']
             }
         },
 
@@ -209,12 +209,6 @@ module.exports = function(grunt) {
                 tasks: ['sass:dev', 'autoprefixer:dev'],
                 options: {
                 }
-            },
-
-            // When the files change run the tests.
-            test: {
-                files: ['templates/**/*.hbs', 'js/**/*.js', 'spec/**/*-spec.js'],
-                tasks: ['test']
             },
 
             guide: {
@@ -255,9 +249,6 @@ module.exports = function(grunt) {
 
     // Tasks to run in local development environment.
     grunt.registerTask('build:dev', ['clean:dev', 'compile-handlebars:dev', 'sass:dev', 'autoprefixer:dev']);
-
-    // Task to only run the JS unit tests.
-    grunt.registerTask('test', ['jasmine']);
 
     grunt.registerTask('guide', ['sass:dev', 'handlebars:guide', 'connect']);
 

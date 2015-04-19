@@ -6,11 +6,12 @@ body {
   background-color: black;
 }
 
-div {
+div, section {
   -webkit-user-select: none;
      -moz-user-select: none;
       -ms-user-select: none;
           user-select: none;
+  height: inherit;
 }
 
 p {
@@ -23,6 +24,10 @@ p {
 .juno {
   background-color: #5A5F66;
   margin: auto;
+  width: 1024px;
+}
+
+.module-container {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -30,7 +35,6 @@ p {
   -webkit-flex-flow: row wrap;
       -ms-flex-flow: row wrap;
           flex-flow: row wrap;
-  width: 1024px;
 }
 
 .module {
@@ -293,6 +297,7 @@ hr {
   position: relative;
   top: 20px;
   margin: auto;
+  height: 38%;
 }
 
 .control-label {
@@ -313,7 +318,7 @@ hr {
 
 .label {
   display: inline-block;
-  margin: 0 8px;
+  margin: 0 6px;
 }
 .label.env {
   width: 16%;
@@ -349,5 +354,4 @@ hr {
   width: 100%;
   height: 150px;
   background-color: white;
-  border: 5px solid #CFCFCF;
 }

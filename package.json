@@ -22,9 +22,6 @@
     "grunt-template-jasmine-requirejs": "latest",
     "load-grunt-tasks": "~1.0.0"
   },
-  "scripts": {
-    "test": "grunt test"
-  },
   "repository": {
     "type": "git",
     "url": "https://github.com/stevengoldberg/juno106.git"

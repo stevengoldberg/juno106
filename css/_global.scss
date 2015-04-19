@@ -12,8 +12,9 @@ body {
     background-color: black;
 }
 
-div {
+div, section {
     user-select: none;
+    height: inherit;
 }
 
 p {
@@ -26,7 +27,5 @@ p {
 .juno {
     background-color: $synth-body-clr;
     margin: auto;
-    display: flex;
-    flex-flow: row wrap;
     width: 1024px;
 }

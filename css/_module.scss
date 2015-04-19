@@ -1,3 +1,8 @@
+.module-container {
+    display: flex;
+    flex-flow: row wrap;
+}
+
 .module {
     margin: 0 2px;
     text-align: center;

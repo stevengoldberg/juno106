@@ -6,8 +6,9 @@ body {
   background-color: black;
 }
 
-div {
+div, section {
   user-select: none;
+  height: inherit;
 }
 
 p {
@@ -20,9 +21,12 @@ p {
 .juno {
   background-color: #5A5F66;
   margin: auto;
+  width: 1024px;
+}
+
+.module-container {
   display: flex;
   flex-flow: row wrap;
-  width: 1024px;
 }
 
 .module {
@@ -230,6 +234,7 @@ hr {
   position: relative;
   top: 20px;
   margin: auto;
+  height: 38%;
 }
 
 .control-label {
@@ -250,7 +255,7 @@ hr {
 
 .label {
   display: inline-block;
-  margin: 0 8px;
+  margin: 0 6px;
 }
 .label.env {
   width: 16%;
@@ -286,7 +291,6 @@ hr {
   width: 100%;
   height: 150px;
   background-color: white;
-  border: 5px solid #CFCFCF;
 }
 
 /*# sourceMappingURL=style.css.map */
