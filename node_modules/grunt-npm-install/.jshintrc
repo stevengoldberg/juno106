@@ -1,0 +1,19 @@
+{
+  "curly": true,
+  "immed": true,
+  "indent": 2,
+  "latedef": true,
+  "newcap": true,
+  "noarg": true,
+  "quotmark": true,
+  "sub": true,
+  "undef": true,
+  "unused": true,
+  "trailing": true,
+  "boss": true,
+  "eqnull": true,
+  "expr": true,
+  "proto": true,
+  "shadow": true,
+  "node": true
+}

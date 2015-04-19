@@ -1,0 +1,33 @@
+// A Leading comment
+{
+  // A comment
+  modules: {
+    "foo": {
+    },
+      bar: {
+    }
+
+    // An inner trailing comment
+  },
+
+  arrays: [
+    'foo',
+    9,
+    {bar: true},
+    [{
+      nested: true
+    }
+    ]
+  ],
+
+
+  expression: (
+    // Will it blend?
+    {
+      foo : true
+    }
+    // Foo
+    ),
+  "other stuff": true,
+}
+// A trailing comment
