@@ -1,0 +1,32 @@
+/* BORDERS */
+$module-border: 1px;
+$border-radius: 8px;
+
+/* TEXT */
+@import url(http://fonts.googleapis.com/css?family=Raleway:400,600,700);
+$header-size: 25px;
+$header-line-height: 30px;
+$label-size: 16px;
+
+body {
+    background-color: black;
+}
+
+div {
+    user-select: none;
+}
+
+p {
+    color: white;
+    font-family: 'Raleway';
+    font-weight: 600;
+    margin: 5px;
+}
+
+.juno {
+    background-color: $synth-body-clr;
+    margin: auto;
+    display: flex;
+    flex-flow: row wrap;
+    width: 1024px;
+}

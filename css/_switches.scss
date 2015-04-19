@@ -1,0 +1,17 @@
+.switch {
+    display: inline-block;
+    position: relative;
+    border-radius: 10px;
+    height: 40px;
+    width: 10px;
+    background-color: black;
+    margin:auto;
+}
+
+.switch__knob {
+    background-color: white;
+    position: absolute;
+    border-radius: 10px;
+    width: 90%;
+    height: 12px;
+}

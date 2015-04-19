@@ -1,0 +1,81 @@
+.fader__scale {
+    background: repeating-linear-gradient(
+        0deg,
+        white,
+        white 2px,
+        transparent 3px,
+        transparent 20px
+    );
+    height: 100%;
+    width: 85%;
+    margin: auto;
+    display: flex;
+    align-self: center;
+    &.env {
+        .fader__slot {
+            margin: 5% auto 0 auto;
+        }
+    }
+}
+
+.fader__scale--hpf {
+    @extend .fader__scale;
+    background: repeating-linear-gradient(
+        0deg,
+        white,
+        white 2px,
+        transparent 3px,
+        transparent 50px
+    );
+    margin-top: -20px;
+    width: 75%;
+    >.fader__slot {
+        margin-top: 50px;
+    }
+}
+
+.fader {
+    align-self: center;
+    margin: auto;
+    height: 75%;
+    width: 100%;
+    &.two {
+        width: 27%;
+    }
+    &.three {
+        width: 55%;
+    }
+    &.vcf {
+        width: 35%;
+    }
+}
+
+.fader__slot {
+    width: 10px;
+    background-color: black;
+    height: 97%;
+    margin: 10% auto 0 auto;
+    border-radius: $border-radius;
+    align-self: center;
+    position: relative;
+}
+
+.fader__knob {
+    position: absolute;
+    top: 173px;
+    left: -17px;
+    background-color: $fader-knob-clr;
+    border-radius: 5px;
+    width: 44px;
+    height: 22px;
+    display: flex;
+    align-self: flex-start;
+}
+
+hr {
+    width: 100%;
+    background-color: $fader-knob-line-clr;
+    border-radius: 2px;
+    font-weight: 200;
+    height: 2px;
+}

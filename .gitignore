@@ -1,0 +1,14 @@
+.settings/
+/ui/
+/ui/
+/.grunt/
+/dist/
+/.sass-cache/
+/index.html
+/css/style.css
+/css/style.min.css
+_SpecRunner.html
+.DS_Store
+/node_modules/
+.grunt.config.json
+*.map

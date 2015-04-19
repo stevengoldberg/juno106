@@ -1,0 +1,51 @@
+.control-label {
+    font-family: 'Raleway', sans-serif;
+    font-size: $label-size;
+    font-weight: bold;
+    color: $module-header-text-clr;
+    width: 22%;
+    &.lfo {
+        width: 36%;
+        margin: auto;
+    }
+    &.DCO {
+        width: 13%;
+        margin: 0 6px;
+    }
+}
+
+.label {
+    display:inline-block;
+    margin: 0 8px;
+    &.env {
+        width: 16%;
+    }
+}
+
+.led {
+    background-color: $led-off-clr;
+    width: 10px;
+    height: 10px;
+    border-radius: 10px;
+    margin: 15px auto;
+    &.lit {
+        background-color: $led-on-clr;
+        box-shadow: 0px 0px 8px $led-on-clr;
+    }
+}
+
+.line {
+    width: 2px;
+    background-color: white;
+    margin: auto;
+}
+
+.line--chorus {
+    @extend .line;
+    height: 65px;
+}
+
+.range {
+    margin: 3px 0px 8px 5px;
+}
+

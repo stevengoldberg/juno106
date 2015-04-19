@@ -202,22 +202,6 @@ hr {
   height: 2px;
 }
 
-.control-label {
-  font-family: 'Raleway', sans-serif;
-  font-size: 16px;
-  font-weight: bold;
-  color: white;
-  width: 22%;
-}
-.control-label.lfo {
-  width: 36%;
-  margin: auto;
-}
-.control-label.DCO {
-  width: 13%;
-  margin: 0 6px;
-}
-
 .button, .button--orange, .button--yellow {
   height: 35px;
   width: 55px;
@@ -240,38 +224,11 @@ hr {
   background-color: #FFE0A3;
 }
 
-.button-container, .knob-container--range, .knob-container--pwm, .button-container--top {
+.button-container, .button-container--top, .knob-container--range, .knob-container--pwm {
   -webkit-align-self: center;
       -ms-flex-item-align: center;
           align-self: center;
   text-align: center;
-}
-
-.knob-container--range {
-  position: relative;
-  margin-top: 50px;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex-flow: column wrap;
-      -ms-flex-flow: column wrap;
-          flex-flow: column wrap;
-  height: 90px;
-}
-.knob-container--range .switch {
-  height: 80px;
-  position: relative;
-}
-.knob-container--range .switch .switch__knob {
-  top: 39%;
-  position: absolute;
-}
-
-.knob-container--pwm {
-  position: relative;
-  top: 20px;
-  margin: auto;
 }
 
 .button-container--top {
@@ -309,6 +266,49 @@ hr {
   border-radius: 10px;
   width: 90%;
   height: 12px;
+}
+
+.knob-container--range {
+  position: relative;
+  margin-top: 50px;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-flow: column wrap;
+      -ms-flex-flow: column wrap;
+          flex-flow: column wrap;
+  height: 90px;
+}
+.knob-container--range .switch {
+  height: 80px;
+  position: relative;
+}
+.knob-container--range .switch .switch__knob {
+  top: 39%;
+  position: absolute;
+}
+
+.knob-container--pwm {
+  position: relative;
+  top: 20px;
+  margin: auto;
+}
+
+.control-label {
+  font-family: 'Raleway', sans-serif;
+  font-size: 16px;
+  font-weight: bold;
+  color: white;
+  width: 22%;
+}
+.control-label.lfo {
+  width: 36%;
+  margin: auto;
+}
+.control-label.DCO {
+  width: 13%;
+  margin: 0 6px;
 }
 
 .label {

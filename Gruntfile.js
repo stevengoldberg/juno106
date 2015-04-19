@@ -251,7 +251,7 @@ module.exports = function(grunt) {
     }
 
     // Tasks run on the build server for integration and production.
-    grunt.registerTask('build', ['clean:prod', 'test', 'compile-handlebars:prod', 'copy:prod', 'concurrent:prod']);
+    grunt.registerTask('build', ['clean:prod', 'compile-handlebars:prod', 'copy:prod', 'concurrent:prod']);
 
     // Tasks to run in local development environment.
     grunt.registerTask('build:dev', ['clean:dev', 'compile-handlebars:dev', 'sass:dev', 'autoprefixer:dev']);

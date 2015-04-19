@@ -1,0 +1,23 @@
+.knob-container--range {
+    @extend .button-container;
+    position: relative;
+    margin-top: 50px;
+    display: flex;
+    flex-flow: column wrap;
+    height: 90px;
+    .switch {
+        height: 80px;
+        position: relative;
+        .switch__knob {
+            top: 39%;
+            position: absolute;
+        }
+    }
+}
+
+.knob-container--pwm {
+    @extend .button-container;
+    position: relative;
+    top: 20px;
+    margin: auto;
+}
