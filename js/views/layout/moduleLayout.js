@@ -59,8 +59,10 @@ define([
             },
             
             handleModuleUpdate: function(update) {
-                console.log(update);
-                this.synth.set(update.param, update.value);
+                var updateKey = update.component ? update.component + '.' + update.param :
+                    update.param;
+                
+                this.synth.set(updateKey, update.value);
             },
         });
     });

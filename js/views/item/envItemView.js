@@ -7,6 +7,8 @@ define([
     function(Backbone, Template, ModuleBaseItemView) {
         return ModuleBaseItemView.extend({
             
+            className: 'env',
+            
             template: Template,
             
             onShow: function() {

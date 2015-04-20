@@ -37,6 +37,7 @@ define([
             
             Voice.prototype.stop = function() {
                 _.each(this.voices, function(voice) {
+                    voice.vca.gain = 0;
                     voice.vco.stop();
                 });
             };

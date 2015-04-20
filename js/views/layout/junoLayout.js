@@ -47,7 +47,11 @@ define([
                 if(_.keys(this.activeVoices).length <= this.maxPolyphony) {
                     options.frequency = this.synth.getCurrentRange(frequency);
                     options.waveform = this.synth.getCurrentWaveforms();
-                    options.volume = this.synth.get('vca');
+                    
+                    //Oscillators are turned off
+                    if(options.waveform.length === 0) return;
+                    
+                    options.volume = this.synth.get('vcaLevel');
                     
                     voice = new Voice(options);
                     voice.start();
@@ -56,6 +60,9 @@ define([
             },
             
             noteOffHandler: function(note) {
+                if(_.isEmpty(this.activeVoices)) {
+                    return;
+                }
                 this.activeVoices[note].stop();
                 delete this.activeVoices[note];
             },
@@ -66,7 +73,7 @@ define([
                 
                 _.each(this.activeVoices, function(voice) {
                     switch(param) {
-                        case 'vca':
+                        case 'vcaLevel':
                             voice.setVolume(value);
                             break;
                         }

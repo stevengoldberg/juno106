@@ -7,30 +7,33 @@ define([
             
             defaults: function() {
                 return {
-                    vca: 0.1,
-                    env: {
-                        a: 0,
-                        d: 0,
-                        s: 1,
-                        r: 0
-                    },
-                    vcf: {
-                        freq: 1
-                    },
-                    dco: {
-                        sawtooth: true,
-                        square: false
-                    },
+                    vcaLevel: 0.1,
+                    vcaEnv: 0,
+                    a: 0,
+                    d: 0,
+                    s: 1,
+                    r: 0,
+                    gate: true,
+                    vcfFreq: 1,
+                    sawtooth: true,
+                    square: false,
+                    noise: 0,
                     range: 1
                 };
             },
             
             getCurrentWaveforms: function() {
-                var dco = _.pick(this.get('dco'), function(value, key, object) {
-                    return object[key] === true;
+                var dco = {
+                    sawtooth: this.get('sawtooth'),
+                    square: this.get('square'),
+                    noise: this.get('noise')
+                };
+                
+                var waveforms = _.pick(dco, function(value) {
+                    return value != 0;
                 });
                 
-                return _.keys(dco);
+                return _.keys(waveforms);
             },
             
             getCurrentRange: function(frequency) {

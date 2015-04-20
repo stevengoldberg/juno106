@@ -7,11 +7,14 @@ define([
     function(Backbone, Template, ModuleBaseItemView) {
         return ModuleBaseItemView.extend({
             
+            className: 'dco',
+            
             template: Template,
             
             onShow: function() {
                 this.styleParent('eight');
                 this.bindSwitches();
+                this.bindButtons();
             }
             
         });

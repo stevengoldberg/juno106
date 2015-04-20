@@ -13,8 +13,9 @@ define([
             },
             
             ui: {
-                faderKnob: '.fader__el',
-                switchEl: '.switch'
+                faderKnob: '.fader__knob',
+                switchEl: '.switch',
+                button: '.button'
             },
             
             styleParent: function(className) {
@@ -61,7 +62,7 @@ define([
                 
                 value = (100 - parseInt(position.slice(0, -1))) / 100;
                 
-                this.triggerUpdate(el.data().param, value, 'fader');
+                this.triggerUpdate(el.data().param, value);
             },
             
             bindSwitches: function() {
@@ -84,7 +85,7 @@ define([
                     });
                     newIndex = (currentIndex + 1) % (that.switchValues[param].length);
                     newValue = that.switchValues[param][newIndex];
-                    that.triggerUpdate(param, newValue, 'switch');
+                    that.triggerUpdate(param, newValue);
                     that.updateSwitchUI(el, param, newValue);
                 });
             },
@@ -105,11 +106,34 @@ define([
                 }
             },
             
-            triggerUpdate: function(param, value, type) {
+            bindButtons: function() {
+                var that = this;
+                var button;
+                var data;
+                var newValue;
+                
+                this.ui.button.click(function(e) {
+                    button = $(this);
+                    data = button.data();
+                    
+                    if(button.hasClass('js-chorus')) {
+                        button.addClass('pressed');
+                        button.siblings('.led').addClass('lit');
+                        button.parent().siblings().children().removeClass('pressed lit');
+                    } else {
+                        button.toggleClass('pressed');
+                        button.siblings('.led').toggleClass('lit');
+                        newValue = (data.value + 1) % 2;
+                        button.data('value', newValue);
+                    }
+                    that.triggerUpdate(data.param, data.value);
+                });
+            },
+            
+            triggerUpdate: function(param, value) {
                 var update = {
                     param: param,
-                    value: value,
-                    type: type
+                    value: value
                 };
                 
                 this.trigger('update', update);
