@@ -34,8 +34,6 @@ define([
             },
             
             onShow: function() {
-                //$(window).on('keydown.keyboard', this.keydownHandler.bind(this));
-                //$(window).on('keyup.keyboard', this.keyupHandler.bind(this));
                 var keyboard = new QwertyHancock({
                     id: 'js-keyboard',
                     width: 1024,
@@ -46,21 +44,24 @@ define([
                     blackNotesColour: 'black',
                     hoverColour: '#f3e939'
                 });
+                
+                keyboard.keyDown = this.keyDownHandler.bind(this);
+                
+                keyboard.keyUp = this.keyUpHandler.bind(this);
             },
             
-            keydownHandler: function(e) {
-                console.log('note on');
-                console.log(this.keyMap[e.which]);
+            keyUpHandler: function(note, frequency) {
+                console.log('off: ' + note + ' ' + frequency);
+                this.notesTriggered = _.without(this.notesTriggered, note);
+                console.log(this.notesTriggered);
             },
             
-            keyupHandler: function(e) {
-                console.log('note off');
-                console.log(this.keyMap[e.which]);
-            },
-            
-            onClose: function() {
-                //$(window).off('keydown.keyboard');
-                //$(window).off('keyup.keyboard');
+            keyDownHandler: function(note, frequency) {
+                console.log('on: ' + note + ' ' + frequency);
+                if(this.notesTriggered.length <= this.maxPolyphony) {
+                    this.notesTriggered.push(note);
+                    console.log(this.notesTriggered);
+                }
             }
 
         });
