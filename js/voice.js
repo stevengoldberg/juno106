@@ -8,29 +8,36 @@ define([
                 this.frequency = options.frequency;
                 this.type = options.waveform;
                 this.volume = options.volume;
-                this.oscillators = [];
+                this.voices = [];
             }
             
             Voice.prototype.start = function() {
-                var vco = App.context.createOscillator();
-                var vca;
+                var note = {
+                    vco: App.context.createOscillator(),
+                    vca: App.context.createGain()
+                };
                 
-                vco.type = this.type;
-                vco.frequency.value = this.frequency;
+                note.vco.type = this.type;
+                note.vco.frequency.value = this.frequency;
+                 
+                note.vca.gain.value = this.volume;
                 
-                vca = App.context.createGain();
-                vca.gain.value = this.volume;
+                note.vco.connect(note.vca);
+                note.vca.connect(App.context.destination);
                 
-                vco.connect(vca);
-                vca.connect(App.context.destination);
-                
-                vco.start(0);
-                this.oscillators.push(vco);
+                note.vco.start(0);
+                this.voices.push(note);
+            };
+            
+            Voice.prototype.setVolume = function(volume) {
+                _.each(this.voices, function(voice) {
+                    voice.vca.gain.value = volume;
+                });
             };
             
             Voice.prototype.stop = function() {
-                _.each(this.oscillators, function(oscillator) {
-                    oscillator.stop();
+                _.each(this.voices, function(voice) {
+                    voice.vco.stop();
                 });
             };
             

@@ -37,6 +37,7 @@ define([
                 
                 this.listenTo(this.keyboardView, 'noteOn', this.noteOnHandler);
                 this.listenTo(this.keyboardView, 'noteOff', this.noteOffHandler);
+                this.listenTo(this.synth, 'change', this.synthUpdateHandler);
             },
             
             noteOnHandler: function(note, frequency) {
@@ -57,6 +58,15 @@ define([
             noteOffHandler: function(note) {
                 this.activeVoices[note].stop();
                 delete this.activeVoices[note];
+            },
+            
+            synthUpdateHandler: function(update) {
+                var value = _.values(update.changed);
+                var param = _.keys(update.changed);
+                
+                _.each(this.activeVoices, function(voice) {
+                    voice.setVolume(value);
+                });
             }
             
         });
