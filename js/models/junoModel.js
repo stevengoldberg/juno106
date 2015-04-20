@@ -7,7 +7,7 @@ define([
             
             defaults: function() {
                 return {
-                    vca: 1,
+                    vca: 0.1,
                     env: {
                         a: 0,
                         d: 0,

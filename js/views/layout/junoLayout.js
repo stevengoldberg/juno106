@@ -61,11 +61,15 @@ define([
             },
             
             synthUpdateHandler: function(update) {
-                var value = _.values(update.changed);
-                var param = _.keys(update.changed);
+                var value = _.first(_.values(update.changed));
+                var param = _.first(_.keys(update.changed));
                 
                 _.each(this.activeVoices, function(voice) {
-                    voice.setVolume(value);
+                    switch(param) {
+                        case 'vca':
+                            voice.setVolume(value);
+                            break;
+                        }
                 });
             }
             

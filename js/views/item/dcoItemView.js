@@ -11,6 +11,7 @@ define([
             
             onShow: function() {
                 this.styleParent('eight');
+                this.bindSwitches();
             }
             
         });

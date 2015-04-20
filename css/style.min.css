@@ -83,7 +83,7 @@ p {
   -webkit-flex: 8 0 auto;
       -ms-flex: 8 0 auto;
           flex: 8 0 auto;
-  width: 50%;
+  width: 47%;
 }
 .module:first-child > .module__back, .module:nth-child(4) > .module__back {
   border-left: none;
@@ -127,7 +127,7 @@ p {
   background: -webkit-repeating-linear-gradient(90deg, white, white 2px, transparent 3px, transparent 20px);
   background: repeating-linear-gradient(0deg, white, white 2px, transparent 3px, transparent 20px);
   height: 100%;
-  width: 85%;
+  width: 95%;
   margin: auto;
   display: -webkit-box;
   display: -webkit-flex;
@@ -267,12 +267,29 @@ hr {
   margin: auto;
 }
 
-.switch__knob {
+.switch__knob, .switch__knob--up, .switch__knob--down, .switch__knob--middle {
   background-color: white;
   position: absolute;
   border-radius: 10px;
   width: 90%;
   height: 12px;
+  -webkit-transition: all .25s;
+          transition: all .25s;
+}
+
+.switch__knob--up {
+  top: 0%;
+  bottom: 90%;
+}
+
+.switch__knob--down {
+  bottom: 0%;
+  top: 90%;
+}
+
+.switch__knob--middle {
+  top: 39%;
+  bottom: 39%;
 }
 
 .knob-container--range {
@@ -290,10 +307,6 @@ hr {
 .knob-container--range .switch {
   height: 80px;
   position: relative;
-}
-.knob-container--range .switch .switch__knob {
-  top: 39%;
-  position: absolute;
 }
 
 .knob-container--pwm {
@@ -324,7 +337,7 @@ hr {
   margin: 0 6px;
 }
 .label.env {
-  width: 16%;
+  width: 20%;
 }
 
 .led {
