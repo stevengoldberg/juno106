@@ -17,6 +17,19 @@ define([
                 keyboardRegion: '.js-keyboard-region'
             },
             
+            intiialize: function() {
+                this.context = null;
+                
+                try {
+                    window.AudioContext = window.AudioContext || window.webkitAudioContext;
+                    this.context = new AudioContext();
+                }
+                catch(e) {
+                    alert('Web Audio API is not supported in this browser');
+                }
+                
+            },
+            
             onShow: function() {
                 this.moduleLayout = new ModuleLayout();
                 this.synthRegion.show(this.moduleLayout);

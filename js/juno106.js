@@ -38,11 +38,15 @@ $(document).on('ready', function() {
                 var that = this;
                 $('.fader__knob').mousedown(function(e) {
                     target = $(e.currentTarget);
+                    target.addClass('dragging');
                     $(window).on('mousemove', function(e) {
                         that.calculateFaderMovement(target, e.clientY);
                     });
                 });
                 $(window).mouseup(function(e) {
+                    if(target) {
+                        target.removeClass('dragging');
+                    }
                     $(window).off('mousemove');
                 });
             },

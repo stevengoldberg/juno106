@@ -70,6 +70,9 @@
     height: 22px;
     display: flex;
     align-self: flex-start;
+    &.dragging {
+        box-shadow: 0 0 7px white;
+    }
 }
 
 hr {

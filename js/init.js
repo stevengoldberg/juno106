@@ -4,21 +4,11 @@ require.config({
 
     wrapShim: true,
 
-
-    // Uncomment to enable dev utils debugging output.
-    //map: {
-    //    '*': {
-    //        'eca/controllers/searchController': 'dev/searchController'
-    //    },
-
-    //    'dev/searchController': {
-    //        'eca/controllers/searchController': 'eca/controllers/searchController'
-    //    }
-    //},
-
     paths: {
 
         tmpl: '../templates',
+        
+        'qwerty-hancock': './vendor/qwerty-hancock-min',
 
         jquery: './vendor/jquery',
         'backbone.marionette': './vendor/backbone.marionette',
@@ -32,7 +22,8 @@ require.config({
         requireLib: './vendor/require',
         underscore: './vendor/underscore',
         'underscore.string': './vendor/underscore.string',
-        'backbone.modal': './vendor/backbone.modal-bundled-min'
+        'backbone.modal': './vendor/backbone.modal-bundled-min',
+        
     },
 
     shim: {
@@ -63,7 +54,11 @@ require.config({
 
         'backbone.modal': {
             deps: ['backbone', 'backbone.marionette']
+        },
+        
+        'qwerty-hancock': {
+            deps: [],
+            'exports': 'QwertyHancock'
         }
-
     }
 });

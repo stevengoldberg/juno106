@@ -53,7 +53,12 @@ define([
                 _.each(this.modules, function(view, name) {
                     regionName = this.getRegionName(name);
                     this[regionName].show(view);
+                    this.listenTo(view, 'update', this.handleModuleUpdate);
                 }, this);
-            }
+            },
+            
+            handleModuleUpdate: function(update) {
+                console.log(update);
+            },
         });
     });

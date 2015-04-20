@@ -197,6 +197,9 @@ p {
       -ms-flex-item-align: start;
           align-self: flex-start;
 }
+.fader__knob.dragging {
+  box-shadow: 0 0 7px white;
+}
 
 hr {
   width: 100%;
@@ -350,8 +353,6 @@ hr {
   margin: 3px 0px 8px 5px;
 }
 
-.keyboard {
-  width: 100%;
-  height: 150px;
-  background-color: white;
+.keyboard-container {
+  margin-top: 15px;
 }
