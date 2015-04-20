@@ -7,7 +7,15 @@ require([
 ],
 
     function (Backbone, Marionette, App, Routers, JunoLayout) {
-
+        
+        try {
+            window.AudioContext = window.AudioContext || window.webkitAudioContext;
+            App.context = new AudioContext();
+        }
+        catch(e) {
+            alert('Web Audio API is not supported in this browser');
+        }
+        
         var junoLayout = new JunoLayout();
         App.start();
         App.router = Routers;
