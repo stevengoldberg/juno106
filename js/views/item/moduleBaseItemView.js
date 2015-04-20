@@ -38,6 +38,7 @@ define([
                 var slotTop = knob.parent().offset().top;
                 var slotHeight = knob.parent().height();
                 var slotBottom = slotTop + slotHeight;
+                var value;
                 
                 if(yPos < slotTop) {
                     position = '0%';
@@ -51,7 +52,9 @@ define([
 					top: position
                 });
                 
-                this.triggerUpdate(knob, position);
+                value = (100 - parseInt(position.slice(0, -1))) / 100;
+                
+                this.triggerUpdate(knob, value);
             },
             
             triggerUpdate: function(knob, position) {

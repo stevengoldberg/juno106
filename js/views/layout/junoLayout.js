@@ -3,10 +3,11 @@ define([
     'views/layout/moduleLayout',
     'views/item/keyboardItemView',
     'voice',
+    'models/junoModel',
     'hbs!tmpl/layout/junoLayout-tmpl'
     ],
     
-    function(Backbone, ModuleLayout, KeyboardItemView, Voice, Template) {
+    function(Backbone, ModuleLayout, KeyboardItemView, Voice, JunoModel, Template) {
         return Backbone.Marionette.LayoutView.extend({
             
             className: 'juno',
@@ -21,10 +22,14 @@ define([
             initialize: function() {
                 this.maxPolyphony = 6;
                 this.activeVoices = {};
+                this.transposeDown = false;
+                this.synth = new JunoModel();
             },
             
             onShow: function() {
-                this.moduleLayout = new ModuleLayout();
+                this.moduleLayout = new ModuleLayout({
+                    synth: this.synth
+                });
                 this.synthRegion.show(this.moduleLayout);
                 
                 this.keyboardView = new KeyboardItemView();
@@ -39,8 +44,9 @@ define([
                 var options = {};
                 
                 if(_.keys(this.activeVoices).length <= this.maxPolyphony) {
-                    options.frequency = frequency;
-                    options.waveform = this.getCurrentWaveform();
+                    options.frequency = this.synth.getCurrentRange(frequency);
+                    options.waveform = this.synth.getCurrentWaveforms();
+                    options.volume = this.synth.get('vca');
                     
                     voice = new Voice(options);
                     voice.start();
@@ -48,13 +54,9 @@ define([
                 }
             },
             
-            noteOffHandler: function(note, frequency) {
+            noteOffHandler: function(note) {
                 this.activeVoices[note].stop();
                 delete this.activeVoices[note];
-            },
-            
-            getCurrentWaveform: function() {
-                return 'sawtooth';
             }
             
         });

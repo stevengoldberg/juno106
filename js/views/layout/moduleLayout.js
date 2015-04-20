@@ -28,7 +28,8 @@ define([
                 choRegion: '.js-cho-region'
             },
             
-            initialize: function() {
+            initialize: function(data) {
+                this.synth = data.synth;
                 this.modules = this.setupModules();
             },
             
@@ -59,6 +60,7 @@ define([
             
             handleModuleUpdate: function(update) {
                 console.log(update);
+                this.synth.set(update.param, update.value);
             },
         });
     });
