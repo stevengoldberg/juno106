@@ -28,6 +28,7 @@ define([
             ENV.prototype.release = function() {
                 var now = this.context.currentTime;
                 this.param.cancelScheduledValues(now);
+                this.param.setValueAtTime(this.param.value, now);
                 this.param.linearRampToValueAtTime(0, now + this.releaseTime);
             };
             
