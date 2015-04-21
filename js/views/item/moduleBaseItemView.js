@@ -9,7 +9,7 @@ define([
                 'dco-range': [0, 1, 2],
                 'pwm-lfo': [0, 1],
                 'vcf-invert': [0, 1],
-                'vca-env': [0, 1]
+                'env-gate': [0, 1]
             },
             
             ui: {
@@ -97,7 +97,7 @@ define([
                 if(newValue === 0) {
                     knob.removeClass('switch__knob--middle switch__knob--up');
                     knob.addClass('switch__knob--down');
-                } else if (newValue === 2 || (param !== 'range' && newValue === 1)) {
+                } else if (newValue === 2 || (param !== 'dco-range' && newValue === 1)) {
                     knob.removeClass('switch__knob--middle switch__knob--down');
                     knob.addClass('switch__knob--up');
                 } else if (newValue === 1) {

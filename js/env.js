@@ -7,9 +7,10 @@ define([
             function ENV(options) {
                 this.context = App.context;
                 
-                this.attackTime = options.envelope.a;
-                this.decayTime = options.envelope.d;
-                this.releaseTime = options.envelope.r; 
+                this.attackTime = options.envelope.gate ? options.envelope.a : 0;
+                this.decayTime = options.envelope.gate ? options.envelope.d : 0;
+                this.releaseTime = options.envelope.gate ? options.envelope.r : 0;
+                this.sustainModifier = options.envelope.gate ? options.envelope.s : 0;
                 this.maxLevel = options.maxLevel;
             }
             

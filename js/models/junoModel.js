@@ -13,7 +13,7 @@ define([
                     'env-d': 0,
                     'env-s': 1,
                     'env-r': 0,
-                    'env-gate': true,
+                    'env-gate': 0,
                     'vcf-freq': 1,
                     'dco-sawtooth': true,
                     'dco-square': false,
@@ -54,13 +54,21 @@ define([
                 
                 var env = {
                     gate: this.get('env-gate'),
-                    a: attackMax * this.get('env-a') + envelopeOffset,
+                    a: attackMax * this.getAttackCurve(this.get('env-a')) + envelopeOffset,
                     d: decayReleaseMax * this.get('env-d') + envelopeOffset,
                     s: this.get('env-s'),
-                    r: decayReleaseMax * this.get('env-r') + envelopeOffset
+                    r: decayReleaseMax * this.getReleaseCurve(this.get('env-r')) + envelopeOffset
                 };
                 
                 return env;
+            },
+            
+            getReleaseCurve: function(releaseMultiplier) {
+                return Math.pow(releaseMultiplier, 3);
+            },
+            
+            getAttackCurve: function(attackMultiplier) {
+                return Math.pow(attackMultiplier, 2);
             }
             
         });
