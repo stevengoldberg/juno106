@@ -6,10 +6,10 @@ define([
         return Backbone.Marionette.ItemView.extend({
                   
             switchValues: {
-                range: [0, 1, 2],
-                pwmLfo: [0, 1],
-                vcfInvert: [0, 1],
-                vcaEnv: [0, 1]
+                'dco-range': [0, 1, 2],
+                'pwm-lfo': [0, 1],
+                'vcf-invert': [0, 1],
+                'vca-env': [0, 1]
             },
             
             ui: {

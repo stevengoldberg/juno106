@@ -1,13 +1,16 @@
 define([
     'backbone',
+    'application',
     'views/layout/moduleLayout',
     'views/item/keyboardItemView',
-    'voice',
+    'vco',
+    'vca',
+    'env',
     'models/junoModel',
     'hbs!tmpl/layout/junoLayout-tmpl'
     ],
     
-    function(Backbone, ModuleLayout, KeyboardItemView, Voice, JunoModel, Template) {
+    function(Backbone, App, ModuleLayout, KeyboardItemView, VCO, VCA, ENV, JunoModel, Template) {
         return Backbone.Marionette.LayoutView.extend({
             
             className: 'juno',
@@ -20,9 +23,10 @@ define([
             },
             
             initialize: function() {
+                this.context = App.context;
+                
                 this.maxPolyphony = 6;
                 this.activeVoices = {};
-                this.transposeDown = false;
                 this.synth = new JunoModel();
             },
             
@@ -41,21 +45,50 @@ define([
             },
             
             noteOnHandler: function(note, frequency) {
-                var voice;
+                var vco;
+                var vca;
+                var envelope;
+                var envSettings = this.synth.getCurrentEnvelope();
+                
                 var options = {};
                 
                 if(_.keys(this.activeVoices).length <= this.maxPolyphony) {
-                    options.frequency = this.synth.getCurrentRange(frequency);
+                    vco = new VCO({
+                        frequency: this.synth.getCurrentRange(frequency),
+                        waveform: this.synth.getCurrentWaveforms()
+                    });
+                    
+                    vca = new VCA();
+                    
+                    env = new ENV({
+                        envelope: envSettings,
+                        maxLevel: this.synth.get('vca-level')
+                    });
+                    
+                    vco.connect(vca);
+                    env.connect(vca.amplitude);
+                    vca.connect(this.context.destination);
+                    env.attack();
+                    
+                    this.activeVoices[note] = {
+                        vco: vco,
+                        vca: vca,
+                        env: env
+                    };
+                    
+                    
+                    /*options.frequency = this.synth.getCurrentRange(frequency);
                     options.waveform = this.synth.getCurrentWaveforms();
+                    options.envelope = this.synth.getCurrentEnvelope();
+                    options.volume = this.synth.get('vcaLevel');
                     
                     //Oscillators are turned off
                     if(options.waveform.length === 0) return;
                     
-                    options.volume = this.synth.get('vcaLevel');
-                    
-                    voice = new Voice(options);
+                    voice = Voice(options);
                     voice.start();
-                    this.activeVoices[note] = voice;
+                    
+                    this.activeVoices[note] = voice;*/
                 }
             },
             
@@ -63,20 +96,20 @@ define([
                 if(_.isEmpty(this.activeVoices)) {
                     return;
                 }
-                this.activeVoices[note].stop();
+                this.activeVoices[note].env.release();
                 delete this.activeVoices[note];
             },
             
             synthUpdateHandler: function(update) {
                 var value = _.first(_.values(update.changed));
                 var param = _.first(_.keys(update.changed));
+                var component = param.slice(0, 3);
+                var method = param.slice(4);
                 
                 _.each(this.activeVoices, function(voice) {
-                    switch(param) {
-                        case 'vcaLevel':
-                            voice.setVolume(value);
-                            break;
-                        }
+                    if(_.isFunction(voice[component][method])) {
+                        voice[component][method](value);
+                    }
                 });
             }
             

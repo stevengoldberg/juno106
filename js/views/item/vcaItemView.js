@@ -14,6 +14,7 @@ define([
             onShow: function() {
                 this.styleParent('two');
                 this.bindFaders();
+                this.bindSwitches();
             }
             
         });
