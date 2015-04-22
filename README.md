@@ -6,6 +6,8 @@ http://stevegoldberg.neocities.org/#juno
 
 Enabled features:
 
+* Play notes with the QWERTY keyboard -- QWERTY A = C3
+* 6 voice polyphony
 * Set volume with VCA level
 * Select ENV/GATE
 * Set ADSR envelope (when ENV is engaged)
