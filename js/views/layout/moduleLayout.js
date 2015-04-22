@@ -35,13 +35,13 @@ define([
             
             setupModules: function() {
                 return {
-                    LFO: new LFOItemView(),
-                    DCO: new DCOItemView(),
-                    VCF: new VCFItemView(),
-                    HPF: new HPFItemView(),
-                    VCA: new VCAItemView(),
-                    ENV: new ENVItemView(),
-                    CHO: new CHOItemView()
+                    lfo: new LFOItemView(),
+                    dco: new DCOItemView(),
+                    vcf: new VCFItemView(),
+                    hpf: new HPFItemView(),
+                    vca: new VCAItemView(),
+                    env: new ENVItemView(),
+                    cho: new CHOItemView()
                 };
             },
             
@@ -55,6 +55,16 @@ define([
                     regionName = this.getRegionName(name);
                     this[regionName].show(view);
                     this.listenTo(view, 'update', this.handleModuleUpdate);
+                }, this);
+                
+                this.updateUIState();
+            },
+            
+            updateUIState: function() {
+                var component;
+                _.each(this.synth.attributes, function(value, key) {
+                    component = key.slice(0, 3);
+                    this.modules[component].updateUIState(key, this.synth.get(key));
                 }, this);
             },
             

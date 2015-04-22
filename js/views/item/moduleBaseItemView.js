@@ -137,6 +137,23 @@ define([
                 };
                 
                 this.trigger('update', update);
+            },
+            
+            updateUIState: function(param, value) {
+                console.log('updating ' + param);
+                var el = this.$('[data-param="' + param + '"]');
+                if(el.hasClass('fader__knob')) {
+                    this.updateFaderPosition(el, value);
+                }
+            },
+            
+            updateFaderPosition: function(el, value) {
+                var slotHeight = el.parent().height();
+                var pos = (1 - value) * slotHeight;
+                
+                el.css({
+                    top: pos + '%'
+                });
             }
             
         });

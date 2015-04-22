@@ -19,7 +19,7 @@ define([
                 this.attackTime = this.gate ? options.envelope.a : 0;
                 this.decayTime = this.gate ? options.envelope.d : 0;
                 this.releaseTime = this.gate ? options.envelope.r : 0;
-                this.sustainModifier = this.gate ? options.envelope.s : 1;
+                this.sustainModifier = this.gate ? (options.envelope.s || 1.40130e-45) : 1;
                 this.maxLevel = options.maxLevel;
                 this.sustainLevel = this.maxLevel * this.sustainModifier;
             },
@@ -71,7 +71,7 @@ define([
                 
                 if(!this.gate) return;
                 
-                this.sustainLevel = this.maxLevel * sustainModifier;
+                this.sustainLevel = (this.maxLevel * sustainModifier) || 1.40130e-45;
                 this.amplitude.cancelScheduledValues(now);
                 this.amplitude.setValueAtTime(this.sustainLevel, now);
             }
