@@ -73,7 +73,7 @@ define([
                 delete this.activeVoices[note];
             },
             
-            synthUpdateHandler: function(update) {
+            synthUpdateHandler: _.throttle(function(update) {
                 var value = _.first(_.values(update.changed));
                 var param = _.first(_.keys(update.changed));
                 var component = param.slice(0, 3);
@@ -84,7 +84,7 @@ define([
                         voice[component][method](value);
                     }
                 });
-            }
+            }, 25)
             
         });
     });
