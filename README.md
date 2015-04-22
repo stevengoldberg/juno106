@@ -4,6 +4,8 @@ Current live WIP version:
 
 http://stevegoldberg.neocities.org/#juno
 
+Requires a minimum 1024x768 window and an updated browser (tested in Chrome only).
+
 Enabled features:
 
 * Play notes with the QWERTY keyboard -- QWERTY A = C3
