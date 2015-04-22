@@ -91,11 +91,16 @@ module.exports = function(grunt) {
                     expand: true,
                     src: ['icons/**'],
                     dest: 'dist/'
-                },{
+                },
+                {
+                    src: 'js/vendor/modernizr.js',
+                    dest: 'dist/js/vendor/modernizr.js'
+                },
+                {
                     expand: true,
                     src: ['fonts/**'],
                     dest: 'dist/'
-                }]
+                },]
             }
         },
 

@@ -17,9 +17,11 @@
 
     </head>
     <body>
-      <script data-main="js/init" src="js/vendor/require.js"></script>
+      <script data-main="{{main}}" src="{{src}}"></script>
 
-      <script type="text/javascript" src="//localhost:35729:livereload.js"></script>
+      {{#each scripts}}
+      <script type="text/javascript" src="this"></script>
+      {{/each}}
         
     </body>
 </html>
