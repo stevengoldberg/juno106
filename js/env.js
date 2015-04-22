@@ -62,6 +62,10 @@ define([
                 this.attackTime = attackTime;
             },
             
+            d: function(decayTime) {
+                this.decayTime = decayTime;
+            },
+            
             r: function(releaseTime) {
                 this.releaseTime = releaseTime;
             },
