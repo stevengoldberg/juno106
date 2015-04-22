@@ -3,14 +3,12 @@ define([
     'application',
     'views/layout/moduleLayout',
     'views/item/keyboardItemView',
-    'vco',
-    'vca',
-    'env',
+    'voice',
     'models/junoModel',
     'hbs!tmpl/layout/junoLayout-tmpl'
     ],
     
-    function(Backbone, App, ModuleLayout, KeyboardItemView, VCO, VCA, ENV, JunoModel, Template) {
+    function(Backbone, App, ModuleLayout, KeyboardItemView, Voice, JunoModel, Template) {
         return Backbone.Marionette.LayoutView.extend({
             
             className: 'juno',
@@ -45,50 +43,24 @@ define([
             },
             
             noteOnHandler: function(note, frequency) {
-                var vco;
-                var vca;
-                var envelope;
-                var envSettings = this.synth.getCurrentEnvelope();
+                var voice;
                 
-                var options = {};
+                var options = {
+                    frequency: this.synth.getCurrentRange(frequency),
+                    waveform: this.synth.getCurrentWaveforms(),
+                    envelope: this.synth.getCurrentEnvelope(),
+                    maxLevel: this.synth.get('vca-level')
+                };
                 
                 if(_.keys(this.activeVoices).length <= this.maxPolyphony) {
-                    vco = new VCO({
-                        frequency: this.synth.getCurrentRange(frequency),
-                        waveform: this.synth.getCurrentWaveforms()
-                    });
+                    voice = new Voice(options);
                     
-                    vca = new VCA();
+                    // Set voice initial volume 
+                    voice.vca.level(options.maxLevel);
+                    // Trigger voice amp envelope
+                    voice.env.attack();
                     
-                    env = new ENV({
-                        envelope: envSettings,
-                        maxLevel: this.synth.get('vca-level')
-                    });
-                    
-                    vco.connect(vca);
-                    env.connect(vca.amplitude);
-                    vca.connect(this.context.destination);
-                    env.attack();
-                    
-                    this.activeVoices[note] = {
-                        vco: vco,
-                        vca: vca,
-                        env: env
-                    };
-                    
-                    
-                    /*options.frequency = this.synth.getCurrentRange(frequency);
-                    options.waveform = this.synth.getCurrentWaveforms();
-                    options.envelope = this.synth.getCurrentEnvelope();
-                    options.volume = this.synth.get('vcaLevel');
-                    
-                    //Oscillators are turned off
-                    if(options.waveform.length === 0) return;
-                    
-                    voice = Voice(options);
-                    voice.start();
-                    
-                    this.activeVoices[note] = voice;*/
+                    this.activeVoices[note] = voice;
                 }
             },
             

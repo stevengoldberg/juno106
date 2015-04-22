@@ -55,7 +55,7 @@ define([
                 var env = {
                     gate: this.get('env-gate'),
                     a: attackMax * this.getAttackCurve(this.get('env-a')) + envelopeOffset,
-                    d: decayReleaseMax * this.get('env-d') + envelopeOffset,
+                    d: decayReleaseMax * this.getReleaseCurve(this.get('env-d')) + envelopeOffset,
                     s: this.get('env-s'),
                     r: decayReleaseMax * this.getReleaseCurve(this.get('env-r')) + envelopeOffset
                 };
