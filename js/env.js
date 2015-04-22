@@ -16,10 +16,13 @@ define([
                 // Gate === 1 if envelope is enabled
                 this.gate = options.envelope.gate;
                 
+                // webAudio can't exponentially ramp to 0
+                this.minSustain = 0.000001;
+                
                 this.attackTime = this.gate ? options.envelope.a : 0;
                 this.decayTime = this.gate ? options.envelope.d : 0;
                 this.releaseTime = this.gate ? options.envelope.r : 0;
-                this.sustainModifier = this.gate ? (options.envelope.s || 1.40130e-45) : 1;
+                this.sustainModifier = this.gate ? (options.envelope.s || this.minSustain) : 1;
                 this.maxLevel = options.maxLevel;
                 this.sustainLevel = this.maxLevel * this.sustainModifier;
             },
@@ -75,7 +78,7 @@ define([
                 
                 if(!this.gate) return;
                 
-                this.sustainLevel = (this.maxLevel * sustainModifier) || 1.40130e-45;
+                this.sustainLevel = (this.maxLevel * sustainModifier) || this.minSustain;
                 this.amplitude.cancelScheduledValues(now);
                 this.amplitude.setValueAtTime(this.sustainLevel, now);
             }

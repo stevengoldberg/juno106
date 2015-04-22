@@ -74,6 +74,9 @@ define([
             },
             
             synthUpdateHandler: _.throttle(function(update) {
+                // Not sure why this is needed
+                if(_.isEmpty(update.changed)) return;
+                    
                 var value = _.first(_.values(update.changed));
                 var param = _.first(_.keys(update.changed));
                 var component = param.slice(0, 3);
