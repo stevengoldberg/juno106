@@ -152,7 +152,7 @@ define([
                 var pos = (1 - value) * slotHeight;
                 
                 el.css({
-                    top: pos + '%'
+                    top: pos
                 });
             }
             
