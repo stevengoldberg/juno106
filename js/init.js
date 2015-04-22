@@ -9,6 +9,7 @@ require.config({
         tmpl: '../templates',
         
         'qwerty-hancock': './vendor/qwerty-hancock-min',
+        tuna: './vendor/tuna',
 
         jquery: './vendor/jquery',
         'backbone.marionette': './vendor/backbone.marionette',
@@ -59,6 +60,11 @@ require.config({
         'qwerty-hancock': {
             deps: [],
             'exports': 'QwertyHancock'
+        },
+        
+        'tuna': {
+            deps: [],
+            'exports': 'Tuna'
         }
     }
 });

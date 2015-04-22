@@ -3,8 +3,8 @@ define([
 ],
     
     function(App) {
-        return function() {
-            function VCO(options) {
+        return Backbone.Marionette.Object.extend({
+            initialize: function(options) {
                 this.context = App.context;
                 
                 this.oscillator = this.context.createOscillator();
@@ -14,25 +14,24 @@ define([
                 
                 this.input = this.oscillator;
                 this.output = this.oscillator;
-            }
+            },
             
-            VCO.prototype.setFrequency = function(frequency) {
+            setFrequency: function(frequency) {
                 this.oscillator.frequency.setValueAtTime(frequency, this.context.currentTime);
-            };
+            },
             
-            VCO.prototype.connect = function(node) {
+            connect: function(node) {
                 if(_.has(node, 'input')) {
                     this.output.connect(node.input);
                 } else {
                     this.output.connect(node);
                 }
-            };
+            },
             
-            VCO.prototype.stop = function() {
+            stop: function() {
                 this.oscillator.stop();
-            };
+            }
             
-            return VCO;
-        }();
+        });
     }
 );

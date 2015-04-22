@@ -18,7 +18,8 @@ define([
                     'dco-sawtooth': true,
                     'dco-square': false,
                     'dco-noise': 0,
-                    'dco-range': 1
+                    'dco-range': 1,
+                    'cho-chorusToggle': 0
                 };
             },
             

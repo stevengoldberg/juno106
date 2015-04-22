@@ -3,8 +3,8 @@ define([
 ],
     
     function(App) {
-        return function() {
-            function VCA() {
+        return Backbone.Marionette.Object.extend({
+            initialize: function() {
                 this.context = App.context;
                 
                 this.gain = this.context.createGain();
@@ -12,24 +12,22 @@ define([
                 this.input = this.gain;
                 this.output = this.gain;
                 this.amplitude = this.gain.gain;
-            }
+            },
             
-            VCA.prototype.connect = function(node) {
+            connect: function(node) {
                 if (_.has(node, 'input')) {
                     this.output.connect(node.input);
                 } else {
                     this.output.connect(node);
                 }
-            };
+            },
             
-            VCA.prototype.level = function(level) {
+            level: function(level) {
                 var now = this.context.currentTime;
                 
                 this.amplitude.cancelScheduledValues(now);
                 this.amplitude.setValueAtTime(level, now);
-            };
-            
-            return VCA;
-        }();
+            },
+        });
     }
 );

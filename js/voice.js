@@ -2,10 +2,11 @@ define([
     'application',
     'vco',
     'vca',
-    'env'
+    'env',
+    'cho'
 ],
     
-    function(App, VCO, VCA, ENV) {
+    function(App, VCO, VCA, ENV, CHO) {
         return Backbone.Marionette.Object.extend({
             initialize: function(options) {
                 this.context = App.context;
@@ -22,10 +23,15 @@ define([
                     maxLevel: options.maxLevel
                 });
                 
+                this.cho = new CHO({
+                    mode: options.chorus
+                });
+                
                 if(!_.isEmpty(options.waveform)) {
                     this.vco.connect(this.vca);
                     this.vca.connect(this.env);
-                    this.env.connect(this.context.destination);
+                    this.env.connect(this.cho);
+                    this.cho.connect(this.context.destination);
                 }
             }
             

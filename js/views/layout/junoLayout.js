@@ -49,7 +49,8 @@ define([
                     frequency: this.synth.getCurrentRange(frequency),
                     waveform: this.synth.getCurrentWaveforms(),
                     envelope: this.synth.getCurrentEnvelope(),
-                    maxLevel: this.synth.get('vca-level')
+                    maxLevel: this.synth.get('vca-level'),
+                    chorus: this.synth.get('cho-chorusToggle')
                 };
                 
                 if(_.keys(this.activeVoices).length <= this.maxPolyphony) {
@@ -79,7 +80,7 @@ define([
                 var method = param.slice(4);
                 
                 _.each(this.activeVoices, function(voice) {
-                    if(_.isFunction(voice[component][method])) {
+                    if(voice[component] && _.isFunction(voice[component][method])) {
                         voice[component][method](value);
                     }
                 });

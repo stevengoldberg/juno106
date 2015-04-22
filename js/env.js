@@ -3,8 +3,8 @@ define([
 ],
     
     function(App) {
-        return function() {
-            function ENV(options) {
+        return Backbone.Marionette.Object.extend({
+            initialize: function(options) {
                 this.context = App.context;
                 
                 this.gain = this.context.createGain();
@@ -22,17 +22,17 @@ define([
                 this.sustainModifier = this.gate ? options.envelope.s : 1;
                 this.maxLevel = options.maxLevel;
                 this.sustainLevel = this.maxLevel * this.sustainModifier;
-            }
+            },
             
-            ENV.prototype.connect = function(node) {
+            connect: function(node) {
                 if (_.has(node, 'input')) {
                     this.output.connect(node.input);
                 } else {
                     this.output.connect(node);
                 }
-            };
+            },
             
-            ENV.prototype.attack = function() {
+            attack: function() {
                 var now = this.context.currentTime;
                 
                 window.clearTimeout(this.triggerDecay);
@@ -42,31 +42,31 @@ define([
                 this.amplitude.setValueAtTime(0, now);
                 this.amplitude.linearRampToValueAtTime(this.maxLevel, now + this.attackTime);
                 
-            };
+            },
             
-            ENV.prototype.decay = function() {
+            decay: function() {
                 var now = this.context.currentTime;
                 this.amplitude.exponentialRampToValueAtTime(this.sustainLevel, 
                     now + this.decayTime);
-            };
+            },
             
-            ENV.prototype.release = function() {
+            release: function() {
                 var now = this.context.currentTime;
                 window.clearTimeout(this.triggerDecay);
                 this.amplitude.cancelScheduledValues(now);
                 this.amplitude.setValueAtTime(this.amplitude.value, now);
                 this.amplitude.linearRampToValueAtTime(0, now + this.releaseTime);
-            };
+            },
             
-            ENV.prototype.a = function(attackTime) {
+            a: function(attackTime) {
                 this.attackTime = attackTime;
-            };
+            },
             
-            ENV.prototype.r = function(releaseTime) {
+            r: function(releaseTime) {
                 this.releaseTime = releaseTime;
-            };
+            },
             
-            ENV.prototype.s = function(sustainModifier) {
+            s: function(sustainModifier) {
                 var now = this.context.currentTime;
                 
                 if(!this.gate) return;
@@ -74,9 +74,7 @@ define([
                 this.sustainLevel = this.maxLevel * sustainModifier;
                 this.amplitude.cancelScheduledValues(now);
                 this.amplitude.setValueAtTime(this.sustainLevel, now);
-            };
-            
-            return ENV;
-        }();
+            }
+        });
     }
 );
