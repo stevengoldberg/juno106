@@ -3,13 +3,18 @@ define([
     'dco',
     'vca',
     'env',
-    'vcf'
+    'vcf',
+    'lfo'
 ],
     
-    function(App, DCO, VCA, ENV, VCF) {
+    function(App, DCO, VCA, ENV, VCF, LFO) {
         return Backbone.Marionette.Object.extend({
             initialize: function(options) {
                 this.maxLevel = options.maxLevel;
+                
+                this.lfo = new LFO({
+                    rate: 1
+                });
                 
                 this.dco = new DCO({
                     frequency: options.frequency,
@@ -30,6 +35,7 @@ define([
                 });
             
                 if(!_.isEmpty(options.waveform)) {
+                    this.lfo.connect(this.dco);
                     this.dco.connect(this.vcf);
                     this.vcf.connect(this.vca);
                     this.vca.connect(this.env);
