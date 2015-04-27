@@ -49,18 +49,22 @@ define([
                 var value;
                 
                 if(yPos < slotTop) {
-                    position = '0%';
+                    position = 0;
                 } else if (yPos > slotBottom) {
-                    position = '100%';
+                    position = 92.25;
                 } else {
-                    position = (yPos - slotTop) / slotHeight * 100  + '%';
+                    position = (yPos - slotTop) / slotHeight * 100;
+                }
+                
+                if(position > 92.25) {
+                    position = 92.25;
                 }
 
                 el.css({
-					top: position
+					top: position + '%'
                 });
                 
-                value = (100 - parseInt(position.slice(0, -1))) / 100;
+                value = (100 - position) / 100;
                 
                 this.triggerUpdate(el.data().param, value);
             },
@@ -148,10 +152,17 @@ define([
             
             updateFaderPosition: function(el, value) {
                 var slotHeight = el.parent().height();
-                var pos = (1 - value) * slotHeight;
+                var percent = 1 - value;
+                var position;
+                
+                if(percent > 0.9225) {
+                    percent = 0.9225;
+                }
+                
+                position = percent * slotHeight;
                 
                 el.css({
-                    top: pos
+                    top: position
                 });
             }
             
