@@ -91,7 +91,7 @@ define([
                         voice[component][method](value);
                     }
                 });
-            }, 20)
+            }, 30)
             
         });
     });

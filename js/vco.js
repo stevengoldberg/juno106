@@ -4,29 +4,37 @@ define([
     
     function(App) {
         function VCO(options) {
-            this.oscillator = App.context.createOscillator();
-            this.oscillator.type = options.waveform;
-            this.setFrequency(options.frequency);
-            this.oscillator.start();
+            this.oscillators = [];
             
-            this.input = this.oscillator;
-            this.output = this.oscillator;
+            _.each(options.waveform, function(waveform, i) {
+                this.oscillators[i] = App.context.createOscillator();
+                this.oscillators[i].type = waveform;
+                this.oscillators[i].frequency.setValueAtTime(options.frequency,
+                    App.context.currentTime);
+                this.oscillators[i].start();
+            }, this);
         }
         
-        VCO.prototype.setFrequency = function(frequency) {
+        /*VCO.prototype.setFrequency = function(frequency) {
             this.oscillator.frequency.setValueAtTime(frequency, App.context.currentTime);
-        };
+        };*/
         
         VCO.prototype.connect = function(node) {
             if(_.has(node, 'input')) {
-                this.output.connect(node.input);
+                _.each(this.oscillators, function(oscillator) {
+                    oscillator.connect(node.input);
+                });
             } else {
-                this.output.connect(node);
+                _.each(this.oscillators, function(oscillator) {
+                    oscillator.connect(node);
+                });
             }
         };
         
         VCO.prototype.stop = function() {
-            this.oscillator.stop();
+            _.each(this.oscillators, function(oscillator) {
+                oscillator.stop();
+            });
         };
         
         return VCO;
