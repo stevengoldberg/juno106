@@ -89,7 +89,7 @@ define([
                         voice[component][method](value);
                     }
                 });
-            }, 25)
+            }, 15)
             
         });
     });

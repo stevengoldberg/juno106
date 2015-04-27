@@ -4,9 +4,7 @@ define([
     
     function(App) {
         function VCO(options) {
-            this.context = App.context;
-            
-            this.oscillator = this.context.createOscillator();
+            this.oscillator = App.context.createOscillator();
             this.oscillator.type = options.waveform;
             this.setFrequency(options.frequency);
             this.oscillator.start();
@@ -16,7 +14,7 @@ define([
         }
         
         VCO.prototype.setFrequency = function(frequency) {
-            this.oscillator.frequency.setValueAtTime(frequency, this.context.currentTime);
+            this.oscillator.frequency.setValueAtTime(frequency, App.context.currentTime);
         };
         
         VCO.prototype.connect = function(node) {

@@ -26,16 +26,26 @@ define([
             }
         };
         
-        VCF.prototype.freq = function(frequency) {
+        VCF.prototype.freq = function(cutoff) {
             var now = App.context.currentTime;
-            this.filter1.frequency.setValueAtTime(frequency, now);
-            this.filter2.frequency.setValueAtTime(frequency, now);
+            var freq = this.getFilterFreqFromCutoff(cutoff);
+            
+            this.filter1.frequency.cancelScheduledValues(now);
+            this.filter2.frequency.cancelScheduledValues(now);
+            this.filter1.frequency.setValueAtTime(freq, now);
+            this.filter2.frequency.setValueAtTime(freq, now);
         };
         
         VCF.prototype.res = function(resonance) {
             var now = App.context.currentTime;
             this.filter1.Q.setValueAtTime(resonance / 2, now);
             this.filter2.Q.setValueAtTime(resonance / 2, now);
+        };
+        
+        VCF.prototype.getFilterFreqFromCutoff = function(cutoff) {
+            var nyquist = App.context.sampleRate / 2;
+            var freq = Math.pow(cutoff, 3) * nyquist;
+            return freq > 10 ? freq : 10;
         };
         
         return VCF;
