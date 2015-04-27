@@ -152,9 +152,6 @@ p {
 }
 
 .fader {
-  -webkit-align-self: center;
-      -ms-flex-item-align: center;
-          align-self: center;
   margin: auto;
   height: 75%;
   width: 100%;

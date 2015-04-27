@@ -7,13 +7,12 @@ define([
             
             defaults: function() {
                 return {
-                    'vca-level': 0.1,
-                    'vca-env': 0,
+                    'vca-level': 0.3,
                     'env-a': 0,
                     'env-d': 0,
                     'env-s': 1,
                     'env-r': 0,
-                    'env-gate': 0,
+                    'vca-gate': 1,
                     'dco-sawtooth': true,
                     'dco-square': false,
                     'dco-noise': 0,
@@ -55,7 +54,7 @@ define([
                 var decayReleaseMax = 12;
                 
                 var env = {
-                    gate: this.get('env-gate'),
+                    gate: this.get('vca-gate'),
                     a: attackMax * this.getAttackCurve(this.get('env-a')) + envelopeOffset,
                     d: decayReleaseMax * this.getReleaseCurve(this.get('env-d')) + envelopeOffset,
                     s: this.get('env-s'),

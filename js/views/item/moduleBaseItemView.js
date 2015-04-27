@@ -9,7 +9,7 @@ define([
                 'dco-range': [0, 1, 2],
                 'pwm-lfo': [0, 1],
                 'vcf-invert': [0, 1],
-                'env-gate': [0, 1]
+                'vca-gate': [0, 1]
             },
             
             ui: {
@@ -147,6 +147,8 @@ define([
                 var el = this.$('[data-param="' + param + '"]');
                 if(el.hasClass('fader__knob')) {
                     this.updateFaderPosition(el, value);
+                } else if(el.hasClass('switch')) {
+                    this.updateSwitchPosition(el, value);
                 }
             },
             
@@ -164,6 +166,11 @@ define([
                 el.css({
                     top: position
                 });
+            },
+            
+            updateSwitchPosition: function(el, value) {
+                var param = el.data().param;
+                this.updateSwitchUI(el, param, value);
             }
             
         });

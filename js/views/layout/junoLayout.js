@@ -68,7 +68,7 @@ define([
             
             noteOffHandler: function(note) {
                 var release;
-                var envOn = this.synth.get('env-gate');
+                var envOn = this.synth.get('vca-gate');
                 var that = this;
                 if(this.activeVoices[note]) {
                     release = envOn ? this.synth.getCurrentEnvelope().r : 0.015;
