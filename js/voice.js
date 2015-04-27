@@ -1,19 +1,20 @@
 define([
     'application',
-    'vco',
+    'dco',
     'vca',
     'env',
     'vcf'
 ],
     
-    function(App, VCO, VCA, ENV, VCF) {
+    function(App, DCO, VCA, ENV, VCF) {
         return Backbone.Marionette.Object.extend({
             initialize: function(options) {
                 this.maxLevel = options.maxLevel;
                 
-                this.vco = new VCO({
+                this.dco = new DCO({
                     frequency: options.frequency,
-                    waveform: options.waveform
+                    waveform: options.waveform,
+                    subLevel: options.subLevel
                 });
                 
                 this.vcf = new VCF({
@@ -29,7 +30,7 @@ define([
                 });
             
                 if(!_.isEmpty(options.waveform)) {
-                    this.vco.connect(this.vcf);
+                    this.dco.connect(this.vcf);
                     this.vcf.connect(this.vca);
                     this.vca.connect(this.env);
                     this.env.connect(App.context.destination);

@@ -17,6 +17,7 @@ define([
                     'dco-square': false,
                     'dco-noise': 0,
                     'dco-range': 1,
+                    'dco-sub': 0,
                     'cho-chorusToggle': 0,
                     'vcf-freq': 1,
                     'vcf-res': 0

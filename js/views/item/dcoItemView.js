@@ -15,6 +15,7 @@ define([
                 this.styleParent('eight');
                 this.bindSwitches();
                 this.bindButtons();
+                this.bindFaders();
             }
             
         });

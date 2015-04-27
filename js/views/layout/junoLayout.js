@@ -51,6 +51,7 @@ define([
                     envelope: this.synth.getCurrentEnvelope(),
                     maxLevel: this.synth.get('vca-level'),
                     chorus: this.synth.get('cho-chorusToggle'),
+                    subLevel: this.synth.get('dco-sub')
                 };
                 
                 if(_.keys(this.activeVoices).length < this.maxPolyphony) {
