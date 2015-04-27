@@ -11,7 +11,13 @@ define([
             
             template: Template,
             
+            onRender: function() {
+                console.log('onrender');
+            },
+            
             onShow: function() {
+                console.log('onshow');
+                
                 var keyboard = new QwertyHancock({
                     id: 'js-keyboard',
                     width: 1024,

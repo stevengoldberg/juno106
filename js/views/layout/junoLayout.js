@@ -21,8 +21,6 @@ define([
             },
             
             initialize: function() {
-                this.context = App.context;
-                
                 this.maxPolyphony = 6;
                 this.activeVoices = {};
                 this.synth = new JunoModel();
@@ -48,12 +46,14 @@ define([
                 var options = {
                     frequency: this.synth.getCurrentRange(frequency),
                     waveform: this.synth.getCurrentWaveforms(),
+                    vcfFreq: this.synth.getCurrentFilterFreq(),
+                    res: 1,
                     envelope: this.synth.getCurrentEnvelope(),
                     maxLevel: this.synth.get('vca-level'),
-                    chorus: this.synth.get('cho-chorusToggle')
+                    chorus: this.synth.get('cho-chorusToggle'),
                 };
                 
-                if(_.keys(this.activeVoices).length <= this.maxPolyphony) {
+                if(_.keys(this.activeVoices).length <= this.maxPolyphony && !this.activeVoices[note]) {
                     voice = new Voice(options);
                     
                     // Set voice initial volume 
@@ -66,11 +66,13 @@ define([
             },
             
             noteOffHandler: function(note) {
-                if(_.isEmpty(this.activeVoices)) {
-                    return;
+                var release;
+                
+                if(this.activeVoices[note]) {
+                   release  = this.synth.getCurrentEnvelope().r;
+                   this.activeVoices[note].noteOff(release); 
+                   delete this.activeVoices[note];
                 }
-                this.activeVoices[note].env.release();
-                delete this.activeVoices[note];
             },
             
             synthUpdateHandler: _.throttle(function(update) {

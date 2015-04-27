@@ -14,12 +14,13 @@ define([
                     'env-s': 1,
                     'env-r': 0,
                     'env-gate': 0,
-                    'vcf-freq': 1,
                     'dco-sawtooth': true,
                     'dco-square': false,
                     'dco-noise': 0,
                     'dco-range': 1,
-                    'cho-chorusToggle': 0
+                    'cho-chorusToggle': 0,
+                    'vcf-freq': 1,
+                    'vcf-res': 1
                 };
             },
             
@@ -70,6 +71,11 @@ define([
             
             getAttackCurve: function(attackMultiplier) {
                 return Math.pow(attackMultiplier, 2);
+            },
+            
+            getCurrentFilterFreq: function() {
+                var freq = (Math.pow(this.get('vcf-freq'), 3) * 22050);
+                return freq < 10 ? 10 : freq;
             }
             
         });

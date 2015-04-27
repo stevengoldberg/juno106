@@ -6,7 +6,7 @@ require([
     'views/layout/junoLayout',
 ],
 
-    function (Backbone, Marionette, App, Routers, JunoLayout, Tuna) {
+    function (Backbone, Marionette, App, Routers, JunoLayout) {
         
         try {
             window.AudioContext = window.AudioContext || window.webkitAudioContext;
@@ -17,7 +17,7 @@ require([
         }
         
         var junoLayout = new JunoLayout();
-        App.start();
         App.router = Routers;
+        App.start();
         App.content.show(junoLayout);
 });
