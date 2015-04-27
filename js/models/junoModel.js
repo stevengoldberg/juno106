@@ -20,7 +20,7 @@ define([
                     'dco-range': 1,
                     'cho-chorusToggle': 0,
                     'vcf-freq': 1,
-                    'vcf-res': 1
+                    'vcf-res': 0
                 };
             },
             

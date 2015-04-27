@@ -16,9 +16,9 @@ define([
             // webAudio can't exponentially ramp to 0
             this.minSustain = 0.000001;
             
-            this.attackTime = this.gate ? options.envelope.a : 0;
+            this.attackTime = this.gate ? options.envelope.a : 0.015;
             this.decayTime = this.gate ? options.envelope.d : 0;
-            this.releaseTime = this.gate ? options.envelope.r : 0;
+            
             this.sustainModifier = this.gate ? (options.envelope.s || this.minSustain) : 1;
             this.maxLevel = options.maxLevel;
             this.sustainLevel = this.maxLevel * this.sustainModifier;
@@ -32,29 +32,21 @@ define([
             }
         };
         
-        ENV.prototype.attack = function() {
+        ENV.prototype.on = function() {
             var now = App.context.currentTime;
-            
-            //window.clearTimeout(this.triggerDecay);
-            //this.triggerDecay = window.setTimeout(this.decay.bind(this), this.attackTime * 1000);
-            
+
             this.amplitude.cancelScheduledValues(now);
             this.amplitude.setValueAtTime(0, now);
             this.amplitude.linearRampToValueAtTime(this.maxLevel, now + this.attackTime);
+            this.amplitude.linearRampToValueAtTime(this.sustainLevel, now + this.attackTime + this.decayTime);
             
         };
         
-        ENV.prototype.decay = function() {
-            var now = App.context.currentTime;
-            this.amplitude.exponentialRampToValueAtTime(this.sustainLevel, 
-                now + this.decayTime);
-        };
-        
-        ENV.prototype.release = function(release) {
+        ENV.prototype.off = function(release) {
             var now = App.context.currentTime;
             this.amplitude.cancelScheduledValues(now);
             this.amplitude.setValueAtTime(this.amplitude.value, now);
-            this.amplitude.exponentialRampToValueAtTime(0.01, now + release);
+            this.amplitude.exponentialRampToValueAtTime(this.minSustain, now + release);
         };
         
         ENV.prototype.a = function(attackTime) {

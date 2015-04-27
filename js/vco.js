@@ -25,8 +25,8 @@ define([
             }
         };
         
-        VCO.prototype.stop = function(release) {
-            this.oscillator.stop(release);
+        VCO.prototype.stop = function() {
+            this.oscillator.stop();
         };
         
         return VCO;

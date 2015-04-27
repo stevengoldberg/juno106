@@ -10,8 +10,8 @@ define([
             this.filter2.type = 'lowpass';
             this.filter1.frequency.value = options.frequency;
             this.filter2.frequency.value = options.frequency;
-            this.filter1.Q.value = options.res / 2;
-            this.filter2.Q.value = options.res / 2;
+            this.filter1.Q.value = this.getResonanceFromValue(options.res / 2);
+            this.filter2.Q.value = this.getResonanceFromValue(options.res / 2);
             
             this.input = this.filter1;
             this.output = this.filter2;
@@ -36,8 +36,11 @@ define([
             this.filter2.frequency.setValueAtTime(freq, now);
         };
         
-        VCF.prototype.res = function(resonance) {
+        VCF.prototype.res = function(value) {
             var now = App.context.currentTime;
+            var resonance = this.getResonanceFromValue(value);
+            this.filter1.frequency.cancelScheduledValues(now);
+            this.filter2.frequency.cancelScheduledValues(now);
             this.filter1.Q.setValueAtTime(resonance / 2, now);
             this.filter2.Q.setValueAtTime(resonance / 2, now);
         };
@@ -46,6 +49,10 @@ define([
             var nyquist = App.context.sampleRate / 2;
             var freq = Math.pow(cutoff, 3) * nyquist;
             return freq > 10 ? freq : 10;
+        };
+        
+        VCF.prototype.getResonanceFromValue = function(value) {
+            return Math.pow(value, 2) * 50 + 1;
         };
         
         return VCF;

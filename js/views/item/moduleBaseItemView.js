@@ -140,7 +140,6 @@ define([
             },
             
             updateUIState: function(param, value) {
-                console.log('updating ' + param);
                 var el = this.$('[data-param="' + param + '"]');
                 if(el.hasClass('fader__knob')) {
                     this.updateFaderPosition(el, value);

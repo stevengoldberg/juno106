@@ -47,19 +47,20 @@ define([
                     frequency: this.synth.getCurrentRange(frequency),
                     waveform: this.synth.getCurrentWaveforms(),
                     vcfFreq: this.synth.getCurrentFilterFreq(),
-                    res: 1,
+                    res: this.synth.get('vcf-res'),
                     envelope: this.synth.getCurrentEnvelope(),
                     maxLevel: this.synth.get('vca-level'),
                     chorus: this.synth.get('cho-chorusToggle'),
                 };
                 
-                if(_.keys(this.activeVoices).length <= this.maxPolyphony && !this.activeVoices[note]) {
+                if(_.keys(this.activeVoices).length < this.maxPolyphony) {
+                    if(this.activeVoices[note]) {
+                        this.activeVoices[note].vco.stop();
+                        console.log('deleting ' + note);
+                        delete this.activeVoices[note];
+                    } 
                     voice = new Voice(options);
-                    
-                    // Set voice initial volume 
-                    voice.vca.level(options.maxLevel);
-                    // Trigger voice amp envelope
-                    voice.env.attack();
+                    voice.noteOn();
                     
                     this.activeVoices[note] = voice;
                 }
@@ -67,11 +68,12 @@ define([
             
             noteOffHandler: function(note) {
                 var release;
-                
+                var envOn = this.synth.get('env-gate');
+                var that = this;
                 if(this.activeVoices[note]) {
-                   release  = this.synth.getCurrentEnvelope().r;
-                   this.activeVoices[note].noteOff(release); 
-                   delete this.activeVoices[note];
+                    release = envOn ? this.synth.getCurrentEnvelope().r : 0.015;
+                    this.activeVoices[note].noteOff(release);
+                    delete this.activeVoices[note];
                 }
             },
             
@@ -89,7 +91,7 @@ define([
                         voice[component][method](value);
                     }
                 });
-            }, 15)
+            }, 20)
             
         });
     });
