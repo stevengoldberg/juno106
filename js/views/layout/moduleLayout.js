@@ -69,7 +69,7 @@ define([
             },
             
             handleModuleUpdate: function(update) {
-                console.log(update);
+                //console.log(update);
                 
                 this.synth.set(update.param, update.value);
             },

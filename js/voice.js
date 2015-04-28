@@ -13,7 +13,8 @@ define([
                 this.maxLevel = options.maxLevel;
                 
                 this.lfo = new LFO({
-                    rate: 1
+                    rate: options.lfoRate,
+                    pitchMod: options.lfoPitch
                 });
                 
                 this.dco = new DCO({
