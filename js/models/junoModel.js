@@ -22,7 +22,8 @@ define([
                     'vcf-freq': 1,
                     'vcf-res': 0,
                     'lfo-pitch': 0,
-                    'lfo-rate': 0
+                    'lfo-rate': 0,
+                    'hpf-freq': 0
                 };
             },
             
