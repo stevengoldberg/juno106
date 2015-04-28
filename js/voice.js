@@ -4,10 +4,11 @@ define([
     'vca',
     'env',
     'vcf',
-    'lfo'
+    'lfo',
+    'hpf'
 ],
     
-    function(App, DCO, VCA, ENV, VCF, LFO) {
+    function(App, DCO, VCA, ENV, VCF, LFO, HPF) {
         return Backbone.Marionette.Object.extend({
             initialize: function(options) {
                 this.maxLevel = options.maxLevel;
@@ -23,6 +24,11 @@ define([
                     subLevel: options.subLevel
                 });
                 
+                this.hpf = new HPF({
+                    frequency: options.hpfFreq
+                });
+
+                
                 this.vcf = new VCF({
                     frequency: options.vcfFreq,
                     res: options.res
@@ -37,7 +43,8 @@ define([
             
                 if(!_.isEmpty(options.waveform)) {
                     this.lfo.connect(this.dco);
-                    this.dco.connect(this.vcf);
+                    this.dco.connect(this.hpf);
+                    this.hpf.connect(this.vcf);
                     this.vcf.connect(this.vca);
                     this.vca.connect(this.env);
                     this.env.connect(App.context.destination);

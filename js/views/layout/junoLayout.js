@@ -52,8 +52,9 @@ define([
                     maxLevel: this.synth.get('vca-level'),
                     chorus: this.synth.get('cho-chorusToggle'),
                     subLevel: this.synth.get('dco-sub'),
-                    lfoPitch: this.synth.get('lfo-pitch'),
-                    lfoRate: this.synth.get('lfo-rate')
+                    hpfFreq: this.synth.get('hpf-freq'),
+                    lfoRate: this.synth.get('lfo-rate'),
+                    lfoPitch: this.synth.get('lfo-pitch')
                 };
                 
                 if(_.keys(this.activeVoices).length < this.maxPolyphony) {
