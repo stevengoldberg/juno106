@@ -32,7 +32,7 @@ define([
             }
         };
         
-        ENV.prototype.on = function() {
+        ENV.prototype.trigger = function() {
             var now = App.context.currentTime;
 
             this.amplitude.cancelScheduledValues(now);

@@ -54,7 +54,8 @@ define([
                     subLevel: this.synth.get('dco-sub'),
                     hpfFreq: this.synth.get('hpf-freq'),
                     lfoRate: this.synth.get('lfo-rate'),
-                    lfoPitch: this.synth.get('lfo-pitch')
+                    lfoPitch: this.synth.get('lfo-pitch'),
+                    lfoDelay: this.synth.get('lfo-delay')
                 };
                 
                 if(_.keys(this.activeVoices).length < this.maxPolyphony) {

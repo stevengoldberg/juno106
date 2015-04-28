@@ -15,7 +15,8 @@ define([
                 
                 this.lfo = new LFO({
                     rate: options.lfoRate,
-                    pitchMod: options.lfoPitch
+                    pitchMod: options.lfoPitch,
+                    delay: options.lfoDelay
                 });
                 
                 this.dco = new DCO({
@@ -53,7 +54,8 @@ define([
             
             noteOn: function() {
                 this.vca.level(this.maxLevel);
-                this.env.on();
+                this.lfo.trigger();
+                this.env.trigger();
             },
         
             noteOff: function(release) {
