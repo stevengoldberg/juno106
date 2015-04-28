@@ -19,4 +19,4 @@ Enabled features:
 * Set filter cutoff and resonance with FREQ and RES sliders
 * Set square-wave sub-osc level with SUB slider
 * Set LFO -> pitch mod level with LFO slider in DCO section
-* Set LFO rate 
+* Set LFO rate and delay time in the LFO section
