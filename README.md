@@ -13,6 +13,10 @@ Enabled features:
 * Set volume with VCA level
 * Select ENV/GATE
 * Set ADSR amp envelope (when ENV is engaged)
-* Chorus Off/I/II (effect needs tweaking)
-* Select waveform with Pulse/Saw switches (will correctly play nothing if both are turned off, but incorrectly plays a sine wave if both are selected)
+* ~~Chorus Off/I/II (effect needs tweaking)~~ temporarily disabled for stability
+* Select waveform with Pulse/Saw switches -- choose either, both, or none
 * Select octave with range switch
+* Set filter cutoff and resonance with FREQ and RES sliders
+* Set square-wave sub-osc level with SUB slider
+* Set LFO -> pitch mod level with LFO slider in DCO section
+* Set LFO rate 
