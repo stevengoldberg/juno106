@@ -41,3 +41,4 @@ Post-1.0:
 * Save/load presets
 * WebMIDI implementation
 * Replace QwertyHancock?
+* Arpeggiator/sequencer
