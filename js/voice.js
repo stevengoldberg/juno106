@@ -55,8 +55,8 @@ define([
                     this.connect(this.dco.output, this.hpf.input);
                     this.connect(this.hpf.output, this.vcf.input);
                     this.connect(this.vcf.output, this.vca.input);
-                    this.connect(this.vca.output, this.env.input);
-                    this.connect(this.env.output, App.context.destination);
+                    this.connect(this.vca.output, this.env.ampMod);
+                    this.connect(this.env.ampMod, App.context.destination);
                 }
             },
             

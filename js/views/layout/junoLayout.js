@@ -46,7 +46,7 @@ define([
                 var options = {
                     frequency: this.synth.getCurrentRange(frequency),
                     waveform: this.synth.getCurrentWaveforms(),
-                    vcfFreq: this.synth.getCurrentFilterFreq(),
+                    vcfFreq: this.synth.get('vcf-freq'),
                     res: this.synth.get('vcf-res'),
                     envelope: this.synth.getCurrentEnvelope(),
                     maxLevel: this.synth.get('vca-level'),

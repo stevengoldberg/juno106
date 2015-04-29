@@ -9,11 +9,9 @@ define([
             this.attackMax = 3;
             this.decayReleaseMax = 12;
             
-            this.gain = App.context.createGain();
-            this.gain.gain.value = 0;
-            this.input = this.gain;
-            this.output = this.gain;
-            this.amplitude = this.gain.gain;
+            this.ampMod = App.context.createGain();
+            this.ampMod.gain.value = 0;
+            
             
             // Gate === 1 if envelope is enabled
             this.envOn = options.envelope.enabled;
@@ -39,17 +37,17 @@ define([
         ENV.prototype.trigger = function() {
             var now = App.context.currentTime;
 
-            this.amplitude.cancelScheduledValues(now);
-            this.amplitude.setValueAtTime(0, now);
-            this.amplitude.linearRampToValueAtTime(this.maxLevel, now + this.attackTime);
-            this.amplitude.linearRampToValueAtTime(this.sustainLevel, now + this.attackTime + this.decayTime);
+            this.ampMod.gain.cancelScheduledValues(now);
+            this.ampMod.gain.setValueAtTime(0, now);
+            this.ampMod.gain.linearRampToValueAtTime(this.maxLevel, now + this.attackTime);
+            this.ampMod.gain.linearRampToValueAtTime(this.sustainLevel, now + this.attackTime + this.decayTime);
         };
         
         ENV.prototype.off = function(release) {
             var now = App.context.currentTime;
-            this.amplitude.cancelScheduledValues(now);
-            this.amplitude.setValueAtTime(this.amplitude.value, now);
-            this.amplitude.exponentialRampToValueAtTime(this.minSustain, now + this.releaseTime);
+            this.ampMod.gain.cancelScheduledValues(now);
+            this.ampMod.gain.setValueAtTime(this.ampMod.gain.value, now);
+            this.ampMod.gain.exponentialRampToValueAtTime(this.minSustain, now + this.releaseTime);
         };
         
         ENV.prototype.a = function(value) {
@@ -78,8 +76,8 @@ define([
             if(!this.envOn) return;
             
             this.sustainLevel = (this.maxLevel * sustainModifier) || this.minSustain;
-            this.amplitude.cancelScheduledValues(now);
-            this.amplitude.setValueAtTime(this.sustainLevel, now);
+            this.ampMod.gain.cancelScheduledValues(now);
+            this.ampMod.gain.setValueAtTime(this.sustainLevel, now);
         };
         
         return ENV;

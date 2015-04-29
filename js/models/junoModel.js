@@ -63,11 +63,6 @@ define([
                     s: this.get('env-s'),
                     r: this.get('env-r')
                 };
-            },
-            
-            getCurrentFilterFreq: function() {
-                var freq = (Math.pow(this.get('vcf-freq'), 3) * 22050);
-                return freq < 10 ? 10 : freq;
             }
             
         });

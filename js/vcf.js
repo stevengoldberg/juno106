@@ -1,17 +1,18 @@
 define([
-    'application'
+    'application',
+    'util'
 ],
     
-    function(App) {
+    function(App, util) {
         function VCF(options) {            
             this.filter1 = App.context.createBiquadFilter();
             this.filter2 = App.context.createBiquadFilter();
             this.filter1.type = 'lowpass';
             this.filter2.type = 'lowpass';
-            this.filter1.frequency.value = options.frequency;
-            this.filter2.frequency.value = options.frequency;
+            this.filter1.frequency.value = this.getFilterFreqFromCutoff(options.frequency);
+            this.filter2.frequency.value = this.filter1.frequency.value;
             this.filter1.Q.value = this.getResonanceFromValue(options.res / 2);
-            this.filter2.Q.value = this.getResonanceFromValue(options.res / 2);
+            this.filter2.Q.value = this.filter1.Q.value;
             
             this.envMod = options.vcfEnv;
             this.env = options.env;
@@ -42,12 +43,12 @@ define([
         
         VCF.prototype.getFilterFreqFromCutoff = function(cutoff) {
             var nyquist = App.context.sampleRate / 2;
-            var freq = Math.pow(cutoff, 3) * nyquist;
+            var freq = util.getFaderCurve(cutoff) * nyquist;
             return freq > 10 ? freq : 10;
         };
         
         VCF.prototype.getResonanceFromValue = function(value) {
-            return Math.pow(value, 2) * 50 + 1;
+            return util.getFaderCurve(value) * 50 + 1;
         };
         
         return VCF;
