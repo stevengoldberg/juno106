@@ -21,14 +21,6 @@ define([
             this.filter1.connect(this.filter2);
         }
         
-        VCF.prototype.connect = function(node) {
-            if (_.has(node, 'input')) {
-                this.output.connect(node.input);
-            } else {
-                this.output.connect(node);
-            }
-        };
-        
         VCF.prototype.freq = function(cutoff) {
             var now = App.context.currentTime;
             var freq = this.getFilterFreqFromCutoff(cutoff);

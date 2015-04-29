@@ -32,18 +32,6 @@ define([
             this.input.push(this.subOsc.frequency);
         }
         
-        DCO.prototype.connect = function(node) {
-            if(_.has(node, 'input')) {
-                _.each(this.output, function(outputNode) {
-                    outputNode.connect(node.input);
-                });
-            } else {
-                _.each(this.output, function(outputNode) {
-                    outputNode.connect(node);
-                });
-            }
-        };
-        
         DCO.prototype.stop = function() {
             _.each(this.oscillators, function(oscillator) {
                 oscillator.stop();

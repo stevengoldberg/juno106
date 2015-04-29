@@ -45,12 +45,12 @@ define([
                 });
             
                 if(!_.isEmpty(options.waveform)) {
-                    this.lfo.connect(this.dco);
-                    this.dco.connect(this.hpf);
-                    this.hpf.connect(this.vcf);
-                    this.vcf.connect(this.vca);
-                    this.vca.connect(this.env);
-                    this.env.connect(App.context.destination);
+                    this.connect(this.lfo.pitchMod, this.dco.input);
+                    this.connect(this.dco.output, this.hpf.input);
+                    this.connect(this.hpf.output, this.vcf.input);
+                    this.connect(this.vcf.output, this.vca.input);
+                    this.connect(this.vca.output, this.env.input);
+                    this.connect(this.env.output, App.context.destination);
                 }
             },
             
@@ -66,6 +66,20 @@ define([
                 /*window.setTimeout(function() {
                     that.trigger('off');
                 }, release * 1000);*/
+            },
+            
+            connect: function(output, input) {
+                if(_.isArray(output)) {
+                    _.forEach(output, function(outputNode) {
+                        outputNode.connect(input);
+                    });
+                } else if(_.isArray(input)) {
+                    _.forEach(input, function(inputNode) {
+                        output.connect(inputNode);
+                    });
+                } else {
+                    output.connect(input);
+                }
             }
     });
 });

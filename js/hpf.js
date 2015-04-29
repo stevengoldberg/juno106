@@ -25,14 +25,6 @@ define([
             this.filter1.connect(this.filter2);
         }
         
-        HPF.prototype.connect = function(node) {
-            if (_.has(node, 'input')) {
-                this.output.connect(node.input);
-            } else {
-                this.output.connect(node);
-            }
-        };
-        
         HPF.prototype.freq = function(value) {
             var now = App.context.currentTime;
             var freq = this.frequencyMap[value];

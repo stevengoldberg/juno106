@@ -11,14 +11,6 @@ define([
             this.amplitude = this.gain.gain;
         }
         
-        VCA.prototype.connect = function(node) {
-            if (_.has(node, 'input')) {
-                this.output.connect(node.input);
-            } else {
-                this.output.connect(node);
-            }
-        };
-        
         VCA.prototype.level = function(level) {
             var now = App.context.currentTime;
             
