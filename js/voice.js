@@ -32,7 +32,9 @@ define([
                 
                 this.vcf = new VCF({
                     frequency: options.vcfFreq,
-                    res: options.res
+                    res: options.res,
+                    vcfEnv: options.vcfEnv,
+                    envelope: options.envelope
                 });
             
                 this.vca = new VCA();

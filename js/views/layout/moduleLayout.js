@@ -31,6 +31,8 @@ define([
             initialize: function(data) {
                 this.synth = data.synth;
                 this.modules = this.setupModules();
+                this.currentParam = null;
+                this.currentValue = null;
             },
             
             setupModules: function() {
@@ -69,9 +71,12 @@ define([
             },
             
             handleModuleUpdate: function(update) {
+                if(update.param === this.currentParam && update.value === this.currentValue) return;
                 console.log(update);
                 
                 this.synth.set(update.param, update.value);
+                this.currentParam = update.param;
+                this.currentValue = update.value;
             },
         });
     });

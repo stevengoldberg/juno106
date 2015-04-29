@@ -55,7 +55,8 @@ define([
                     hpfFreq: this.synth.get('hpf-freq'),
                     lfoRate: this.synth.get('lfo-rate'),
                     lfoPitch: this.synth.get('lfo-pitch'),
-                    lfoDelay: this.synth.get('lfo-delay')
+                    lfoDelay: this.synth.get('lfo-delay'),
+                    vcfEnv: this.synth.get('vcf-env')
                 };
                 
                 if(_.keys(this.activeVoices).length < this.maxPolyphony) {
@@ -82,12 +83,9 @@ define([
                 }
             },
             
-            synthUpdateHandler: _.throttle(function(update) {
-                // Not sure why this is needed
-                if(_.isEmpty(update.changed)) return;
-                    
-                var value = _.first(_.values(update.changed));
-                var param = _.first(_.keys(update.changed));
+            synthUpdateHandler: _.throttle(function(update) {                    
+                var param = Object.keys(update.changed)[0];
+                var value = update.changed[param];
                 var component = param.slice(0, 3);
                 var method = param.slice(4);
                 

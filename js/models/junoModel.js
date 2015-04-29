@@ -21,6 +21,7 @@ define([
                     'cho-chorusToggle': 0,
                     'vcf-freq': 1,
                     'vcf-res': 0,
+                    'vcf-env': 0,
                     'lfo-pitch': 0,
                     'lfo-rate': 0,
                     'lfo-delay': 0,

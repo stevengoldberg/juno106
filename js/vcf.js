@@ -13,6 +13,9 @@ define([
             this.filter1.Q.value = this.getResonanceFromValue(options.res / 2);
             this.filter2.Q.value = this.getResonanceFromValue(options.res / 2);
             
+            this.envMod = options.vcfEnv;
+            this.env = options.env;
+            
             this.input = this.filter1;
             this.output = this.filter2;
             this.filter1.connect(this.filter2);

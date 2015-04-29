@@ -32,10 +32,6 @@ define([
             this.input.push(this.subOsc.frequency);
         }
         
-        /*VCO.prototype.setFrequency = function(frequency) {
-            this.oscillator.frequency.setValueAtTime(frequency, App.context.currentTime);
-        };*/
-        
         DCO.prototype.connect = function(node) {
             if(_.has(node, 'input')) {
                 _.each(this.output, function(outputNode) {
@@ -58,6 +54,10 @@ define([
             var now = App.context.currentTime;
             this.subLevel.gain.cancelScheduledValues(now);
             this.subLevel.gain.setValueAtTime(value, now);
+        };
+        
+        DCO.prototype.range = function() {
+            //stub
         };
         
         return DCO;
