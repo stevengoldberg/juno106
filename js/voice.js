@@ -66,12 +66,9 @@ define([
                 this.env.trigger();
             },
         
-            noteOff: function(release) {
+            noteOff: function() {
                 var that = this;
-                this.env.off(release);
-                /*window.setTimeout(function() {
-                    that.trigger('off');
-                }, release * 1000);*/
+                this.env.off();
             },
             
             connect: function(output, input) {

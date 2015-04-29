@@ -13,7 +13,7 @@ define([
             this.pitchMod.gain.value = this.getAmplitude(options.pitchMod);
             
             this.freqMod = App.context.createGain();
-            this.freqMod.gain.value = this.getAmplitude(options.freqMod) * 300;
+            this.freqMod.gain.value = this.getAmplitude(options.freqMod) * 200;
             
             this.lfo.connect(this.pitchMod);
             this.lfo.connect(this.freqMod);
@@ -30,7 +30,7 @@ define([
         LFO.prototype.freq = function(value) {
             var now = App.context.currentTime;
             this.freqMod.gain.cancelScheduledValues(now);
-            this.freqMod.gain.setValueAtTime(this.getAmplitude(value) * 300, now);
+            this.freqMod.gain.setValueAtTime(this.getAmplitude(value) * 200, now);
         };
         
         LFO.prototype.rate = function(value) {

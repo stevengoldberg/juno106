@@ -56,27 +56,13 @@ define([
             },
             
             getCurrentEnvelope: function() {
-                var envelopeOffset = 0.0015;
-                var attackMax = 3;
-                var decayReleaseMax = 12;
-                
-                var env = {
-                    gate: this.get('vca-gate'),
-                    a: attackMax * this.getAttackCurve(this.get('env-a')) + envelopeOffset,
-                    d: decayReleaseMax * this.getReleaseCurve(this.get('env-d')) + envelopeOffset,
+                return {
+                    enabled: this.get('vca-gate'),
+                    a: this.get('env-a'),
+                    d: this.get('env-d'),
                     s: this.get('env-s'),
-                    r: decayReleaseMax * this.getReleaseCurve(this.get('env-r')) + envelopeOffset
+                    r: this.get('env-r')
                 };
-                
-                return env;
-            },
-            
-            getReleaseCurve: function(releaseMultiplier) {
-                return Math.pow(releaseMultiplier, 3);
-            },
-            
-            getAttackCurve: function(attackMultiplier) {
-                return Math.pow(attackMultiplier, 2);
             },
             
             getCurrentFilterFreq: function() {
