@@ -56,6 +56,7 @@ define([
                     lfoRate: this.synth.get('lfo-rate'),
                     lfoPitch: this.synth.get('lfo-pitch'),
                     lfoDelay: this.synth.get('lfo-delay'),
+                    lfoFreq: this.synth.get('lfo-freq'),
                     vcfEnv: this.synth.get('vcf-env')
                 };
                 

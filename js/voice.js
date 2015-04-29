@@ -11,11 +11,13 @@ define([
     function(App, DCO, VCA, ENV, VCF, LFO, HPF) {
         return Backbone.Marionette.Object.extend({
             initialize: function(options) {
+                
                 this.maxLevel = options.maxLevel;
                 
                 this.lfo = new LFO({
                     rate: options.lfoRate,
                     pitchMod: options.lfoPitch,
+                    freqMod: options.lfoFreq,
                     delay: options.lfoDelay
                 });
                 
@@ -46,6 +48,10 @@ define([
             
                 if(!_.isEmpty(options.waveform)) {
                     this.connect(this.lfo.pitchMod, this.dco.input);
+
+                    this.connect(this.lfo.freqMod, this.vcf.filter1.detune);
+                    this.connect(this.lfo.freqMod, this.vcf.filter2.detune);
+                    
                     this.connect(this.dco.output, this.hpf.input);
                     this.connect(this.hpf.output, this.vcf.input);
                     this.connect(this.vcf.output, this.vca.input);

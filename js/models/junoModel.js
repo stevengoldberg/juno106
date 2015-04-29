@@ -25,6 +25,7 @@ define([
                     'lfo-pitch': 0,
                     'lfo-rate': 0,
                     'lfo-delay': 0,
+                    'lfo-freq': 0,
                     'hpf-freq': 0
                 };
             },

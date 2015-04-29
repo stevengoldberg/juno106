@@ -24,14 +24,6 @@ define([
             this.sustainLevel = this.maxLevel * this.sustainModifier;
         }
         
-        ENV.prototype.connect = function(node) {
-            if (_.has(node, 'input')) {
-                this.output.connect(node.input);
-            } else {
-                this.output.connect(node);
-            }
-        };
-        
         ENV.prototype.trigger = function() {
             var now = App.context.currentTime;
 
