@@ -7,12 +7,14 @@ define([
         function LFO(options) {
             this.lfo = App.context.createOscillator();
             this.lfo.type = 'triangle';
-            
+            this.lfo.frequency.value = 0;
             this.lfo.start(0);
             
             this.pitchMod = App.context.createGain();
+            this.pitchMod.gain.value = 0;
             
             this.freqMod = App.context.createGain();
+            this.freqMod.gain.value = 0;
             
             this.lfo.connect(this.pitchMod);
             this.lfo.connect(this.freqMod);
@@ -38,7 +40,7 @@ define([
         };
         
         LFO.prototype.delay = function(value) {
-            //this.delayTime = value * 3;
+
         };
         
         LFO.prototype.trigger = function(options) {
@@ -48,11 +50,11 @@ define([
             var delayTime = util.getFaderCurve(options.lfoDelay) * 3;
             
             this.pitchMod.gain.cancelScheduledValues(now);
-            this.pitchMod.gain.value = 0;
+            this.pitchMod.gain.setValueAtTime(0, now);
             this.pitchMod.gain.linearRampToValueAtTime(currentPitchMod, now + delayTime);
             
             this.freqMod.gain.cancelScheduledValues(now);
-            this.freqMod.gain.value = 0;
+            this.freqMod.gain.setValueAtTime(0, now);
             this.freqMod.gain.linearRampToValueAtTime(currentFreqMod, now + delayTime);
         };
         
