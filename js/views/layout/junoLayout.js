@@ -4,11 +4,12 @@ define([
     'views/layout/moduleLayout',
     'views/item/keyboardItemView',
     'voice',
+    'lfo',
     'models/junoModel',
     'hbs!tmpl/layout/junoLayout-tmpl'
     ],
     
-    function(Backbone, App, ModuleLayout, KeyboardItemView, Voice, JunoModel, Template) {
+    function(Backbone, App, ModuleLayout, KeyboardItemView, Voice, LFO, JunoModel, Template) {
         return Backbone.Marionette.LayoutView.extend({
             
             className: 'juno',
@@ -24,6 +25,8 @@ define([
                 this.maxPolyphony = 6;
                 this.activeVoices = {};
                 this.synth = new JunoModel();
+                
+                this.lfo = new LFO();
             },
             
             onShow: function() {
@@ -41,9 +44,7 @@ define([
             },
             
             noteOnHandler: function(note, frequency) {
-                var voice;
-                
-                var options = {
+                var voice = new Voice({
                     frequency: this.synth.getCurrentRange(frequency),
                     waveform: this.synth.getCurrentWaveforms(),
                     vcfFreq: this.synth.get('vcf-freq'),
@@ -53,17 +54,18 @@ define([
                     chorus: this.synth.get('cho-chorusToggle'),
                     subLevel: this.synth.get('dco-sub'),
                     hpfFreq: this.synth.get('hpf-freq'),
+                    envFreqMod: this.synth.get('env-freqMod'),
+                    lfo: this.lfo
+                });
+                    
+                voice.noteOn({
                     lfoRate: this.synth.get('lfo-rate'),
                     lfoPitch: this.synth.get('lfo-pitch'),
                     lfoDelay: this.synth.get('lfo-delay'),
-                    lfoFreq: this.synth.get('lfo-freq'),
-                    envFreqMod: this.synth.get('env-freqMod')
-                };
+                    lfoFreq: this.synth.get('lfo-freq')
+                });
                 
-                    voice = new Voice(options);
-                    voice.noteOn();
-                    
-                    this.activeVoices[note] = voice;
+                this.activeVoices[note] = voice;
             },
             
             noteOffHandler: function(note) {

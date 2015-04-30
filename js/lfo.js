@@ -1,24 +1,22 @@
 define([
-    'application'
+    'application',
+    'util'
 ],
     
-    function(App) {
+    function(App, util) {
         function LFO(options) {
             this.lfo = App.context.createOscillator();
             this.lfo.type = 'triangle';
-            this.lfo.frequency.value = this.getRate(options.rate);
+            
             this.lfo.start(0);
             
             this.pitchMod = App.context.createGain();
-            this.pitchMod.gain.value = this.getAmplitude(options.pitchMod);
             
             this.freqMod = App.context.createGain();
-            this.freqMod.gain.value = this.getAmplitude(options.freqMod) * 200;
             
             this.lfo.connect(this.pitchMod);
             this.lfo.connect(this.freqMod);
-            
-            this.delayTime = Math.pow(options.delay, 2) * 3;
+
         }
         
         LFO.prototype.pitch = function(value) {
@@ -40,34 +38,30 @@ define([
         };
         
         LFO.prototype.delay = function(value) {
-            this.delayTime = value * 3;
+            //this.delayTime = value * 3;
         };
         
-        LFO.prototype.trigger = function() {
+        LFO.prototype.trigger = function(options) {
             var now = App.context.currentTime;
-            var currentPitchMod = this.pitchMod.gain.value;
-            var currentFreqMod = this.freqMod.gain.value;
+            var currentPitchMod = this.getAmplitude(options.lfoPitch);
+            var currentFreqMod = this.getAmplitude(options.lfoFreq) * 200;
+            var delayTime = util.getFaderCurve(options.lfoDelay) * 3;
             
             this.pitchMod.gain.cancelScheduledValues(now);
             this.pitchMod.gain.value = 0;
-            this.pitchMod.gain.linearRampToValueAtTime(currentPitchMod, now + this.delayTime);
+            this.pitchMod.gain.linearRampToValueAtTime(currentPitchMod, now + delayTime);
             
             this.freqMod.gain.cancelScheduledValues(now);
             this.freqMod.gain.value = 0;
-            this.freqMod.gain.linearRampToValueAtTime(currentFreqMod, now + this.delayTime);
+            this.freqMod.gain.linearRampToValueAtTime(currentFreqMod, now + delayTime);
         };
         
         LFO.prototype.getRate = function(value) {
-            return Math.pow(value, 3) * 25;
+            return util.getFaderCurve(value) * 25;
         };
         
         LFO.prototype.getAmplitude = function(value) {
             return Math.pow(value, 2) * 40;
-        };
-        
-        LFO.prototype.off = function(releaseTime) {
-            var now = App.context.currentTime;
-            this.lfo.stop(now + releaseTime);
         };
             
         return LFO;

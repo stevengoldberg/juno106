@@ -12,14 +12,7 @@ define([
         return Backbone.Marionette.Object.extend({
             initialize: function(options) {
                 
-                this.maxLevel = options.maxLevel;
-                
-                this.lfo = new LFO({
-                    rate: options.lfoRate,
-                    pitchMod: options.lfoPitch,
-                    freqMod: options.lfoFreq,
-                    delay: options.lfoDelay
-                });
+                this.lfo = options.lfo;
                 
                 this.dco = new DCO({
                     frequency: options.frequency,
@@ -38,7 +31,9 @@ define([
                     envelope: options.envelope
                 });
             
-                this.vca = new VCA();
+                this.vca = new VCA({
+                    maxLevel: options.maxLevel
+                });
             
                 this.env = new ENV({
                     envelope: options.envelope,
@@ -60,9 +55,14 @@ define([
                 }
             },
             
-            noteOn: function() {
-                this.vca.level(this.maxLevel);
-                this.lfo.trigger();
+            noteOn: function(options) {
+                this.lfo.trigger({
+                    lfoRate: options.lfoRate,
+                    lfoFreq: options.lfoFreq,
+                    lfoDelay: options.lfoDelay,
+                    lfoPitch: options.lfoPitch
+                });
+                
                 this.env.trigger();
             },
         
@@ -70,7 +70,6 @@ define([
                 var releaseTime = this.env.getDecay(releaseValue);
                 this.env.off();
                 this.dco.off(releaseTime);
-                this.lfo.off(releaseTime);
             },
             
             connect: function(output, input) {
