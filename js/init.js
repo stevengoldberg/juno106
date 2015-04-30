@@ -8,7 +8,7 @@ require.config({
 
         tmpl: '../templates',
         
-        'qwerty-hancock': './vendor/qwerty-hancock-min',
+        'qwerty-hancock': './vendor/qwerty-hancock',
         tuna: './vendor/tuna',
 
         jquery: './vendor/jquery',

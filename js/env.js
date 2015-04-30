@@ -9,18 +9,17 @@ define([
             this.attackMax = 3;
             this.decayReleaseMax = 12;
             
+            // webAudio can't exponentially ramp to 0
+            this.minSustain = 0.000001;
+            
             this.ampMod = App.context.createGain();
-            this.ampMod.gain.value = 0;
+            this.ampMod.gain.value = this.minSustain;
             
             this.freqMod = App.context.createGain();
             this.freqMod.gain.value = options.freqMod;
             
-            
             // Gate === 1 if envelope is enabled
             this.envOn = options.envelope.enabled;
-            
-            // webAudio can't exponentially ramp to 0
-            this.minSustain = 0.000001;
             
             this.attackTime = this.envOn ? this.getAttack(options.envelope.a) :
                 this.envelopeOffset;

@@ -6,18 +6,22 @@ define([
         function DCO(options) {
             this.output = [];
             this.input = [];
+            this.oscillators = [];
             
             _.each(options.waveform, function(waveform, i) {
                 this.output[i] = App.context.createOscillator();
                 this.output[i].type = waveform;
                 this.output[i].frequency.value = options.frequency;
-                this.output[i].start();
+                this.output[i].start(0);
+                
+                this.oscillators.push(this.output[i]);
             }, this);
             
             this.subOsc = App.context.createOscillator();
             this.subOsc.type = 'square';
             this.subOsc.frequency.value = options.frequency / 2;
-            this.subOsc.start();
+            this.subOsc.start(0);
+            this.oscillators.push(this.subOsc);
             
             this.subLevel = App.context.createGain();
             this.subOsc.connect(this.subLevel);
@@ -32,9 +36,10 @@ define([
             this.input.push(this.subOsc.frequency);
         }
         
-        DCO.prototype.stop = function() {
+        DCO.prototype.off = function(releaseTime) {
+            var now = App.context.currentTime;
             _.each(this.oscillators, function(oscillator) {
-                oscillator.stop();
+                oscillator.stop(now + releaseTime);
             });
         };
         

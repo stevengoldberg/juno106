@@ -66,9 +66,11 @@ define([
                 this.env.trigger();
             },
         
-            noteOff: function() {
-                var that = this;
+            noteOff: function(releaseValue) {
+                var releaseTime = this.env.getDecay(releaseValue);
                 this.env.off();
+                this.dco.off(releaseTime);
+                this.lfo.off(releaseTime);
             },
             
             connect: function(output, input) {

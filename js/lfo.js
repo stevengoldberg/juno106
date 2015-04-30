@@ -64,6 +64,11 @@ define([
         LFO.prototype.getAmplitude = function(value) {
             return Math.pow(value, 2) * 40;
         };
+        
+        LFO.prototype.off = function(releaseTime) {
+            var now = App.context.currentTime;
+            this.lfo.stop(now + releaseTime);
+        };
             
         return LFO;
     }

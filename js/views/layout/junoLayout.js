@@ -60,24 +60,15 @@ define([
                     envFreqMod: this.synth.get('env-freqMod')
                 };
                 
-                if(_.keys(this.activeVoices).length < this.maxPolyphony) {
-                    if(this.activeVoices[note]) {
-                        this.activeVoices[note].vco.stop();
-                        console.log('deleting ' + note);
-                        delete this.activeVoices[note];
-                    } 
                     voice = new Voice(options);
                     voice.noteOn();
                     
                     this.activeVoices[note] = voice;
-                }
             },
             
             noteOffHandler: function(note) {
-                if(this.activeVoices[note]) {
-                    this.activeVoices[note].noteOff();
+                    this.activeVoices[note].noteOff(this.synth.getCurrentEnvelope().r);
                     delete this.activeVoices[note];
-                }
             },
             
             synthUpdateHandler: _.throttle(function(update) {                    
