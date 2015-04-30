@@ -20,3 +20,25 @@ Enabled features:
 * Set square-wave sub-osc level with SUB slider
 * Set LFO -> pitch mod level with LFO slider in DCO section
 * Set LFO rate and delay time in the LFO section
+
+**TODO:**
+
+1.0:
+
+* Filter mod by LFO
+* Filter mod by ENV
+* Noise generator
+* PWM manual/LFO
+* Filter key tracking
+* Filter invert
+* Chorus
+* Filter self-resonance?
+* Optimize for iPad
+* Clean up markup
+ 
+Post-1.0:
+
+* Save/load presets
+* WebMIDI implementation
+* Replace QwertyHancock?
+* Arpeggiator/sequencer
