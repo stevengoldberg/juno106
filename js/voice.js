@@ -35,7 +35,6 @@ define([
                 this.vcf = new VCF({
                     frequency: options.vcfFreq,
                     res: options.res,
-                    vcfEnv: options.vcfEnv,
                     envelope: options.envelope
                 });
             
@@ -43,6 +42,7 @@ define([
             
                 this.env = new ENV({
                     envelope: options.envelope,
+                    freqMod: options.envFreqMod,
                     maxLevel: options.maxLevel
                 });
             

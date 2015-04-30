@@ -14,10 +14,10 @@ define([
             initialize: function() {
                 this.currentSetting = 0;
                 this.positionMap = {
-                    0: '83%',
+                    0: '85%',
                     1: '57%',
-                    2: '30%',
-                    3: '4%'
+                    2: '29%',
+                    3: '1%'
                 };
             },
             

@@ -12,6 +12,7 @@ define([
                     'env-d': 0,
                     'env-s': 1,
                     'env-r': 0,
+                    'env-freqMod': 0,
                     'vca-gate': 1,
                     'dco-sawtooth': true,
                     'dco-square': false,
@@ -63,6 +64,11 @@ define([
                     s: this.get('env-s'),
                     r: this.get('env-r')
                 };
+            },
+            
+            get: function(attr) {
+                var value = Backbone.Model.prototype.get.call(this, attr);
+                return value > 0.0775 ? value : 0;
             }
             
         });

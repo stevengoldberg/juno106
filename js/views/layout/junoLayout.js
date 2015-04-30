@@ -57,7 +57,7 @@ define([
                     lfoPitch: this.synth.get('lfo-pitch'),
                     lfoDelay: this.synth.get('lfo-delay'),
                     lfoFreq: this.synth.get('lfo-freq'),
-                    vcfEnv: this.synth.get('vcf-env')
+                    envFreqMod: this.synth.get('env-freqMod')
                 };
                 
                 if(_.keys(this.activeVoices).length < this.maxPolyphony) {

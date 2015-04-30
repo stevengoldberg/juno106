@@ -49,22 +49,22 @@ define([
                 var value;
                 
                 if(yPos < slotTop) {
-                    position = 0;
+                    position = -5;
                 } else if (yPos > slotBottom) {
-                    position = 92.25;
+                    position = 95;
                 } else {
                     position = (yPos - slotTop) / slotHeight * 100;
                 }
                 
-                if(position > 92.25) {
-                    position = 92.25;
+                if(position > 95) {
+                    position = 95;
                 }
 
                 el.css({
 					top: position + '%'
                 });
                 
-                value = (100 - position) / 100;
+                value = (100 - (position + 5)) / 100;
                 
                 this.triggerUpdate(el.data().param, value);
             },
@@ -144,7 +144,10 @@ define([
             },
             
             updateUIState: function(param, value) {
-                var el = this.$('[data-param="' + param + '"]');
+                // Global $ as workaround for modulation controls whose
+                // code is grouped differently
+                
+                var el = $('[data-param="' + param + '"]');
                 if(el.hasClass('fader__knob')) {
                     this.updateFaderPosition(el, value);
                 } else if(el.hasClass('switch')) {
@@ -154,11 +157,11 @@ define([
             
             updateFaderPosition: function(el, value) {
                 var slotHeight = el.parent().height();
-                var percent = 1 - value;
+                var percent = 1 - (value + 0.05);
                 var position;
                 
-                if(percent > 0.9225) {
-                    percent = 0.9225;
+                if(percent > 0.95) {
+                    percent = 0.95;
                 }
                 
                 position = percent * slotHeight;

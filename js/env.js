@@ -12,6 +12,9 @@ define([
             this.ampMod = App.context.createGain();
             this.ampMod.gain.value = 0;
             
+            this.freqMod = App.context.createGain();
+            this.freqMod.gain.value = options.freqMod;
+            
             
             // Gate === 1 if envelope is enabled
             this.envOn = options.envelope.enabled;
@@ -78,6 +81,10 @@ define([
             this.sustainLevel = (this.maxLevel * sustainModifier) || this.minSustain;
             this.ampMod.gain.cancelScheduledValues(now);
             this.ampMod.gain.setValueAtTime(this.sustainLevel, now);
+        };
+        
+        ENV.prototype.freqMod = function(value) {
+            
         };
         
         return ENV;
