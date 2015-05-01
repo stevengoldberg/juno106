@@ -31,10 +31,12 @@ define([
         }
         
         VCF.prototype.freq = function(value) {
-            var now = App.context.currentTime;
-            
             this.setupEnvValues(value);
-            
+            this.setFilter();
+        };
+        
+        VCF.prototype.setFilter = function() {
+            var now = App.context.currentTime;
             this.filter1.frequency.cancelScheduledValues(now);
             this.filter2.frequency.cancelScheduledValues(now);
             this.filter1.frequency.setValueAtTime(this.sustainLevel, now);
@@ -83,7 +85,8 @@ define([
         
         VCF.prototype.env = function(value) {
             this.vcfEnv = util.getFaderCurve(value);
-            this.maxLevel = this.getMaxLevel();
+            this.setupEnvValues(null, this.filterCutoff);
+            this.setFilter();
         };
         
         VCF.prototype.getEnvModAmount = function() {
