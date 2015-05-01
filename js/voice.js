@@ -28,7 +28,8 @@ define([
                 this.vcf = new VCF({
                     frequency: options.vcfFreq,
                     res: options.res,
-                    envelope: options.envelope
+                    envelope: options.envelope,
+                    vcfEnv: options.vcfEnv
                 });
             
                 this.vca = new VCA({
@@ -36,8 +37,7 @@ define([
                 });
             
                 this.env = new ENV({
-                    envelope: options.envelope,
-                    freqMod: options.envFreqMod,
+                    //envelope: options.envelope,
                     maxLevel: options.maxLevel
                 });
             
@@ -56,6 +56,13 @@ define([
             },
             
             noteOn: function(options) {
+                var triggerEnvelope = {
+                    attack: options.envelope.a,
+                    decay: options.envelope.d,
+                    sustain: options.envelope.s,
+                    enabled: options.envelope.enabled
+                };
+                
                 this.lfo.trigger({
                     lfoRate: options.lfoRate,
                     lfoFreq: options.lfoFreq,
@@ -63,12 +70,14 @@ define([
                     lfoPitch: options.lfoPitch
                 });
                 
-                this.env.trigger();
+                this.env.trigger(triggerEnvelope);
+                this.vcf.trigger(triggerEnvelope);
             },
         
             noteOff: function(releaseValue) {
                 var releaseTime = this.env.getDecay(releaseValue);
-                this.env.off();
+                this.env.off(releaseTime);
+                this.vcf.off(releaseTime);
                 this.dco.off(releaseTime);
             },
             

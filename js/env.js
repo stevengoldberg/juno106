@@ -15,44 +15,40 @@ define([
             this.ampMod = App.context.createGain();
             this.ampMod.gain.value = this.minSustain;
             
-            this.freqMod = App.context.createGain();
-            this.freqMod.gain.value = options.freqMod;
-            
-            // Gate === 1 if envelope is enabled
-            this.envOn = options.envelope.enabled;
-            
-            this.attackTime = this.envOn ? this.getAttack(options.envelope.a) :
-                this.envelopeOffset;
-            
-            this.decayTime = this.envOn ? this.getDecay(options.envelope.d) : 
-                this.envelopeOffset;
-            
-            this.releaseTime = this.envOn ? this.getDecay(options.envelope.r) : 
-                this.envelopeOffset;
-            
-            this.sustainModifier = this.envOn ? (options.envelope.s || this.minSustain) : 1;
-            
             this.maxLevel = options.maxLevel;
-            this.sustainLevel = this.maxLevel * this.sustainModifier;
+            
+            this.enabled = null;
         }
         
-        ENV.prototype.trigger = function() {
+        ENV.prototype.trigger = function(envelope) {
             var now = App.context.currentTime;
+            
+            this.enabled = envelope.enabled;
 
+            var attackTime = envelope.enabled ? this.getAttack(envelope.attack) :
+                this.envelopeOffset;
+            var decayTime = envelope.enabled ? this.getDecay(envelope.decay) : 
+                this.envelopeOffset;
+            this.sustainModifier = envelope.enabled ? (envelope.sustain || this.minSustain) : 1;
+            this.sustainLevel = this.maxLevel * this.sustainModifier;
+            
             this.ampMod.gain.cancelScheduledValues(now);
             this.ampMod.gain.setValueAtTime(0, now);
-            this.ampMod.gain.linearRampToValueAtTime(this.maxLevel, now + this.attackTime);
-            this.ampMod.gain.linearRampToValueAtTime(this.sustainLevel, now + this.attackTime + this.decayTime);
+            this.ampMod.gain.linearRampToValueAtTime(this.maxLevel, now + attackTime);
+            this.ampMod.gain.linearRampToValueAtTime(this.sustainLevel, now + attackTime + decayTime);
         };
         
         ENV.prototype.off = function(release) {
             var now = App.context.currentTime;
+            
+            this.releaseTime = this.enabled ? release : this.envelopeOffset;
+            
             this.ampMod.gain.cancelScheduledValues(now);
             this.ampMod.gain.setValueAtTime(this.ampMod.gain.value, now);
             this.ampMod.gain.exponentialRampToValueAtTime(this.minSustain, now + this.releaseTime);
         };
         
-        ENV.prototype.a = function(value) {
+        /*ENV.prototype.a = function(value) {
             this.attackTime = this.getAttack(value);
         };
         
@@ -62,7 +58,7 @@ define([
         
         ENV.prototype.r = function(value) {
             this.releaseTime = this.getDecay(value);
-        };
+        };*/
         
         ENV.prototype.getAttack = function(value) {
             return util.getFaderCurve(value) * this.attackMax + this.envelopeOffset;
@@ -75,15 +71,11 @@ define([
         ENV.prototype.s = function(sustainModifier) {
             var now = App.context.currentTime;
             
-            if(!this.envOn) return;
+            if(!this.enabled) return;
             
             this.sustainLevel = (this.maxLevel * sustainModifier) || this.minSustain;
             this.ampMod.gain.cancelScheduledValues(now);
             this.ampMod.gain.setValueAtTime(this.sustainLevel, now);
-        };
-        
-        ENV.prototype.freqMod = function(value) {
-            
         };
         
         return ENV;

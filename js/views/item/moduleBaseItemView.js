@@ -144,10 +144,8 @@ define([
             },
             
             updateUIState: function(param, value) {
-                // Global $ as workaround for modulation controls whose
-                // code is grouped differently
-                
                 var el = $('[data-param="' + param + '"]');
+                
                 if(el.hasClass('fader__knob')) {
                     this.updateFaderPosition(el, value);
                 } else if(el.hasClass('switch')) {

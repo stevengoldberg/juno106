@@ -54,7 +54,7 @@ define([
                     chorus: this.synth.get('cho-chorusToggle'),
                     subLevel: this.synth.get('dco-sub'),
                     hpfFreq: this.synth.get('hpf-freq'),
-                    envFreqMod: this.synth.get('env-freqMod'),
+                    vcfEnv: this.synth.get('vcf-env'),
                     lfo: this.lfo
                 });
                     
@@ -62,15 +62,16 @@ define([
                     lfoRate: this.synth.get('lfo-rate'),
                     lfoPitch: this.synth.get('lfo-pitch'),
                     lfoDelay: this.synth.get('lfo-delay'),
-                    lfoFreq: this.synth.get('lfo-freq')
+                    lfoFreq: this.synth.get('lfo-freq'),
+                    envelope: this.synth.getCurrentEnvelope()
                 });
                 
                 this.activeVoices[note] = voice;
             },
             
             noteOffHandler: function(note) {
-                    this.activeVoices[note].noteOff(this.synth.getCurrentEnvelope().r);
-                    delete this.activeVoices[note];
+                this.activeVoices[note].noteOff(this.synth.getCurrentEnvelope().r);
+                delete this.activeVoices[note];
             },
             
             synthUpdateHandler: _.throttle(function(update) {                    
