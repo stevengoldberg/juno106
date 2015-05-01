@@ -5,11 +5,12 @@ define([
     'views/item/keyboardItemView',
     'voice',
     'lfo',
+    'tuna',
     'models/junoModel',
     'hbs!tmpl/layout/junoLayout-tmpl'
     ],
     
-    function(Backbone, App, ModuleLayout, KeyboardItemView, Voice, LFO, JunoModel, Template) {
+    function(Backbone, App, ModuleLayout, KeyboardItemView, Voice, LFO, Tuna, JunoModel, Template) {
         return Backbone.Marionette.LayoutView.extend({
             
             className: 'juno',
@@ -25,6 +26,9 @@ define([
                 this.maxPolyphony = 6;
                 this.activeVoices = {};
                 this.synth = new JunoModel();
+                
+                var tuna = new Tuna(App.context);
+                this.chorus = new tuna.Chorus();
                 
                 this.lfo = new LFO();
             },
@@ -51,11 +55,12 @@ define([
                     res: this.synth.get('vcf-res'),
                     envelope: this.synth.getCurrentEnvelope(),
                     maxLevel: this.synth.get('vca-level'),
-                    chorus: this.synth.get('cho-chorusToggle'),
+                    chorusLevel: this.synth.get('cho-chorusToggle'),
                     subLevel: this.synth.get('dco-sub'),
                     hpfFreq: this.synth.get('hpf-freq'),
                     vcfEnv: this.synth.get('vcf-env'),
-                    lfo: this.lfo
+                    lfo: this.lfo,
+                    chorus: this.chorus
                 });
                     
                 voice.noteOn({
