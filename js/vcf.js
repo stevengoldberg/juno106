@@ -23,26 +23,24 @@ define([
             this.envelope = options.envelope;
             this.vcfEnv = options.vcfEnv;
             this.envModAmount = this.getEnvModAmount();
+            this.sustainLevel = this.filterCutoff + (this.envModAmount * util.getFaderCurve(this.envelope.s));
             
             this.input = this.filter1;
             this.output = this.filter2;
             this.filter1.connect(this.filter2);
         }
         
-        VCF.prototype.getEnvModAmount = function() {
-            var envModValue = util.getFaderCurve(this.vcfEnv);
-            return this.getFilterFreqFromCutoff(envModValue);
-        };
-        
         VCF.prototype.freq = function(cutoff) {
             var now = App.context.currentTime;
             this.filterCutoff = this.getFilterFreqFromCutoff(cutoff);
             this.envModAmount = this.getEnvModAmount();
+            this.maxLevel = this.getMaxLevel();
+            this.sustainLevel = this.maxLevel * util.getFaderCurve(this.envelope.s);
             
             this.filter1.frequency.cancelScheduledValues(now);
             this.filter2.frequency.cancelScheduledValues(now);
-            this.filter1.frequency.setValueAtTime(this.filterCutoff + this.envModAmount, now);
-            this.filter2.frequency.setValueAtTime(this.filterCutoff + this.envModAmount, now);
+            this.filter1.frequency.setValueAtTime(this.sustainLevel + this.envModAmount, now);
+            this.filter2.frequency.setValueAtTime(this.sustainLevel + this.envModAmount, now);
         };
         
         VCF.prototype.res = function(value) {
@@ -56,36 +54,43 @@ define([
         
         VCF.prototype.trigger = function(envelope) {
             var now = App.context.currentTime;
-            var envModAmount = this.getEnvModAmount();
-            var attackTime = envModAmount > 0 ? util.getFaderCurve(envelope.attack) * 
-                this.attackMax + this.envelopeOffset : this.envelopeOffset;
-            var decayTime = envModAmount > 0 ? util.getFaderCurve(envelope.decay) *
-                this.decayReleaseMax + this.envelopeOffset : this.envelopeOffset;
+            var attackTime = util.getFaderCurve(envelope.attack) * this.attackMax + this.envelopeOffset;
+            var decayTime = util.getFaderCurve(envelope.decay) * this.decayReleaseMax + this.envelopeOffset;
             
-            
-            this.maxLevel = this.filterCutoff + envModAmount;
-            this.sustainLevel = this.filterCutoff + (envModAmount * util.getFaderCurve(envelope.sustain));
+            this.envModAmount = this.getEnvModAmount();
+            this.maxLevel = this.getMaxLevel();
+            this.sustainLevel = this.maxLevel * util.getFaderCurve(this.envelope.s);
 
             this.filter1.frequency.cancelScheduledValues(now);
-            this.filter1.frequency.setValueAtTime(10, now);
+            this.filter1.frequency.setValueAtTime(this.filterCutoff, now);
             this.filter1.frequency.linearRampToValueAtTime(this.maxLevel, now + attackTime);
             this.filter1.frequency.linearRampToValueAtTime(this.sustainLevel, now + attackTime + decayTime);
             
             this.filter2.frequency.cancelScheduledValues(now);
-            this.filter2.frequency.setValueAtTime(10, now);
+            this.filter2.frequency.setValueAtTime(this.filterCutoff, now);
             this.filter2.frequency.linearRampToValueAtTime(this.maxLevel, now + attackTime);
             this.filter2.frequency.linearRampToValueAtTime(this.sustainLevel, now + attackTime + decayTime);
         };
         
+        VCF.prototype.getMaxLevel = function() {
+            var nyquist = App.context.sampleRate / 2;
+            var value = this.filterCutoff + this.envModAmount;
+            return value > nyquist ? nyquist : value;
+        };
+        
         VCF.prototype.env = function(value) {
             this.vcfEnv = util.getFaderCurve(value);
+            this.maxLevel = this.getMaxLevel();
+        };
+        
+        VCF.prototype.getEnvModAmount = function() {
+            return this.getFilterFreqFromCutoff(util.getFaderCurve(this.vcfEnv)) - 10;
         };
         
         VCF.prototype.off = function(releaseValue) {
             var now = App.context.currentTime;
-            var envModAmount = this.getEnvModAmount();
-            var releaseTime = envModAmount > 0 ? util.getFaderCurve(releaseValue) *
-                this.decayReleaseMax + this.envelopeOffset : this.envelopeOffset;
+            var releaseTime = util.getFaderCurve(releaseValue) * this.decayReleaseMax + this.envelopeOffset;
+            this.envModAmount = this.getEnvModAmount();
                 
             this.filter1.frequency.cancelScheduledValues(now);
             this.filter1.frequency.setValueAtTime(this.filter1.frequency.value, now);

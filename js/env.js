@@ -48,18 +48,6 @@ define([
             this.ampMod.gain.exponentialRampToValueAtTime(this.minSustain, now + this.releaseTime);
         };
         
-        /*ENV.prototype.a = function(value) {
-            this.attackTime = this.getAttack(value);
-        };
-        
-        ENV.prototype.d = function(value) {
-            this.decayTime = this.getDecay(value);
-        };
-        
-        ENV.prototype.r = function(value) {
-            this.releaseTime = this.getDecay(value);
-        };*/
-        
         ENV.prototype.getAttack = function(value) {
             return util.getFaderCurve(value) * this.attackMax + this.envelopeOffset;
         };
