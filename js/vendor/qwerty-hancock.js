@@ -246,6 +246,7 @@
     * Call user's mouseUp event.
     */
     var mouseUp = function (element, callback) {
+        if(!mouse_is_down) return;
         mouse_is_down = false;
         darkenDown(element);
         callback(element.title, getFrequencyOfNote(element.title));

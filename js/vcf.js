@@ -53,8 +53,6 @@ define([
         VCF.prototype.res = function(value) {
             var now = App.context.currentTime;
             var resonance = this.getResonanceFromValue(value);
-            this.filter1.frequency.cancelScheduledValues(now);
-            this.filter2.frequency.cancelScheduledValues(now);
             this.filter1.Q.setValueAtTime(resonance / 2, now);
             this.filter2.Q.setValueAtTime(resonance / 2, now);
         };
