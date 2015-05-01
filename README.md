@@ -48,13 +48,13 @@ For detailed instructions, consult the [Juno 106 owner's manual](http://www.synt
 
 **QUICKSTART MANUAL**
 
-* LFO - Low Frequency Oscillator
+* LFO - Low Frequency Oscillator  
  Triangle-wave oscillator used to modulate other synth parameters.
  
  Rate: Controls the speed of the LFO.  
  Delay: Controls the speed at which the LFO fades in on triggering a note.  
 
-* DCO - Digitally Controlled Oscillator
+* DCO - Digitally Controlled Oscillator  
  Oscillators that produce pitches, controlled by the keyboard.
  
  Range: Selects the keyboard octave.  
@@ -65,7 +65,7 @@ For detailed instructions, consult the [Juno 106 owner's manual](http://www.synt
  SUB: Sets volume of square-wave sub-oscillator, one octave below main oscillator.  
  NOISE: Sets volume of noise generator.  
 
-* VCF - Voltage Controlled Filter
+* VCF - Voltage Controlled Filter  
  24 dB/octave resonant lowpass filter
 
  FREQ: Sets filter cutoff. Higher values let more high frequencies pass through, for a brighter sound.  
@@ -75,18 +75,18 @@ For detailed instructions, consult the [Juno 106 owner's manual](http://www.synt
  LFO: The extent to which the LFO modulates the filter cutoff.  
  KBD: The extent to which the filter cutoff tracks the keyboard pitch.  
 
-* HPF - High Pass Filter
+* HPF - High Pass Filter  
  24 dB/octave non-resonant highpass filter
 
  FREQ: Set the level higher to filter out more low-frequency content.
 
-* VCA - Voltage Controlled Amplifier
+* VCA - Voltage Controlled Amplifier  
  Controls the overall volume level.
 
  ENV/GATE: In ENV mode, the volume will be shaped by the envelope. In GATE mode, notes will instantly turn on and off when keys are pressed and released. Note that in GATE mode, the ENV can still be applied to the filter cutoff.  
  LEVEL: Overall volume.
 
-* ENV - Envelope
+* ENV - Envelope  
  Envelope shared by both the amplifier and filter.
  
  A: Attack - how quickly the volume/filter rises to its maximum level when a note is triggered.  
@@ -94,7 +94,7 @@ For detailed instructions, consult the [Juno 106 owner's manual](http://www.synt
  S: Sustain - the level at which the volume/filter maintains itself while a note is held.  
  R: Release - how long the volume/filter takes to fade out once a note is released.  
 
-* CHORUS
+* CHORUS  
  A chorus effect.
  
  OFF: No effect.  
