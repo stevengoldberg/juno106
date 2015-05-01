@@ -13,9 +13,10 @@ define([
                     'env-sustain': 1,
                     'env-release': 0,
                     'vca-gate': 1,
-                    'dco-sawtooth': true,
-                    'dco-square': false,
+                    'dco-sawtooth': 1,
+                    'dco-pulse': 0,
                     'dco-noise': 0,
+                    'dco-pwm': 0.5,
                     'dco-range': 1,
                     'dco-sub': 0,
                     'cho-chorusToggle': 0,
@@ -31,17 +32,13 @@ define([
             },
             
             getCurrentWaveforms: function() {
-                var dco = {
+                return {
                     sawtooth: this.get('dco-sawtooth'),
-                    square: this.get('dco-square'),
-                    noise: this.get('dco-noise')
+                    pulse: this.get('dco-pulse'),
+                    noise: this.get('dco-noise'),
+                    sub: this.get('dco-sub'),
+                    pwm: this.get('dco-pwm')
                 };
-                
-                var waveforms = _.pick(dco, function(value) {
-                    return value != 0;
-                });
-                
-                return _.keys(waveforms);
             },
             
             getCurrentRange: function(frequency) {
