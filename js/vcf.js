@@ -30,17 +30,22 @@ define([
             this.filter1.connect(this.filter2);
         }
         
-        VCF.prototype.freq = function(cutoff) {
+        VCF.prototype.freq = function(value) {
             var now = App.context.currentTime;
-            this.filterCutoff = this.getFilterFreqFromCutoff(cutoff);
-            this.envModAmount = this.getEnvModAmount();
-            this.maxLevel = this.getMaxLevel();
-            this.sustainLevel = this.maxLevel * util.getFaderCurve(this.envelope.s);
+            
+            this.setupEnvValues(value);
             
             this.filter1.frequency.cancelScheduledValues(now);
             this.filter2.frequency.cancelScheduledValues(now);
-            this.filter1.frequency.setValueAtTime(this.sustainLevel + this.envModAmount, now);
-            this.filter2.frequency.setValueAtTime(this.sustainLevel + this.envModAmount, now);
+            this.filter1.frequency.setValueAtTime(this.sustainLevel, now);
+            this.filter2.frequency.setValueAtTime(this.sustainLevel, now);
+        };
+        
+        VCF.prototype.setupEnvValues = function(value, cutoff) {
+            this.filterCutoff = value === null ? cutoff : this.getFilterFreqFromCutoff(value);
+            this.envModAmount = this.getEnvModAmount();
+            this.maxLevel = this.getMaxLevel();
+            this.sustainLevel = this.maxLevel * util.getFaderCurve(this.envelope.s);
         };
         
         VCF.prototype.res = function(value) {
@@ -57,9 +62,7 @@ define([
             var attackTime = util.getFaderCurve(envelope.attack) * this.attackMax + this.envelopeOffset;
             var decayTime = util.getFaderCurve(envelope.decay) * this.decayReleaseMax + this.envelopeOffset;
             
-            this.envModAmount = this.getEnvModAmount();
-            this.maxLevel = this.getMaxLevel();
-            this.sustainLevel = this.maxLevel * util.getFaderCurve(this.envelope.s);
+            this.setupEnvValues(null, this.filterCutoff);
 
             this.filter1.frequency.cancelScheduledValues(now);
             this.filter1.frequency.setValueAtTime(this.filterCutoff, now);
