@@ -88,6 +88,8 @@ define([
                 _.each(this.activeVoices, function(voice) {
                     if(voice[component] && _.isFunction(voice[component][method])) {
                         voice[component][method](value);
+                    } else {
+                        voice[component][method] = value;
                     }
                 });
             }, 30)
