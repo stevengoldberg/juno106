@@ -42,7 +42,7 @@ define([
                 });
             
                 this.env = new ENV({
-                    //envelope: options.envelope,
+                    envelope: options.envelope,
                     maxLevel: options.maxLevel
                 });
             
@@ -61,10 +61,10 @@ define([
             
             noteOn: function(options) {
                 var triggerEnvelope = {
-                    attack: options.envelope.a,
-                    decay: options.envelope.d,
-                    sustain: options.envelope.s,
-                    enabled: options.envelope.enabled
+                    attack: this.env.attack,
+                    decay: this.env.decay,
+                    sustain: this.env.sustain,
+                    enabled: this.env.enabled
                 };
                 
                 this.lfo.trigger({
@@ -74,13 +74,13 @@ define([
                     lfoPitch: options.lfoPitch
                 });
                 
-                this.env.trigger(triggerEnvelope);
+                this.env.trigger();
                 this.vcf.trigger(triggerEnvelope);
             },
         
-            noteOff: function(releaseValue) {
-                var releaseTime = this.env.getDecay(releaseValue);
-                this.env.off(releaseTime);
+            noteOff: function() {
+                var releaseTime = this.env.release;
+                this.env.off();
                 this.vcf.off(releaseTime);
                 this.dco.off(releaseTime);
             },

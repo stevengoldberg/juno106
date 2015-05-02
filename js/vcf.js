@@ -23,7 +23,7 @@ define([
             this.envelope = options.envelope;
             this.vcfEnv = options.vcfEnv;
             this.envModAmount = this.getEnvModAmount();
-            this.sustainLevel = this.filterCutoff + (this.envModAmount * util.getFaderCurve(this.envelope.s));
+            this.sustainLevel = this.filterCutoff + (this.envModAmount * util.getFaderCurve(this.envelope.sustain));
             
             this.input = this.filter1;
             this.output = this.filter2;
@@ -47,7 +47,7 @@ define([
             this.filterCutoff = value === null ? cutoff : this.getFilterFreqFromCutoff(value);
             this.envModAmount = this.getEnvModAmount();
             this.maxLevel = this.getMaxLevel();
-            this.sustainLevel = this.maxLevel * util.getFaderCurve(this.envelope.s);
+            this.sustainLevel = this.maxLevel * util.getFaderCurve(this.envelope.sustain);
         };
         
         VCF.prototype.res = function(value) {

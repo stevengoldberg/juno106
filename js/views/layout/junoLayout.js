@@ -75,7 +75,7 @@ define([
             },
             
             noteOffHandler: function(note) {
-                this.activeVoices[note].noteOff(this.synth.getCurrentEnvelope().r);
+                this.activeVoices[note].noteOff();
                 delete this.activeVoices[note];
             },
             

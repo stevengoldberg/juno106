@@ -8,10 +8,10 @@ define([
             defaults: function() {
                 return {
                     'vca-level': 0.3,
-                    'env-a': 0,
-                    'env-d': 0,
-                    'env-s': 1,
-                    'env-r': 0,
+                    'env-attack': 0,
+                    'env-decay': 0,
+                    'env-sustain': 1,
+                    'env-release': 0,
                     'vca-gate': 1,
                     'dco-sawtooth': true,
                     'dco-square': false,
@@ -58,10 +58,10 @@ define([
             getCurrentEnvelope: function() {
                 return {
                     enabled: this.get('vca-gate'),
-                    a: this.get('env-a'),
-                    d: this.get('env-d'),
-                    s: this.get('env-s'),
-                    r: this.get('env-r')
+                    attack: this.get('env-attack'),
+                    decay: this.get('env-decay'),
+                    sustain: this.get('env-sustain'),
+                    release: this.get('env-release')
                 };
             },
             
