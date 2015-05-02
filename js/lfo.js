@@ -5,67 +5,81 @@ define([
     
     function(App, util) {
         function LFO(options) {
-            this.lfo = App.context.createOscillator();
-            this.lfo.type = 'triangle';
-            this.lfo.frequency.value = 0;
-            this.lfo.start(0);
+            // Initialization
+            var lfo = App.context.createOscillator();
+            lfo.type = 'triangle';
+            lfo.frequency.value = 0;
+            lfo.start(0);
             
-            this.pitchMod = App.context.createGain();
-            this.pitchMod.gain.value = 0;
+            var pitchMod = App.context.createGain();
+            pitchMod.gain.value = 0;
             
-            this.freqMod = App.context.createGain();
-            this.freqMod.gain.value = 0;
+            var freqMod = App.context.createGain();
+            freqMod.gain.value = 0;
             
-            this.lfo.connect(this.pitchMod);
-            this.lfo.connect(this.freqMod);
+            lfo.connect(pitchMod);
+            lfo.connect(freqMod);
+            
+            // Setter methods
+            function setPitchMod(value) {
+                var now = App.context.currentTime;
+                pitchMod.gain.cancelScheduledValues(now);
+                pitchMod.gain.setValueAtTime(getAmplitude(value), now);
+            }
+            
+            function setFreqMod(value) {
+                var now = App.context.currentTime;
+                freqMod.gain.cancelScheduledValues(now);
+                freqMod.gain.setValueAtTime(getAmplitude(value) * 200, now);
+            }
+            
+            function setRate(value) {
+                var now = App.context.currentTime;
+                lfo.frequency.cancelScheduledValues(now);
+                lfo.frequency.setValueAtTime(getRate(value), now);
+            }
+            
+            function getAmplitude(value) {
+                return util.getFaderCurve(value) * 40;
+            }
+            
+            function getRate(value) {
+                 return util.getFaderCurve(value) * 25;
+            }
+            
+            // Trigger the LFO on a keypress
+            this.trigger = function(options) {
+                var now = App.context.currentTime;
+                var currentPitchMod = getAmplitude(options.lfoPitch);
+                var currentFreqMod = getAmplitude(options.lfoFreq) * 200;
+                var delayTime = util.getFaderCurve(options.lfoDelay) * 3;
+            
+                pitchMod.gain.cancelScheduledValues(now);
+                pitchMod.gain.setValueAtTime(0, now);
+                pitchMod.gain.linearRampToValueAtTime(currentPitchMod, now + delayTime);
+            
+                freqMod.gain.cancelScheduledValues(now);
+                freqMod.gain.setValueAtTime(0, now);
+                freqMod.gain.linearRampToValueAtTime(currentFreqMod, now + delayTime);
+            };
+                
+            Object.defineProperties(this, {
+                'pitchMod': {
+                    'get': function() { return pitchMod; },
+                    'set': function(value) { console.log('setting pitchMod ' + value); setPitchMod(value); }
+                },
+                'freqMod': {
+                    'get': function() { return freqMod; },
+                    'set': function(value) { console.log('setting freqMod ' + value); setFreqMod(value); }
+                },
+                'rate': {
+                    'get': function() { return lfo.frequency; },
+                    'set': function(value) { console.log('setting rate ' + value); setRate(value); }
+                }
+            });
 
         }
         
-        LFO.prototype.pitch = function(value) {
-            var now = App.context.currentTime;
-            this.pitchMod.gain.cancelScheduledValues(now);
-            this.pitchMod.gain.setValueAtTime(this.getAmplitude(value), now);
-        };
-        
-        LFO.prototype.freq = function(value) {
-            var now = App.context.currentTime;
-            this.freqMod.gain.cancelScheduledValues(now);
-            this.freqMod.gain.setValueAtTime(this.getAmplitude(value) * 200, now);
-        };
-        
-        LFO.prototype.rate = function(value) {
-            var now = App.context.currentTime;
-            this.lfo.frequency.cancelScheduledValues(now);
-            this.lfo.frequency.setValueAtTime(this.getRate(value), now);
-        };
-        
-        LFO.prototype.delay = function(value) {
-
-        };
-        
-        LFO.prototype.trigger = function(options) {
-            var now = App.context.currentTime;
-            var currentPitchMod = this.getAmplitude(options.lfoPitch);
-            var currentFreqMod = this.getAmplitude(options.lfoFreq) * 200;
-            var delayTime = util.getFaderCurve(options.lfoDelay) * 3;
-            
-            this.pitchMod.gain.cancelScheduledValues(now);
-            this.pitchMod.gain.setValueAtTime(0, now);
-            this.pitchMod.gain.linearRampToValueAtTime(currentPitchMod, now + delayTime);
-            
-            this.freqMod.gain.cancelScheduledValues(now);
-            this.freqMod.gain.setValueAtTime(0, now);
-            this.freqMod.gain.linearRampToValueAtTime(currentFreqMod, now + delayTime);
-        };
-        
-        LFO.prototype.getRate = function(value) {
-            return util.getFaderCurve(value) * 25;
-        };
-        
-        LFO.prototype.getAmplitude = function(value) {
-            return Math.pow(value, 2) * 40;
-        };
-            
         return LFO;
     }
 );

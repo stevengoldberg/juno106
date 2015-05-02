@@ -22,10 +22,10 @@ define([
                     'vcf-freq': 1,
                     'vcf-res': 0,
                     'vcf-env': 0,
-                    'lfo-pitch': 0,
+                    'lfo-pitchMod': 0,
                     'lfo-rate': 0,
                     'lfo-delay': 0,
-                    'lfo-freq': 0,
+                    'lfo-freqMod': 0,
                     'hpf-freq': 0
                 };
             },
