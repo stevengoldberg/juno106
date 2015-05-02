@@ -39,6 +39,7 @@ define([
                 lfo.frequency.setValueAtTime(getRate(value), now);
             }
             
+            // Helper methods
             function getAmplitude(value) {
                 return util.getFaderCurve(value) * 40;
             }

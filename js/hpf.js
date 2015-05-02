@@ -4,36 +4,44 @@ define([
     
     function(App) {
         function HPF(options) {            
-            this.frequencyMap = {
+            
+            // Initialization
+            var frequencyMap = {
                 0: 0,
                 1: 100,
                 2: 180,
                 3: 320
             };
+            var filter1 = App.context.createBiquadFilter();
+            var filter2 = App.context.createBiquadFilter();
             
-            this.filter1 = App.context.createBiquadFilter();
-            this.filter2 = App.context.createBiquadFilter();
-            this.filter1.type = 'highpass';
-            this.filter2.type = 'highpass';
-            this.filter1.frequency.value = this.frequencyMap[options.frequency];
-            this.filter2.frequency.value = this.frequencyMap[options.frequency];
-            this.filter1.Q.value = 1;
-            this.filter2.Q.value = 1;
+            filter1.type = 'highpass';
+            filter2.type = 'highpass';
+            filter1.frequency.value = frequencyMap[options.frequency];
+            filter2.frequency.value = frequencyMap[options.frequency];
+            filter1.Q.value = 1;
+            filter2.Q.value = 1;
+
+            filter1.connect(filter2);
             
-            this.input = this.filter1;
-            this.output = this.filter2;
-            this.filter1.connect(this.filter2);
+            // Setter methods
+            function setFreq(value) {
+                var now = App.context.currentTime;
+                var freq = frequencyMap[value];
+            
+                filter1.frequency.cancelScheduledValues(now);
+                filter2.frequency.cancelScheduledValues(now);
+                filter1.frequency.setValueAtTime(freq, now);
+                filter2.frequency.setValueAtTime(freq, now);
+            }
+            
+            Object.defineProperties(this, {
+                'cutoff': {
+                    'get': function() { return filter1; },
+                    'set': function(value) { setFreq(value); }
+                }
+            });
         }
-        
-        HPF.prototype.freq = function(value) {
-            var now = App.context.currentTime;
-            var freq = this.frequencyMap[value];
-            
-            this.filter1.frequency.cancelScheduledValues(now);
-            this.filter2.frequency.cancelScheduledValues(now);
-            this.filter1.frequency.setValueAtTime(freq, now);
-            this.filter2.frequency.setValueAtTime(freq, now);
-        };
         
         return HPF;
     }

@@ -51,10 +51,10 @@ define([
                 this.connect(this.lfo.freqMod, this.vcf.filter1.detune);
                 this.connect(this.lfo.freqMod, this.vcf.filter2.detune);
                 
-                this.connect(this.dco.output, this.hpf.input);
-                this.connect(this.hpf.output, this.vcf.input);
-                this.connect(this.vcf.output, this.vca.input);
-                this.connect(this.vca.output, this.env.ampMod);
+                this.connect(this.dco.output, this.hpf.cutoff);
+                this.connect(this.hpf.cutoff, this.vcf.input);
+                this.connect(this.vcf.output, this.vca.level);
+                this.connect(this.vca.level, this.env.ampMod);
                 this.connect(this.env.ampMod, this.cho.input);
                 this.connect(this.cho, App.context.destination);
             },
