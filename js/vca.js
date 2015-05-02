@@ -5,18 +5,16 @@ define([
     function(App) {
         function VCA(options) {
             var amplifier = App.context.createGain();
-            var that = this;
-            
-            amplifier.gain.value = 0;
-            this.input = amplifier.gain;
+            this.input = amplifier;
             this.output = amplifier;
-            amplifier.gain.value = options.maxLevel;
             
             var level = function(level) {
                 var now = App.context.currentTime;
-                amplifier.cancelScheduledValues(now);
-                amplifier.setValueAtTime(level, now);
+                amplifier.gain.cancelScheduledValues(now);
+                amplifier.gain.setValueAtTime(level, now);
             };
+            
+            amplifier.gain.value = options.maxLevel;
             
             Object.defineProperties(this, {
                 'level': {
