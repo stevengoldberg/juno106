@@ -36,7 +36,7 @@ define([
             this.input.push(this.subOsc.frequency);
         }
         
-        DCO.prototype.off = function(releaseTime) {
+        DCO.prototype.noteOff = function(releaseTime) {
             var now = App.context.currentTime;
             _.each(this.oscillators, function(oscillator) {
                 oscillator.stop(now + releaseTime);

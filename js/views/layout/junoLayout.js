@@ -51,14 +51,14 @@ define([
                 var voice = new Voice({
                     frequency: this.synth.getCurrentRange(frequency),
                     waveform: this.synth.getCurrentWaveforms(),
-                    vcfFreq: this.synth.get('vcf-freq'),
+                    vcfFreq: this.synth.get('vcf-cutoff'),
                     res: this.synth.get('vcf-res'),
                     envelope: this.synth.getCurrentEnvelope(),
                     maxLevel: this.synth.get('vca-level'),
                     chorusLevel: this.synth.get('cho-chorusToggle'),
                     subLevel: this.synth.get('dco-sub'),
                     hpfFreq: this.synth.get('hpf-freq'),
-                    vcfEnv: this.synth.get('vcf-env'),
+                    vcfEnv: this.synth.get('vcf-envMod'),
                     lfo: this.lfo,
                     chorus: this.chorus
                 });
@@ -90,6 +90,7 @@ define([
                         voice[component][method](value);
                     } else {
                         voice[component][method] = value;
+                        console.log(voice[component].id + ' : ' + voice[component].cutoff);
                     }
                 });
             }, 30)

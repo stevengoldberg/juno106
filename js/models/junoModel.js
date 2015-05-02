@@ -19,9 +19,9 @@ define([
                     'dco-range': 1,
                     'dco-sub': 0,
                     'cho-chorusToggle': 0,
-                    'vcf-freq': 1,
+                    'vcf-cutoff': 1,
                     'vcf-res': 0,
-                    'vcf-env': 0,
+                    'vcf-envMod': 0,
                     'lfo-pitchMod': 0,
                     'lfo-rate': 0,
                     'lfo-delay': 0,
@@ -65,6 +65,7 @@ define([
                 };
             },
             
+            // Faders register 0.0775 at their lowest position, so convert that to 0
             get: function(attr) {
                 var value = Backbone.Model.prototype.get.call(this, attr);
                 return value > 0.0775 ? value : 0;

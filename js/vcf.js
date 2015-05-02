@@ -4,116 +4,187 @@ define([
 ],
     
     function(App, util) {
-        function VCF(options) {            
-            this.filter1 = App.context.createBiquadFilter();
-            this.filter2 = App.context.createBiquadFilter();
-            this.filter1.type = 'lowpass';
-            this.filter2.type = 'lowpass';
+        function VCF(options) {
+            // Initialization     
+            this.id = _.uniqueId();
+                   
+            var envelopeOffset = options.envConstants.envelopeOffset;
+            var attackMax = options.envConstants.attackMax;
+            var decayReleaseMax = options.envConstants.decayReleaseMax;
+            var minSustain = options.envConstants.minSustain;
+            var filterMinimum = 10;
             
-            this.envelopeOffset = 0.0015;
-            this.attackMax = 3;
-            this.decayReleaseMax = 12;
-            this.minSustain = 0.0001;
+            filter1 = App.context.createBiquadFilter();
+            filter2 = App.context.createBiquadFilter();
+            filter1.type = 'lowpass';
+            filter2.type = 'lowpass';
             
-            this.filterCutoff = this.getFilterFreqFromCutoff(options.frequency);
+            filter1.Q.value = getResonanceFromValue(options.res / 2);
+            filter2.Q.value = filter1.Q.value;
             
-            this.filter1.Q.value = this.getResonanceFromValue(options.res / 2);
-            this.filter2.Q.value = this.filter1.Q.value;
+            var envelope = options.envelope;
+            var vcfEnv = options.vcfEnv;
+            var filterCutoff = getCutoffFreqFromValue(options.frequency);
             
-            this.envelope = options.envelope;
-            this.vcfEnv = options.vcfEnv;
-            this.envModAmount = this.getEnvModAmount();
-            this.sustainLevel = this.filterCutoff + (this.envModAmount * util.getFaderCurve(this.envelope.sustain));
+            var attackTime;
+            var decayTime;
+            var sustainLevel;
+            var releaseTime;
+            var envModAmount;
+            var maxLevel;
             
-            this.input = this.filter1;
-            this.output = this.filter2;
-            this.filter1.connect(this.filter2);
-        }
-        
-        VCF.prototype.freq = function(value) {
-            this.setupEnvValues(value);
-            this.setFilter();
-        };
-        
-        VCF.prototype.setFilter = function() {
-            var now = App.context.currentTime;
-            this.filter1.frequency.cancelScheduledValues(now);
-            this.filter2.frequency.cancelScheduledValues(now);
-            this.filter1.frequency.setValueAtTime(this.sustainLevel, now);
-            this.filter2.frequency.setValueAtTime(this.sustainLevel, now);
-        };
-        
-        VCF.prototype.setupEnvValues = function(value, cutoff) {
-            this.filterCutoff = value === null ? cutoff : this.getFilterFreqFromCutoff(value);
-            this.envModAmount = this.getEnvModAmount();
-            this.maxLevel = this.getMaxLevel();
-            this.sustainLevel = this.maxLevel * util.getFaderCurve(this.envelope.sustain);
-        };
-        
-        VCF.prototype.res = function(value) {
-            var now = App.context.currentTime;
-            var resonance = this.getResonanceFromValue(value);
-            this.filter1.Q.setValueAtTime(resonance / 2, now);
-            this.filter2.Q.setValueAtTime(resonance / 2, now);
-        };
-        
-        VCF.prototype.trigger = function(envelope) {
-            var now = App.context.currentTime;
-            var attackTime = util.getFaderCurve(envelope.attack) * this.attackMax + this.envelopeOffset;
-            var decayTime = util.getFaderCurve(envelope.decay) * this.decayReleaseMax + this.envelopeOffset;
+            setupEnvelope(options.frequency);
+            filter1.connect(filter2);
             
-            this.setupEnvValues(null, this.filterCutoff);
-
-            this.filter1.frequency.cancelScheduledValues(now);
-            this.filter1.frequency.setValueAtTime(this.filterCutoff, now);
-            this.filter1.frequency.linearRampToValueAtTime(this.maxLevel, now + attackTime);
-            this.filter1.frequency.linearRampToValueAtTime(this.sustainLevel, now + attackTime + decayTime);
+            // Setter methods
+            function setRes(value) {
+                var now = App.context.currentTime;
+                var resonance = getResonanceFromValue(value);
+                filter1.Q.setValueAtTime(resonance / 2, now);
+                filter2.Q.setValueAtTime(resonance / 2, now);
+            }
             
-            this.filter2.frequency.cancelScheduledValues(now);
-            this.filter2.frequency.setValueAtTime(this.filterCutoff, now);
-            this.filter2.frequency.linearRampToValueAtTime(this.maxLevel, now + attackTime);
-            this.filter2.frequency.linearRampToValueAtTime(this.sustainLevel, now + attackTime + decayTime);
-        };
-        
-        VCF.prototype.getMaxLevel = function() {
-            var nyquist = App.context.sampleRate / 2;
-            var value = this.filterCutoff + this.envModAmount;
-            return value > nyquist ? nyquist : value;
-        };
-        
-        VCF.prototype.env = function(value) {
-            this.vcfEnv = util.getFaderCurve(value);
-            this.setupEnvValues(null, this.filterCutoff);
-            this.setFilter();
-        };
-        
-        VCF.prototype.getEnvModAmount = function() {
-            return this.getFilterFreqFromCutoff(util.getFaderCurve(this.vcfEnv)) - 10;
-        };
-        
-        VCF.prototype.off = function(releaseValue) {
-            var now = App.context.currentTime;
-            var releaseTime = util.getFaderCurve(releaseValue) * this.decayReleaseMax + this.envelopeOffset;
-            this.envModAmount = this.getEnvModAmount();
+            function setFilter() {
+                var now = App.context.currentTime;
+                filter1.frequency.cancelScheduledValues(now);
+                filter2.frequency.cancelScheduledValues(now);
+                filter1.frequency.setValueAtTime(sustainLevel, now);
+                filter2.frequency.setValueAtTime(sustainLevel, now);
+            }
+            
+            // Helper methods
+            function setupEnvelope() {
+                attackTime = getAttackTime();
+                decayTime = getDecayTime();
+                releaseTime = getReleaseTime();
+                sustainLevel = getSustainLevel();
                 
-            this.filter1.frequency.cancelScheduledValues(now);
-            this.filter1.frequency.setValueAtTime(this.filter1.frequency.value, now);
-            this.filter1.frequency.exponentialRampToValueAtTime(this.filterCutoff, now + releaseTime);
+                envModAmount = getEnvModAmount();
+                maxLevel = getMaxLevel();
+            }
             
-            this.filter2.frequency.cancelScheduledValues(now);
-            this.filter2.frequency.setValueAtTime(this.filter2.frequency.value, now);
-            this.filter2.frequency.exponentialRampToValueAtTime(this.filterCutoff, now + releaseTime);
-        };
+            function getMaxLevel() {
+                var nyquist = App.context.sampleRate / 2;
+                var value = filterCutoff + envModAmount;
+                return value > nyquist ? nyquist : value;
+            }
+            
+            function getSustainLevel() {
+                return filterCutoff + (envModAmount * util.getFaderCurve(envelope.sustain));
+            }
+            
+            function getAttackTime() {
+                return util.getFaderCurve(envelope.attack) * attackMax + envelopeOffset;
+            }
+            
+            function getDecayTime() {
+                return util.getFaderCurve(envelope.decay) * decayReleaseMax + envelopeOffset;
+            }
+            
+            function getReleaseTime() {
+                return util.getFaderCurve(envelope.release) * decayReleaseMax + envelopeOffset;
+            }
+            
+            function getResonanceFromValue(value) {
+                return util.getFaderCurve(value) * 50 + 1;
+            }
+            
+            function getCutoffFreqFromValue(value) {
+                var nyquist = App.context.sampleRate / 2;
+                var freq = util.getFaderCurve(value) * nyquist;
+                return freq > filterMinimum ? freq : filterMinimum;
+            }
+            
+            function getEnvModAmount() {
+                return getCutoffFreqFromValue(util.getFaderCurve(vcfEnv)) - filterMinimum;
+            }
+            
+            // Trigger the filter on keypress
+            this.noteOn = function() {
+                var now = App.context.currentTime;
+                setupEnvelope();
+
+                filter1.frequency.cancelScheduledValues(now);
+                filter1.frequency.setValueAtTime(filterCutoff, now);
+                filter1.frequency.linearRampToValueAtTime(maxLevel, now + attackTime);
+                filter1.frequency.linearRampToValueAtTime(sustainLevel, now + attackTime + decayTime);
+    
+                filter2.frequency.cancelScheduledValues(now);
+                filter2.frequency.setValueAtTime(filterCutoff, now);
+                filter2.frequency.linearRampToValueAtTime(maxLevel, now + attackTime);
+                filter2.frequency.linearRampToValueAtTime(sustainLevel, now + attackTime + decayTime);
+            };
+            
+            // Release the filter on keyup
+            this.noteOff = function() {
+                var now = App.context.currentTime;
         
-        VCF.prototype.getFilterFreqFromCutoff = function(cutoff) {
-            var nyquist = App.context.sampleRate / 2;
-            var freq = util.getFaderCurve(cutoff) * nyquist;
-            return freq > 10 ? freq : 10;
-        };
-        
-        VCF.prototype.getResonanceFromValue = function(value) {
-            return util.getFaderCurve(value) * 50 + 1;
-        };
+                filter1.frequency.cancelScheduledValues(now);
+                filter1.frequency.setValueAtTime(filter1.frequency.value, now);
+                filter1.frequency.exponentialRampToValueAtTime(filterCutoff, now + releaseTime);
+    
+                filter2.frequency.cancelScheduledValues(now);
+                filter2.frequency.setValueAtTime(filter2.frequency.value, now);
+                filter2.frequency.exponentialRampToValueAtTime(filterCutoff, now + releaseTime);
+            };
+            
+            Object.defineProperties(this, {
+                'cutoff': {
+                    'get': function() { return sustainLevel; },
+                    'set': function(value) { 
+                        filterCutoff = getCutoffFreqFromValue(value);
+                        setupEnvelope();
+                        setFilter();
+                    }
+                },
+                'envMod': {
+                    'get': function() { return envModAmount; },
+                    'set': function(value) { 
+                        vcfEnv = value;
+                        envModAmount = getEnvModAmount();
+                        sustainLevel = getSustainLevel();
+                        setFilter();
+                    }
+                },
+                'attack': {
+                    'set': function(value) { 
+                        envelope.attack = value;
+                        attackTime = getAttackTime();
+                        setFilter();
+                    }
+                },
+                'decay': {
+                    'set': function(value) {
+                        envelope.decay = value;
+                        decayTime = getDecayTime();
+                        setFilter();
+                    }
+                },
+                'sustain': {
+                    'set': function(value) {
+                        envelope.sustain = value;
+                        sustainLevel = getSustainLevel();
+                        setFilter();
+                    }
+                },
+                'release': {
+                    'set': function(value) {
+                        envelope.release = value;
+                        releaseTime = getReleaseTime();
+                        setFilter();
+                    }
+                },
+                 'input1': {
+                    'get': function() { return filter1; }
+                },
+                'input2': {
+                    'get': function() { return filter2; }
+                },
+                'output': {
+                    'get': function() { return filter2; }
+                }
+            });
+        }
         
         return VCF;
     }

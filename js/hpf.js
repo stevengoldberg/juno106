@@ -39,6 +39,9 @@ define([
                 'cutoff': {
                     'get': function() { return filter1; },
                     'set': function(value) { setFreq(value); }
+                },
+                'output': {
+                    'get': function() { return filter2; }
                 }
             });
         }
