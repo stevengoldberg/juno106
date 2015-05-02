@@ -1,57 +1,31 @@
 define([
     'application',
-    'dco',
-    'vca',
-    'env',
-    'vcf',
-    'lfo',
-    'hpf'
+    'dco'
 ],
     
-    function(App, DCO, VCA, ENV, VCF, LFO, HPF) {
+    function(App, DCO) {
         return Backbone.Marionette.Object.extend({
             initialize: function(options) {
-                
-                var envConstants = {
-                    envelopeOffset: 0.0015,
-                    attackMax: 3,
-                    decayReleaseMax: 12,
-                    minSustain: 0.0001
-                };
                 
                 var that = this;
                 
                 this.lfo = options.lfo;
-                
-                this.cho = options.chorus;
+                this.env = options.env;
+                this.vcf = options.vcf;
+                this.hpf = options.hpf;
+                this.vca = options.vca;
+                this.cho = options.cho;
                 this.cho.chorusToggle = chorusToggle;
-                chorusToggle(options.chorusLevel);
+                chorusToggle(this.cho.chorusLevel);
                 
+                // Oscillators are instantiated as needed
                 this.dco = new DCO({
                     frequency: options.frequency,
                     waveform: options.waveform,
                     subLevel: options.subLevel
                 });
-                this.hpf = new HPF({
-                    frequency: options.hpfFreq
-                });
-                this.vca = new VCA({
-                    maxLevel: options.maxLevel
-                });
-                this.env = new ENV({
-                    envelope: options.envelope,
-                    maxLevel: options.maxLevel,
-                    envConstants: envConstants
-                });
-                this.vcf = new VCF({
-                    frequency: options.vcfFreq,
-                    res: options.res,
-                    envelope: options.envelope,
-                    vcfEnv: options.vcfEnv,
-                    envConstants: envConstants
-                });
-                
-                // Sync up the envelope between the amplifier and the filter
+
+                // Sync up the envelope for the amplifier and the filter
                 function setupEnvelopeListeners() {
                     that.listenTo(that.env, 'attack', function(e) {
                         that.vcf.attack = e;
@@ -72,6 +46,16 @@ define([
                 setupEnvelopeListeners();
                 
                 // Connect nodes
+                connect(this.lfo.pitchMod, this.dco.input);
+                connect(this.lfo.freqMod, this.vcf.input1.detune);
+                connect(this.lfo.freqMod, this.vcf.input2.detune);
+                connect(this.dco.output, this.hpf.cutoff);
+                connect(this.hpf.output, this.vcf.input1);
+                connect(this.vcf.output, this.vca.level);
+                connect(this.vca.level, this.env.ampMod);
+                connect(this.env.ampMod, this.cho.input);
+                connect(this.cho, App.context.destination);
+                
                 function connect(output, input) {
                     if(_.isArray(output)) {
                         _.forEach(output, function(outputNode) {
@@ -105,33 +89,16 @@ define([
                             break;
                     }
                 }
-            
-                connect(this.lfo.pitchMod, this.dco.input);
-                connect(this.lfo.freqMod, this.vcf.input1.detune);
-                connect(this.lfo.freqMod, this.vcf.input2.detune);
-                connect(this.dco.output, this.hpf.cutoff);
-                connect(this.hpf.output, this.vcf.input1);
-                connect(this.vcf.output, this.vca.level);
-                connect(this.vca.level, this.env.ampMod);
-                connect(this.env.ampMod, this.cho.input);
-                connect(this.cho, App.context.destination);
             },
             
-            noteOn: function(options) {
-                this.lfo.trigger({
-                    lfoRate: options.lfoRate,
-                    lfoFreq: options.lfoFreq,
-                    lfoDelay: options.lfoDelay,
-                    lfoPitch: options.lfoPitch
-                });
-                
+            noteOn: function() {
+                this.lfo.noteOn();
                 this.env.noteOn();
                 this.vcf.noteOn();
             },
         
             noteOff: function() {
                 var releaseTime = this.env.release;
-                
                 this.env.noteOff();
                 this.vcf.noteOff();
                 this.dco.noteOff(releaseTime);

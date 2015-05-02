@@ -8,7 +8,7 @@ define([
             // Initialization
             var lfo = App.context.createOscillator();
             lfo.type = 'triangle';
-            lfo.frequency.value = 0;
+            lfo.frequency.value = options.lfoRate;
             lfo.start(0);
             
             var pitchMod = App.context.createGain();
@@ -17,26 +17,34 @@ define([
             var freqMod = App.context.createGain();
             freqMod.gain.value = 0;
             
+            var delayTime = setDelay(options.lfoDelay);
+            var pitchModFactor = getPitchModFactor(options.lfoPitch);
+            var freqModFactor = getFreqModFactor(options.lfoFreq);
+            
             lfo.connect(pitchMod);
             lfo.connect(freqMod);
             
             // Setter methods
-            function setPitchMod(value) {
+            function setPitchMod() {
                 var now = App.context.currentTime;
                 pitchMod.gain.cancelScheduledValues(now);
-                pitchMod.gain.setValueAtTime(getAmplitude(value), now);
+                pitchMod.gain.setValueAtTime(pitchModFactor, now);
             }
             
-            function setFreqMod(value) {
+            function setFreqMod() {
                 var now = App.context.currentTime;
                 freqMod.gain.cancelScheduledValues(now);
-                freqMod.gain.setValueAtTime(getAmplitude(value) * 200, now);
+                freqMod.gain.setValueAtTime(freqModFactor, now);
             }
             
             function setRate(value) {
                 var now = App.context.currentTime;
                 lfo.frequency.cancelScheduledValues(now);
                 lfo.frequency.setValueAtTime(getRate(value), now);
+            }
+            
+            function setDelay(value) {
+                return util.getFaderCurve(value) * 3;
             }
             
             // Helper methods
@@ -48,34 +56,48 @@ define([
                  return util.getFaderCurve(value) * 25;
             }
             
+            function getPitchModFactor(value) {
+                return getAmplitude(value);
+            }
+            
+            function getFreqModFactor(value) {
+                return getAmplitude(value) * 200;
+            }
+            
             // Trigger the LFO on a keypress
-            this.trigger = function(options) {
+            this.noteOn = function() {
                 var now = App.context.currentTime;
-                var currentPitchMod = getAmplitude(options.lfoPitch);
-                var currentFreqMod = getAmplitude(options.lfoFreq) * 200;
-                var delayTime = util.getFaderCurve(options.lfoDelay) * 3;
             
                 pitchMod.gain.cancelScheduledValues(now);
                 pitchMod.gain.setValueAtTime(0, now);
-                pitchMod.gain.linearRampToValueAtTime(currentPitchMod, now + delayTime);
+                pitchMod.gain.linearRampToValueAtTime(pitchModFactor, now + delayTime);
             
                 freqMod.gain.cancelScheduledValues(now);
                 freqMod.gain.setValueAtTime(0, now);
-                freqMod.gain.linearRampToValueAtTime(currentFreqMod, now + delayTime);
+                freqMod.gain.linearRampToValueAtTime(freqModFactor, now + delayTime);
             };
                 
             Object.defineProperties(this, {
                 'pitchMod': {
                     'get': function() { return pitchMod; },
-                    'set': function(value) { console.log('setting pitchMod ' + value); setPitchMod(value); }
+                    'set': function(value) { 
+                        pitchModFactor = getPitchModFactor(value);
+                        setPitchMod();
+                    }
                 },
                 'freqMod': {
                     'get': function() { return freqMod; },
-                    'set': function(value) { console.log('setting freqMod ' + value); setFreqMod(value); }
+                    'set': function(value) { 
+                        freqModFactor = getFreqModFactor(value);
+                        setFreqMod();
+                    }
                 },
                 'rate': {
                     'get': function() { return lfo.frequency; },
-                    'set': function(value) { console.log('setting rate ' + value); setRate(value); }
+                    'set': function(value) { setRate(value); }
+                },
+                'delay': {
+                    'set': function(value) { delayTime = setDelay(value); }
                 }
             });
 

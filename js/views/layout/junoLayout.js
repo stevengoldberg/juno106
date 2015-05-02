@@ -5,12 +5,18 @@ define([
     'views/item/keyboardItemView',
     'voice',
     'lfo',
+    'vcf',
+    'env',
+    'hpf',
+    'vca',
     'tuna',
     'models/junoModel',
     'hbs!tmpl/layout/junoLayout-tmpl'
     ],
     
-    function(Backbone, App, ModuleLayout, KeyboardItemView, Voice, LFO, Tuna, JunoModel, Template) {
+    function(Backbone, App, ModuleLayout, KeyboardItemView, Voice, LFO, VCF, ENV,
+        HPF, VCA, Tuna, JunoModel, Template) {
+        
         return Backbone.Marionette.LayoutView.extend({
             
             className: 'juno',
@@ -25,12 +31,51 @@ define([
             initialize: function() {
                 this.maxPolyphony = 6;
                 this.activeVoices = {};
+                                
+                // Envelope constants
+                var envConstants = {
+                    envelopeOffset: 0.0015,
+                    attackMax: 3,
+                    decayReleaseMax: 12,
+                    minSustain: 0.0001
+                };
+                
+                // Initialize long-lived components
                 this.synth = new JunoModel();
                 
                 var tuna = new Tuna(App.context);
-                this.chorus = new tuna.Chorus();
                 
-                this.lfo = new LFO();
+                this.cho = new tuna.Chorus();
+                this.cho.chorusLevel = this.synth.get('cho-chorusToggle');
+                
+                this.lfo = new LFO({
+                    lfoRate: this.synth.get('lfo-rate'),
+                    lfoPitch: this.synth.get('lfo-pitch'),
+                    lfoDelay: this.synth.get('lfo-delay'),
+                    lfoFreq: this.synth.get('lfo-freq')
+                });
+                
+                this.vcf = new VCF({
+                    frequency: this.synth.get('vcf-cutoff'),
+                    res: this.synth.get('vcf-res'),
+                    envelope: this.synth.getCurrentEnvelope(),
+                    vcfEnv: this.synth.get('vcf-envMod'),
+                    envConstants: envConstants
+                });
+                
+                this.env = new ENV({
+                    envelope: this.synth.getCurrentEnvelope(),
+                    maxLevel: this.synth.get('vca-level'),
+                    envConstants: envConstants
+                });
+                
+                this.hpf = new HPF({
+                    frequency: this.synth.get('hpf-freq')
+                });
+                
+                this.vca = new VCA({
+                    maxLevel: this.synth.get('vca-level'),
+                });
             },
             
             onShow: function() {
@@ -51,25 +96,16 @@ define([
                 var voice = new Voice({
                     frequency: this.synth.getCurrentRange(frequency),
                     waveform: this.synth.getCurrentWaveforms(),
-                    vcfFreq: this.synth.get('vcf-cutoff'),
-                    res: this.synth.get('vcf-res'),
-                    envelope: this.synth.getCurrentEnvelope(),
-                    maxLevel: this.synth.get('vca-level'),
-                    chorusLevel: this.synth.get('cho-chorusToggle'),
                     subLevel: this.synth.get('dco-sub'),
-                    hpfFreq: this.synth.get('hpf-freq'),
-                    vcfEnv: this.synth.get('vcf-envMod'),
-                    lfo: this.lfo,
-                    chorus: this.chorus
+                    cho: this.cho,
+                    vcf: this.vcf,
+                    hpf: this.hpf,
+                    env: this.env,
+                    vca: this.vca,
+                    lfo: this.lfo
                 });
                     
-                voice.noteOn({
-                    lfoRate: this.synth.get('lfo-rate'),
-                    lfoPitch: this.synth.get('lfo-pitch'),
-                    lfoDelay: this.synth.get('lfo-delay'),
-                    lfoFreq: this.synth.get('lfo-freq'),
-                    envelope: this.synth.getCurrentEnvelope()
-                });
+                voice.noteOn();
                 
                 this.activeVoices[note] = voice;
             },
@@ -90,10 +126,9 @@ define([
                         voice[component][method](value);
                     } else {
                         voice[component][method] = value;
-                        console.log(voice[component].id + ' : ' + voice[component].cutoff);
                     }
                 });
-            }, 30)
+            }, 15)
             
         });
     });

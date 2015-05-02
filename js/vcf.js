@@ -6,8 +6,6 @@ define([
     function(App, util) {
         function VCF(options) {
             // Initialization     
-            this.id = _.uniqueId();
-                   
             var envelopeOffset = options.envConstants.envelopeOffset;
             var attackMax = options.envConstants.attackMax;
             var decayReleaseMax = options.envConstants.decayReleaseMax;
