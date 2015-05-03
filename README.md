@@ -14,7 +14,7 @@ Active features:
 * LFO delay
 * DCO range
 * DCO modulation by LFO
-* DCO pulse/saw toggle
+* DCO sawtooth on/off
 * DCO sub level
 * VCF cutoff
 * VCF res
@@ -30,6 +30,7 @@ Active features:
 
 1.0:
 
+* Square/pulse wave
 * Noise generator
 * PWM manual/LFO
 * Filter key tracking
