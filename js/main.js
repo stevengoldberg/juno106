@@ -19,7 +19,6 @@ require([
         
         // Pulse oscillator from Andy Harman
         // https://github.com/pendragon-andyh/WebAudio-PulseOscillator
-
         var pulseCurve = new Float32Array(256);
         for(var i = 0; i < 128; i++) {
             pulseCurve[i] = -1;
