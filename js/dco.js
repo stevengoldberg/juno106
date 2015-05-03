@@ -14,7 +14,8 @@ define([
                 var sawtooth = createOsc.call(this, options.frequency, 'sawtooth', options.waveform.sawtooth);
             
                 // Pulse osc
-                //var pulse = this.createPulse(options.frequency, options.waveform.pulse, options.waveform.pwm);
+                var pulseWidth;
+                var pulse = createPulse.call(this, options.frequency, options.waveform.pwm, options.waveform.pulse);
             
                 // Sub osc is a square wave -1 8ve from the main osc
                 var sub = createOsc.call(this, options.frequency / 2, 'square', options.subLevel);
@@ -41,6 +42,31 @@ define([
                     var now = App.context.currentTime;
                     sawtooth.gain.cancelScheduledValues(now);
                     sawtooth.gain.setValueAtTime(level, now);
+                }
+                
+                function setPulse(level) {
+                    var now = App.context.currentTime;
+                    pulse.gain.cancelScheduledValues(now);
+                    pulse.gain.setValueAtTime(level, now);
+                }
+                
+                function setPulseWidth(value) {
+                    var now = App.context.currentTime;
+                    pulseWidth.cancelScheduledValues(now);
+                    pulseWidth.setValueAtTime(value * 0.8, now);
+                }
+                
+                function createPulse(frequency, pwm, level) {
+                    var osc = App.context.createPulseOscillator();
+                    var gain = App.context.createGain();
+                    osc.frequency.value = frequency;
+                    gain.gain.value = level;
+                    osc.connect(gain);
+                    osc.width.value = pwm;
+                    this.oscillators.push(osc);
+                    this.output.push(gain);
+                    pulseWidth = osc.width;
+                    return gain;
                 }
             
                 function createOsc(frequency, type, level) {
@@ -70,11 +96,14 @@ define([
                     'sawtooth': {
                         'set': function(value) { setSawtooth(value); }
                     },
+                    'pulse': {
+                        'set': function(value) { setPulse(value); }
+                    },
                     'sub': {
                         'set': function(value) { setSub(value); }
                     },
-                    'pulse': {
-                        'set': function(value) { setPulse(value); }
+                    'pwm': {
+                        'set': function(value) { setPulseWidth(value); }
                     }
                 });
                

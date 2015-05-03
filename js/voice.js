@@ -21,7 +21,7 @@ define([
                     minSustain: 0.0001
                 };
                 
-                var triggerKillVoice = _.after(2, function() {
+                var triggerKillVoice = _.after(3, function() {
                     that.trigger('killVoice');
                 });
                 

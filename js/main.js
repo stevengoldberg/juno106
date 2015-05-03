@@ -24,23 +24,21 @@ require([
             pulseCurve[i] = -1;
             pulseCurve[i + 128] = 1;
         }
-        
         App.context.pulseCurve = pulseCurve;
         
         var constantOneCurve = new Float32Array(2);
         constantOneCurve[0] = 1;
         constantOneCurve[1] = 1;
-        
         App.context.constantOneCurve = constantOneCurve;
         
         App.context.createPulseOscillator = function() {
     		var node = this.createOscillator();
     		node.type = "sawtooth";
             
-    		var pulseShaper = ac.createWaveShaper();
+    		var pulseShaper = App.context.createWaveShaper();
     		pulseShaper.curve = this.pulseCurve;
     		node.connect(pulseShaper);
-    		var widthGain = ac.createGain();
+    		var widthGain = App.context.createGain();
     		widthGain.gain.value = 0; 
     		node.width = widthGain.gain; 
     		widthGain.connect(pulseShaper);

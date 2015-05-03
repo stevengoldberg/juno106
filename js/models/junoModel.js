@@ -16,7 +16,7 @@ define([
                     'dco-sawtooth': 1,
                     'dco-pulse': 0,
                     'dco-noise': 0,
-                    'dco-pwm': 0.5,
+                    'dco-pwm': 0,
                     'dco-range': 1,
                     'dco-sub': 0,
                     'cho-chorusToggle': 0,
@@ -37,7 +37,7 @@ define([
                     pulse: this.get('dco-pulse'),
                     noise: this.get('dco-noise'),
                     sub: this.get('dco-sub'),
-                    pwm: this.get('dco-pwm')
+                    pwm: this.getPulseWidth()
                 };
             },
             
@@ -60,6 +60,10 @@ define([
                     sustain: this.get('env-sustain'),
                     release: this.get('env-release')
                 };
+            },
+            
+            getPulseWidth: function() {
+                return this.get('dco-pwm') * 0.8;
             },
             
             // Faders register 0.0775 at their lowest position, so convert that to 0
