@@ -5,20 +5,22 @@ define([
     
     function(App, util) {
         function VCF(options) {
-            // Initialization     
+            // Initialization  
+            var that = this;
+            
             var envelopeOffset = options.envConstants.envelopeOffset;
             var attackMax = options.envConstants.attackMax;
             var decayReleaseMax = options.envConstants.decayReleaseMax;
             var minSustain = options.envConstants.minSustain;
             var filterMinimum = 10;
             
-            filter1 = App.context.createBiquadFilter();
-            filter2 = App.context.createBiquadFilter();
+            var filter1 = App.context.createBiquadFilter();
+            var filter2 = App.context.createBiquadFilter();
             filter1.type = 'lowpass';
             filter2.type = 'lowpass';
             
             filter1.Q.value = getResonanceFromValue(options.res / 2);
-            filter2.Q.value = filter1.Q.value;
+            filter2.Q.value = getResonanceFromValue(options.res / 2);
             
             var envelope = options.envelope;
             var vcfEnv = options.vcfEnv;
@@ -28,10 +30,24 @@ define([
             var decayTime;
             var sustainLevel;
             var releaseTime;
+            
             var envModAmount;
             var maxLevel;
             
-            setupEnvelope(options.frequency);
+            var releaseObj = {
+                releasing: false,
+                releaseMoment: null,
+                releaseTimeout: null,
+                releaseCutoff: null
+            };
+            
+            var attackObj = {
+                attacking: false,
+                attackMoment: null,
+                attackTimeout: null
+            };
+            
+            setupEnvelope();
             filter1.connect(filter2);
             
             // Setter methods
@@ -42,12 +58,14 @@ define([
                 filter2.Q.setValueAtTime(resonance / 2, now);
             }
             
-            function setFilter() {
+            function setFilter(value) {
+                value = value || sustainLevel;
+                
                 var now = App.context.currentTime;
                 filter1.frequency.cancelScheduledValues(now);
                 filter2.frequency.cancelScheduledValues(now);
-                filter1.frequency.setValueAtTime(sustainLevel, now);
-                filter2.frequency.setValueAtTime(sustainLevel, now);
+                filter1.frequency.setValueAtTime(value, now);
+                filter2.frequency.setValueAtTime(value, now);
             }
             
             // Helper methods
@@ -97,18 +115,62 @@ define([
                 return getCutoffFreqFromValue(util.getFaderCurve(vcfEnv)) - filterMinimum;
             }
             
-            // Trigger the filter on keypress
-            this.noteOn = function() {
+            function resetAttack() {
                 var now = App.context.currentTime;
-                setupEnvelope();
+                var elapsed = now - attackObj.attackMoment;
+                
+                attackTime -= elapsed;
+            
+                maxLevel = getMaxLevel();
+                sustainLevel = getSustainLevel();
+                
+                window.clearTimeout(attackObj.attackTimeout);
+                that.noteOn(filter1.frequency.value);
+            }
+            
+            function resetRelease() {
+                var now = App.context.currentTime;
+                var elapsed = now - releaseObj.releaseMoment;
+                
+                releaseTime -= elapsed;
+                
+                window.clearTimeout(releaseObj.releaseTimeout);
+
+                that.noteOff();
+            }
+            
+            function setDecay() {
+                var now = App.context.currentTime;
+                decayTime = getDecayTime();
+                filter1.frequency.cancelScheduledValues(now);
+                filter2.frequency.cancelScheduledValues(now);
+                filter1.frequency.exponentialRampToValueAtTime(sustainLevel, now + decayTime);
+                filter2.frequency.exponentialRampToValueAtTime(sustainLevel, now + decayTime);
+            }
+            
+            // Trigger the filter on keypress
+            this.noteOn = function(initial) {
+                var now = App.context.currentTime;
+                
+                if(!initial) {
+                    initial = filterCutoff;
+                    setupEnvelope();
+                }
+
+                attackObj.attacking = true;
+                attackObj.attackMoment = now;
+                
+                attackObj.attackTimeout = window.setTimeout(function() {
+                    attackObj.attacking = false;
+                }, (attackTime * 1000));
 
                 filter1.frequency.cancelScheduledValues(now);
-                filter1.frequency.setValueAtTime(filterCutoff, now);
+                filter1.frequency.setValueAtTime(initial, now);
                 filter1.frequency.linearRampToValueAtTime(maxLevel, now + attackTime);
-                filter1.frequency.linearRampToValueAtTime(sustainLevel, now + attackTime + decayTime);
+                filter1.frequency.exponentialRampToValueAtTime(sustainLevel, now + attackTime + decayTime);
     
                 filter2.frequency.cancelScheduledValues(now);
-                filter2.frequency.setValueAtTime(filterCutoff, now);
+                filter2.frequency.setValueAtTime(initial, now);
                 filter2.frequency.linearRampToValueAtTime(maxLevel, now + attackTime);
                 filter2.frequency.linearRampToValueAtTime(sustainLevel, now + attackTime + decayTime);
             };
@@ -116,13 +178,21 @@ define([
             // Release the filter on keyup
             this.noteOff = function() {
                 var now = App.context.currentTime;
+                
+                releaseObj.releaseMoment = now;
+                attackObj.attacking = false;
+                releaseObj.releasing = true;
+                
+                releaseObj.releaseTimeout = window.setTimeout(function() {
+                    releaseObj.releasing = false;
+                }, (releaseTime * 1000));
         
                 filter1.frequency.cancelScheduledValues(now);
                 filter1.frequency.setValueAtTime(filter1.frequency.value, now);
                 filter1.frequency.exponentialRampToValueAtTime(filterCutoff, now + releaseTime);
     
                 filter2.frequency.cancelScheduledValues(now);
-                filter2.frequency.setValueAtTime(filter2.frequency.value, now);
+                filter2.frequency.setValueAtTime(filter1.frequency.value, now);
                 filter2.frequency.exponentialRampToValueAtTime(filterCutoff, now + releaseTime);
             };
             
@@ -131,8 +201,16 @@ define([
                     'get': function() { return sustainLevel; },
                     'set': function(value) { 
                         filterCutoff = getCutoffFreqFromValue(value);
-                        setupEnvelope();
-                        setFilter();
+                        envModAmount = getEnvModAmount();
+                        
+                        if(attackObj.attacking) {
+                            resetAttack();
+                        } else if(releaseObj.releasing) {
+                            resetRelease();
+                        } else {
+                            setupEnvelope();
+                            setFilter();
+                        }
                     }
                 },
                 'envMod': {
@@ -140,37 +218,54 @@ define([
                     'set': function(value) { 
                         vcfEnv = value;
                         envModAmount = getEnvModAmount();
-                        sustainLevel = getSustainLevel();
-                        setFilter();
+                        
+                        if(attackObj.attacking) {
+                            resetAttack();
+                        } else if(releaseObj.releasing) {
+                            resetRelease();
+                        } else {
+                            setupEnvelope();
+                            setFilter();
+                        }
                     }
                 },
                 'attack': {
                     'set': function(value) { 
                         envelope.attack = value;
-                        attackTime = getAttackTime();
-                        setFilter();
+                        setupEnvelope();
+                        if(attackObj.attacking) {
+                            that.noteOn(filter1.frequency.value);
+                        }
                     }
                 },
                 'decay': {
                     'set': function(value) {
                         envelope.decay = value;
-                        decayTime = getDecayTime();
-                        setFilter();
+                        if(!attackObj.attacking && !releaseObj.releasing) {
+                            setDecay();
+                        }
                     }
                 },
                 'sustain': {
                     'set': function(value) {
                         envelope.sustain = value;
                         sustainLevel = getSustainLevel();
-                        setFilter();
+                        if(! attackObj.attacking && !releaseObj.releasing) {
+                            setFilter();
+                        }
                     }
                 },
                 'release': {
                     'set': function(value) {
                         envelope.release = value;
-                        releaseTime = getReleaseTime();
-                        setFilter();
+                        setupEnvelope();
+                        if(releaseObj.releasing) {
+                            that.noteOff();
+                        }
                     }
+                },
+                'res': {
+                    'set': function(value) { setRes(value); }
                 },
                  'input1': {
                     'get': function() { return filter1; }

@@ -1,29 +1,73 @@
 define([
     'application',
-    'dco'
+    'dco',
+    'vcf',
+    'env',
+    'hpf',
+    'vca'
 ],
     
-    function(App, DCO) {
+    function(App, DCO, VCF, ENV, HPF, VCA) {
         return Backbone.Marionette.Object.extend({
             initialize: function(options) {
                 
                 var that = this;
                 
-                this.lfo = options.lfo;
-                this.env = options.env;
-                this.vcf = options.vcf;
-                this.hpf = options.hpf;
-                this.vca = options.vca;
-                this.cho = options.cho;
-                this.cho.chorusToggle = chorusToggle;
-                chorusToggle(this.cho.chorusLevel);
+                // Envelope constants
+                var envConstants = {
+                    envelopeOffset: 0.0015,
+                    attackMax: 3,
+                    decayReleaseMax: 12,
+                    minSustain: 0.0001
+                };
                 
-                // Oscillators are instantiated as needed
+                var triggerKillVoice = _.after(2, function() {
+                    that.trigger('killVoice');
+                });
+                
+                this.lfo = options.lfo;
+                this.cho = options.cho;
+                
+                if(!_.has(this.cho, 'chorusToggle')) {
+                    Object.defineProperties(this.cho, {
+                        'chorusToggle': {
+                            'set': function(value) { 
+                                that.cho.chorusLevel = value;
+                                chorusToggle.call(that.cho);
+                            }
+                        }
+                    });
+                }
+                
+                this.vcf = new VCF({
+                    frequency: options.vcfFreq,
+                    res: options.res,
+                    envelope: options.envelope,
+                    vcfEnv: options.vcfEnv,
+                    envConstants: envConstants
+                });
+                
+                this.env = new ENV({
+                    envelope: options.envelope,
+                    maxLevel: options.maxLevel,
+                    envConstants: envConstants
+                });
+                
                 this.dco = new DCO({
                     frequency: options.frequency,
                     waveform: options.waveform,
                     subLevel: options.subLevel
                 });
+                
+                this.hpf = new HPF({
+                    frequency: options.hpf
+                });
+                
+                this.vca = new VCA({
+                    maxLevel: options.maxLevel
+                });
+                
+                this.listenTo(this.dco, 'destroyed', triggerKillVoice);
 
                 // Sync up the envelope for the amplifier and the filter
                 function setupEnvelopeListeners() {
@@ -70,8 +114,8 @@ define([
                     }
                 }
                 
-                function chorusToggle(level) {
-                    switch(level) {
+                function chorusToggle() {
+                    switch(this.chorusLevel) {
                         case 0:
                             this.bypass = 1;
                             break;
@@ -98,10 +142,9 @@ define([
             },
         
             noteOff: function() {
-                var releaseTime = this.env.release;
+                this.listenToOnce(this.env, 'released', this.dco.noteOff.bind(this.dco));
                 this.env.noteOff();
                 this.vcf.noteOff();
-                this.dco.noteOff(releaseTime);
             }
     });
 });

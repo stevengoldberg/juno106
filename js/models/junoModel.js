@@ -12,7 +12,7 @@ define([
                     'env-decay': 0,
                     'env-sustain': 1,
                     'env-release': 0,
-                    'vca-gate': 1,
+                    'env-enabled': 1,
                     'dco-sawtooth': 1,
                     'dco-pulse': 0,
                     'dco-noise': 0,
@@ -54,7 +54,7 @@ define([
             
             getCurrentEnvelope: function() {
                 return {
-                    enabled: this.get('vca-gate'),
+                    enabled: this.get('env-enabled'),
                     attack: this.get('env-attack'),
                     decay: this.get('env-decay'),
                     sustain: this.get('env-sustain'),

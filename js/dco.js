@@ -3,84 +3,82 @@ define([
 ],
     
     function(App) {
-        function DCO(options) {
-            this.output = [];
-            this.input = [];
-            this.oscillators = [];
+        return Backbone.Marionette.Object.extend({
+            initialize: function(options) {
+                this.output = [];
+                this.input = [];
+                this.oscillators = [];
+                var that = this;
             
-            // Sawtooth osc
-            this.sawtooth = App.context.createOscillator();
-            this.sawtooth.type = 'sawtooth';
-            this.sawtooth.frequency.value = options.frequency;
-            this.sawtoothLevel = App.context.createGain();
-            this.sawtoothLevel.gain.value = options.waveform.sawtooth;
-            this.sawtooth.connect(this.sawtoothLevel);
-            this.oscillators.push(this.sawtooth);
-            this.output.push(this.sawtoothLevel);
+                // Sawtooth osc
+                var sawtooth = createOsc.call(this, options.frequency, 'sawtooth', options.waveform.sawtooth);
             
-            // Pulse osc consists of sawtooth + delayed ramp
-            this.pulse_sawtooth = App.context.createOscillator();
-            this.pulse_sawtooth.type = 'sawtooth';
-            this.pulse_sawtooth.frequency.value = options.frequency;
+                // Pulse osc
+                //var pulse = this.createPulse(options.frequency, options.waveform.pulse, options.waveform.pwm);
             
-            this.pulse_ramp = App.context.createOscillator();
-            this.pulse_ramp.type = 'sawtooth';
-            this.pulse_ramp.frequency.value = options.frequency;
-            this.sawtoothInverter = App.context.createGain();
-            this.sawtoothInverter.gain.value = -1;
+                // Sub osc is a square wave -1 8ve from the main osc
+                var sub = createOsc.call(this, options.frequency / 2, 'square', options.subLevel);
             
-            this.pulse_ramp.connect(this.sawtoothInverter);
-            this.rampDelay = App.context.createDelay(1 / options.frequency);
-            this.setPWM(options.waveform.pwm);
-            this.sawtoothInverter.connect(this.rampDelay);
-            this.input.push(this.rampDelay.delayTime);
+                // Start the oscillators, set up mod inputs
+                _.each(this.oscillators, function(oscillator) {
+                    oscillator.start(0);
+                    oscillator.onended = destroyOscillator;
+                    this.input.push(oscillator.frequency);
+                }, this);
             
-            this.pulseBus = App.context.createGain();
-            this.pulse_sawtooth.connect(this.pulseBus);
-            this.rampDelay.connect(this.pulseBus);
+                // Setter methods
+                function setSub(level) {
+                    var now = App.context.currentTime;
+                    sub.gain.cancelScheduledValues(now);
+                    sub.gain.setValueAtTime(level, now);
+                }
             
-            this.pulseLevel = App.context.createGain();
-            this.pulseLevel.gain.value = options.waveform.pulse;
-            this.pulseBus.connect(this.pulseLevel);
-            this.oscillators.push(this.pulse_ramp, this.pulse_sawtooth);
-            this.output.push(this.pulseLevel);
-            
-            // Sub osc is a square wave -1 8ve from the main osc
-            this.subOsc = App.context.createOscillator();
-            this.subOsc.type = 'square';
-            this.subOsc.frequency.value = options.frequency / 2;
-            this.oscillators.push(this.subOsc);
-            
-            this.subLevel = App.context.createGain();
-            this.subOsc.connect(this.subLevel);
-            this.subLevel.gain.value = options.waveform.sub;
-            this.output.push(this.subLevel);
-            
-            // Start the oscillators, setup mod inputs
-            _.each(this.oscillators, function(oscillator) {
-                oscillator.start(0);
-                this.input.push(oscillator.frequency);
-            }, this);
-        }
-        
+                function setRange(level) {
 
-        DCO.prototype.noteOff = function(releaseTime) {
-            var now = App.context.currentTime;
-            _.each(this.oscillators, function(oscillator) {
-                oscillator.stop(now + releaseTime);
-            });
-        };
-        
-        DCO.prototype.sub = function(value) {
-            var now = App.context.currentTime;
-            this.subLevel.gain.cancelScheduledValues(now);
-            this.subLevel.gain.setValueAtTime(value, now);
-        };
-        
-        DCO.prototype.range = function() {
-            //stub
-        };
-        
-        return DCO;
+                }
+            
+                function setSawtooth(level) {
+                    var now = App.context.currentTime;
+                    sawtooth.gain.cancelScheduledValues(now);
+                    sawtooth.gain.setValueAtTime(level, now);
+                }
+            
+                function createOsc(frequency, type, level) {
+                    var osc = App.context.createOscillator();
+                    var gain = App.context.createGain();
+                    osc.type = type;
+                    osc.frequency.value = frequency;                
+                    gain.gain.value = level;
+                    osc.connect(gain);
+                    this.oscillators.push(osc);
+                    this.output.push(gain);
+                    return gain;
+                }
+            
+                function destroyOscillator() {
+                    that.trigger('destroyed');
+                }
+            
+                this.noteOff = function() {
+                    var now = App.context.currentTime;
+                    _.each(this.oscillators, function(oscillator) {
+                        oscillator.stop(now);
+                    });
+                };
+            
+                Object.defineProperties(this, {
+                    'sawtooth': {
+                        'set': function(value) { setSawtooth(value); }
+                    },
+                    'sub': {
+                        'set': function(value) { setSub(value); }
+                    },
+                    'pulse': {
+                        'set': function(value) { setPulse(value); }
+                    }
+                });
+               
+            }
+        });
     }
 );

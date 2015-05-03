@@ -27,76 +27,96 @@ define([
                 var sustainModifier;
                 var sustainLevel;
                 var releaseTime;
-                var releasing = false;
+                var releaseObj = {
+                    releasing: false,
+                    releaseTime: null,
+                    releaseTimeout: null
+                };
+                var attackObj = {
+                    attacking: false,
+                    attackTime: null,
+                    attackTimeout: null
+                };
             
                 if(enabled) {
-                    sustainModifier = envelope.sustain;
-                    sustainLevel = (maxLevel * sustainModifier) || minSustain;
-                    attackTime = setAttack(envelope.attack);
-                    decayTime = setDecay(envelope.decay);
-                    releaseTime = setRelease(envelope.release);
+                    setSustain(envelope.sustain);
+                    setAttack(envelope.attack);
+                    setDecay(envelope.decay);
+                    setRelease(envelope.release);
                 } else {
-                    sustainLevel = (maxLevel * sustainModifier) || minSustain;
+                    setSustain(1);
                     attackTime = envelopeOffset;
                     decayTime = envelopeOffset;
-                    sustainModifier = 1;
                     releaseTime = envelopeOffset;
                 }
             
                 // Setter methods
-                function setSustain(sustainModifier) {
+                function setSustain(value) {
                     var now = App.context.currentTime;
-                    sustainLevel = (maxLevel * sustainModifier) || minSustain;
+                    
+                    sustainLevel = (maxLevel * value) || minSustain;
                 
-                    if(enabled) {
-                        //ampMod.gain.cancelScheduledValues(now);
+                    if(enabled && !attackObj.attacking && !releaseObj.releasing) {
+                        ampMod.gain.cancelScheduledValues(now);
                         ampMod.gain.setValueAtTime(sustainLevel, now);
                     }
-                    that.trigger('sustain', sustainLevel);
                 }
             
                 function setAttack(value) {
                     var now = App.context.currentTime;
                     attackTime = util.getFaderCurve(value) * attackMax + envelopeOffset;
                 
-                    if(enabled) {
-                        //ampMod.gain.cancelScheduledValues(now);
-                        ampMod.gain.linearRampToValueAtTime(maxLevel, now + attackTime);
+                    if(enabled && attackObj.attacking) {
+                        resetAttack();
                     }
-                    return attackTime;
                 }
             
                 function setDecay(value) {
                     var now = App.context.currentTime;
                     decayTime = util.getFaderCurve(value) * decayReleaseMax + envelopeOffset;
                 
-                    if(enabled) {
-                        //ampMod.gain.cancelScheduledValues(now);
-                        ampMod.gain.linearRampToValueAtTime(sustainLevel, now + decayTime);
+                    if(enabled && !attackObj.attacking && !releaseObj.releasing) {
+                        ampMod.gain.exponentialRampToValueAtTime(sustainLevel, now + decayTime);
                     }
-                    return decayTime;
                 }
             
                 function setRelease(value) {
                     var now = App.context.currentTime;
                     releaseTime = util.getFaderCurve(value) * decayReleaseMax + envelopeOffset;
                 
-                    if(enabled && releasing) {
-                        //ampMod.gain.cancelScheduledValues(now);
-                        ampMod.gain.exponentialRampToValueAtTime(minSustain, now + releaseTime);
+                    if(enabled && releaseObj.releasing) {
+                        resetRelease();
                     }
-                    return releaseTime;
+                }
+                
+                function resetAttack() {
+                    window.clearTimeout(attackObj.attackTimeout);
+                    that.noteOn(ampMod.gain.value);
+                }
+                
+                function resetRelease() {                
+                    window.clearTimeout(releaseObj.releaseTimeout);
+                    that.noteOff();
                 }
             
                 // Trigger the envelope on a keypress
-                this.noteOn = function() {
+                this.noteOn = function(initial) {
                     var now = App.context.currentTime;
+                    initial = initial || 0;
+                    
                     ampMod.gain.cancelScheduledValues(now);
-                    ampMod.gain.setValueAtTime(0, now);
+                    ampMod.gain.setValueAtTime(initial, now);
                 
                     if(enabled) {
+                        attackObj.attacking = true;
+                        attackObj.attackTime = now;
+                        
+                        attackObj.attackTimeout = window.setTimeout(function() {
+                            attackObj.attacking = false;
+                        }, (attackTime * 1000));
+                        
                         ampMod.gain.linearRampToValueAtTime(maxLevel, now + attackTime);
-                        ampMod.gain.linearRampToValueAtTime(sustainLevel, now + attackTime + decayTime);
+                        ampMod.gain.exponentialRampToValueAtTime(sustainLevel, now + attackTime + decayTime);
                     } else {
                         ampMod.gain.linearRampToValueAtTime(maxLevel, now + envelopeOffset);
                     }
@@ -105,12 +125,22 @@ define([
                 // Release the envelope on keyup
                 this.noteOff = function() {
                     var now = App.context.currentTime;
-                    releasing = true;
+                    var that = this;
                 
                     ampMod.gain.cancelScheduledValues(now);
                     ampMod.gain.setValueAtTime(ampMod.gain.value, now);
+                    
+                    attackObj.attacking = false;
                 
                     if(enabled) {
+                        releaseObj.releasing = true;
+                        releaseObj.releaseTime = now;
+                        
+                        releaseObj.releaseTimeout = window.setTimeout(function() {
+                            releaseObj.releasing = false;
+                            that.trigger('released');
+                        }, (releaseTime * 1000));
+                        
                         ampMod.gain.exponentialRampToValueAtTime(minSustain, now + releaseTime);
                     } else {
                         ampMod.gain.exponentialRampToValueAtTime(minSustain, now + envelopeOffset);
@@ -121,29 +151,29 @@ define([
                     'attack': {
                         'get': function() { return attackTime; },
                         'set': function(value) { 
-                            attackTime = setAttack(value);
-                            this.trigger('attack', attackTime);
+                            setAttack(value);
+                            this.trigger('attack', value);
                         }
                     },
                     'decay': {
                         'get': function() { return decayTime; },
                         'set': function(value) {
-                            decayTime = setDecay(value);
-                            this.trigger('decay', decayTime);
+                            setDecay(value);
+                            this.trigger('decay', value);
                         }
                     },
                     'sustain': {
-                        'get': function() { return sustainLevel; },
+                        'get': function() { return sustainModifier; },
                         'set': function(value) {
                             setSustain(value);
-                            this.trigger('sustain', sustainLevel);
+                            this.trigger('sustain', value);
                         }
                     },
                     'release': {
                         'get': function() { return releaseTime; },
                         'set': function(value) {
-                            releaseTime = setRelease(value);
-                            this.trigger('release', releaseTime);
+                            setRelease(value);
+                            this.trigger('release', value);
                         }
                     },
                     'ampMod': {
