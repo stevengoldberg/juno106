@@ -58,7 +58,7 @@ For detailed instructions, consult the [Juno 106 owner's manual](http://www.synt
  Oscillators that produce pitches, controlled by the keyboard.
  
  Range: Selects the keyboard octave.  
- LFO: Selects the extent to which the LFO modulates the oscillator pitch.  
+ LFO: Selects the extent to which the LFO modulates the oscillator pitch -- i.e., adjusts the depth of vibrato.  
  PWM: In manual mode, sets the width of the pulse wave, between 5% and 95%. In LFO mode,  
  selects the extent to which the LFO modulates pulse width.  
  PULSE/SAW: Toggles active waveforms.  
@@ -71,8 +71,8 @@ For detailed instructions, consult the [Juno 106 owner's manual](http://www.synt
  FREQ: Sets filter cutoff. Higher values let more high frequencies pass through, for a brighter sound.  
  RES: Controls resonance, which is a gain increase at the point of the filter cutoff.  
  NORM/INV: Whether or not to invert the filter.  
- ENV: The extent to which the envelope modulates the filter cutoff.  
- LFO: The extent to which the LFO modulates the filter cutoff.  
+ ENV: The extent to which the envelope is applied to the filter cutoff.  
+ LFO: The extent to which the LFO is applied to the filter cutoff.  
  KBD: The extent to which the filter cutoff tracks the keyboard pitch.  
 
 * HPF - High Pass Filter  
