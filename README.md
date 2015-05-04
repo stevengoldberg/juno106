@@ -14,7 +14,8 @@ Active features:
 * LFO delay
 * DCO range
 * DCO modulation by LFO
-* DCO sawtooth on/off
+* DCO sawtooth and pulse on/off
+* DCO set pulse width manually or set pulse width modulation by LFO
 * DCO sub level
 * VCF cutoff
 * VCF res
@@ -30,20 +31,20 @@ Active features:
 
 1.0:
 
-* Square/pulse wave
 * Noise generator
-* PWM manual/LFO
 * Filter key tracking
 * Filter invert
-* Optimize for iPad
 * Clean up
-* WebMIDI
+* WebMIDI?
+* Optimize for iPad?
  
 Post-1.0:
 
 * Save/load presets
 * Replace QwertyHancock?
 * Arpeggiator/sequencer
+* Improve chorus
+* "Analog" waveshaping/distortion
 
 For detailed instructions, consult the [Juno 106 owner's manual](http://www.synthfool.com/docs/Roland/Juno_Series/Roland_Juno_106/Roland_Juno106_Owners_Manual.pdf).
 
