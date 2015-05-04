@@ -40,7 +40,8 @@ define([
                     lfoPitch: this.synth.get('lfo-pitch'),
                     lfoDelay: this.synth.get('lfo-delay'),
                     lfoFreq: this.synth.get('lfo-freq'),
-                    lfoPwmEnabled: this.synth.get('dco-lfoPwmEnabled')
+                    lfoPwmEnabled: this.synth.get('dco-lfoPwmEnabled'),
+                    lfoPwm: this.synth.get('dco-pwm')
                 });
             },
             
