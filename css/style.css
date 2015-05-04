@@ -8,7 +8,10 @@ body {
 
 div, section {
   user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
   height: inherit;
+  box-sizing: border-box;
 }
 
 p {
@@ -143,8 +146,13 @@ p {
   height: 22px;
   display: flex;
   align-self: flex-start;
+  cursor: pointer;
+}
+.fader__knob:hover {
+  box-shadow: 0 0 7px white;
 }
 .fader__knob.dragging {
+  border: 1px dashed #CC3300;
   box-shadow: 0 0 7px white;
 }
 
@@ -163,9 +171,13 @@ hr {
   align-self: center;
   border-radius: 2px;
   opacity: .8;
+  cursor: pointer;
 }
 .button.pressed, .pressed.button--orange, .pressed.button--yellow {
   opacity: 1;
+}
+.button:hover, .button--orange:hover, .button--yellow:hover {
+  box-shadow: 0 0 7px white;
 }
 
 .button--orange {
@@ -215,6 +227,10 @@ hr {
   width: 90%;
   height: 12px;
   transition: all .25s;
+  cursor: pointer;
+}
+.switch__knob:hover, .switch__knob--up:hover, .switch__knob--down:hover, .switch__knob--middle:hover {
+  box-shadow: 0 0 15px red;
 }
 
 .switch__knob--up {

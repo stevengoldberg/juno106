@@ -14,7 +14,10 @@ body {
 
 div, section {
     user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
     height: inherit;
+    box-sizing: border-box;
 }
 
 p {

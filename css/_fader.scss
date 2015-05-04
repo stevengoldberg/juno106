@@ -69,7 +69,13 @@
     height: 22px;
     display: flex;
     align-self: flex-start;
+    cursor: pointer;
+    &:hover {
+        box-shadow: 0 0 7px white;
+    }
+    
     &.dragging {
+        border: 1px dashed $led-on-clr;
         box-shadow: 0 0 7px white;
     }
 }

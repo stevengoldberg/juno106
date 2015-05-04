@@ -15,6 +15,10 @@
     width: 90%;
     height: 12px;
     transition: all .25s;
+    cursor: pointer;
+    &:hover {
+        box-shadow: 0 0 15px red;
+    }
 }
 
 .switch__knob--up {

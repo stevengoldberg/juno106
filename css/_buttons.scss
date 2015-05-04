@@ -5,8 +5,12 @@
     align-self: center;
     border-radius: 2px;
     opacity: .8;
+    cursor: pointer;
     &.pressed {
         opacity: 1;
+    }
+    &:hover {
+        box-shadow: 0 0 7px white;
     }
 }
 
