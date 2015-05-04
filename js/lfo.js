@@ -17,12 +17,19 @@ define([
             var freqMod = App.context.createGain();
             freqMod.gain.value = 0;
             
+            var pwmMod = App.context.createGain();
+            pwmMod.gain.value = 0;
+            
             var delayTime = setDelay(options.lfoDelay);
             var pitchModFactor = getPitchModFactor(options.lfoPitch);
             var freqModFactor = getFreqModFactor(options.lfoFreq);
+            var pwmModFactor = getPitchModFactor(options.lfoPwm);
+            
+            var pwmModEnabled = options.lfoPwmEnabled;
             
             lfo.connect(pitchMod);
             lfo.connect(freqMod);
+            lfo.connect(pwmMod);
             
             // Setter methods
             function setPitchMod() {
@@ -35,6 +42,14 @@ define([
                 var now = App.context.currentTime;
                 freqMod.gain.cancelScheduledValues(now);
                 freqMod.gain.setValueAtTime(freqModFactor, now);
+            }
+            
+            function setPwmMod() {
+                var now = App.context.currentTime;
+                if(pwmModEnabled) {
+                    pwmMod.gain.cancelScheduledValues(now);
+                    pwmMod.gain.setValueAtTime(pwmModFactor, now);
+                }
             }
             
             function setRate(value) {
@@ -64,6 +79,13 @@ define([
                 return getAmplitude(value) * 200;
             }
             
+            function disablePwmMod() {
+                var now = App.context.currentTime;
+                enabled = false;
+                pwmMod.gain.cancelScheduledValues(now);
+                pwmMod.gain.setValueAtTime(0, now);
+            }
+            
             // Trigger the LFO on a keypress
             this.noteOn = function() {
                 var now = App.context.currentTime;
@@ -75,6 +97,12 @@ define([
                 freqMod.gain.cancelScheduledValues(now);
                 freqMod.gain.setValueAtTime(0, now);
                 freqMod.gain.linearRampToValueAtTime(freqModFactor, now + delayTime);
+                
+                if(pwmModEnabled) {
+                    pwmMod.gain.cancelScheduledValues(now);
+                    pwmMod.gain.setValueAtTime(0, now);
+                    pwmMod.gain.linearRampToValueAtTime(pwmModFactor, now + delayTime);
+                }
             };
                 
             Object.defineProperties(this, {
@@ -90,6 +118,23 @@ define([
                     'set': function(value) { 
                         freqModFactor = getFreqModFactor(value);
                         setFreqMod();
+                    }
+                },
+                'pwmMod': {
+                    'get': function() { return pwmMod; },
+                    'set': function(value) {
+                        pwmModFactor = util.getFaderCurve(value) * 0.8;
+                        setPwmMod();
+                    }
+                },
+                'pwmEnabled': {
+                    'set': function(value) {
+                        pwmModEnabled = value;
+                        if(pwmModEnabled) {
+                            setPwmMod();
+                        } else {
+                            disablePwmMod();
+                        }
                     }
                 },
                 'rate': {

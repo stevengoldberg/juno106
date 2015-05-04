@@ -9,7 +9,8 @@ define([
                 'dco-range': [0, 1, 2],
                 'pwm-lfo': [0, 1],
                 'vcf-invert': [0, 1],
-                'env-enabled': [0, 1]
+                'env-enabled': [0, 1],
+                'dco-lfoPwmEnabled': [0, 1]
             },
             
             ui: {

@@ -56,7 +56,8 @@ define([
                 this.dco = new DCO({
                     frequency: options.frequency,
                     waveform: options.waveform,
-                    subLevel: options.subLevel
+                    subLevel: options.subLevel,
+                    lfoPwmEnabled: options.lfoPwmEnabled
                 });
                 
                 this.hpf = new HPF({
@@ -67,7 +68,14 @@ define([
                     maxLevel: options.maxLevel
                 });
                 
+                // Propogate DCO events
                 this.listenTo(this.dco, 'destroyed', triggerKillVoice);
+                this.listenTo(this.dco, 'pwm', function(e) {
+                    that.lfo.pwmMod = e;
+                });
+                this.listenTo(this.dco, 'lfoPwmEnabled', function(e) {
+                    that.lfo.pwmEnabled = e;
+                });
 
                 // Sync up the envelope for the amplifier and the filter
                 function setupEnvelopeListeners() {
@@ -91,6 +99,7 @@ define([
                 
                 // Connect nodes
                 connect(this.lfo.pitchMod, this.dco.input);
+                connect(this.lfo.pwmMod, this.dco.pwm);
                 connect(this.lfo.freqMod, this.vcf.input1.detune);
                 connect(this.lfo.freqMod, this.vcf.input2.detune);
                 connect(this.dco.output, this.hpf.cutoff);

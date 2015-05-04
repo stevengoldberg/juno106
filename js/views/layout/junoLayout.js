@@ -39,7 +39,8 @@ define([
                     lfoRate: this.synth.get('lfo-rate'),
                     lfoPitch: this.synth.get('lfo-pitch'),
                     lfoDelay: this.synth.get('lfo-delay'),
-                    lfoFreq: this.synth.get('lfo-freq')
+                    lfoFreq: this.synth.get('lfo-freq'),
+                    lfoPwmEnabled: this.synth.get('dco-lfoPwmEnabled')
                 });
             },
             
@@ -65,6 +66,7 @@ define([
                     waveform: this.synth.getCurrentWaveforms(),
                     envelope: this.synth.getCurrentEnvelope(),
                     subLevel: this.synth.get('dco-sub'),
+                    lfoPwmEnabled: this.synth.get('dco-lfoPwmEnabled'),
                     vcfFreq: this.synth.get('vcf-cutoff'),
                     res: this.synth.get('vcf-res'),
                     vcfEnv: this.synth.get('vcf-envMod'),

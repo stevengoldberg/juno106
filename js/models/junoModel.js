@@ -19,6 +19,7 @@ define([
                     'dco-pwm': 0,
                     'dco-range': 1,
                     'dco-sub': 0,
+                    'dco-lfoPwmEnabled': 0,
                     'cho-chorusToggle': 0,
                     'vcf-cutoff': 1,
                     'vcf-res': 0,
