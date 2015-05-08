@@ -21,7 +21,7 @@ define([
                     minSustain: 0.0001
                 };
                 
-                var triggerKillVoice = _.after(3, function() {
+                var triggerKillVoice = _.after(4, function() {
                     that.trigger('killVoice');
                 });
                 
@@ -49,14 +49,13 @@ define([
                 
                 this.env = new ENV({
                     envelope: options.envelope,
-                    maxLevel: options.maxLevel,
+                    maxLevel: options.volume,
                     envConstants: envConstants
                 });
                 
                 this.dco = new DCO({
                     frequency: options.frequency,
                     waveform: options.waveform,
-                    subLevel: options.subLevel,
                     lfoPwmEnabled: options.lfoPwmEnabled
                 });
                 
@@ -65,7 +64,7 @@ define([
                 });
                 
                 this.vca = new VCA({
-                    maxLevel: options.maxLevel
+                    maxLevel: options.volume
                 });
                 
                 // Propogate DCO events

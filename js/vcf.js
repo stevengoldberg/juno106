@@ -198,8 +198,9 @@ define([
                         var now = App.context.currentTime;
                         var sustaining = now > e.timing.attack + attackLength + decayLength && 
                             e.timing.release === null;
-                        
+                    
                         envelope.sustain = e.value;
+
                         sustainLevel = getSustainLevel();
                         if(sustaining) {
                             setFilter();
