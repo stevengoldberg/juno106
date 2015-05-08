@@ -22,20 +22,16 @@ define([
                 var enabled = options.envelope.enabled;
                 var envelope = options.envelope;
             
-                var attackTime;
-                var decayTime;
+                var attackLength;
+                var decayLength;
                 var sustainModifier;
                 var sustainLevel;
-                var releaseTime;
-                var releaseObj = {
-                    releasing: false,
-                    releaseTime: null,
-                    releaseTimeout: null
-                };
-                var attackObj = {
-                    attacking: false,
-                    attackTime: null,
-                    attackTimeout: null
+                var releaseLength;
+                
+                var timing = {
+                    attack: null,
+                    decay: null,
+                    release: null
                 };
             
                 if(enabled) {
@@ -45,18 +41,20 @@ define([
                     setRelease(envelope.release);
                 } else {
                     setSustain(1);
-                    attackTime = envelopeOffset;
-                    decayTime = envelopeOffset;
-                    releaseTime = envelopeOffset;
+                    attackLength = envelopeOffset;
+                    decayLength = envelopeOffset;
+                    releaseLength = envelopeOffset;
                 }
             
                 // Setter methods
                 function setSustain(value) {
                     var now = App.context.currentTime;
+                    var sustaining = now > timing.attack + attackLength + decayLength && 
+                        timing.release === null;
                     
                     sustainLevel = (maxLevel * value) || minSustain;
                 
-                    if(enabled && !attackObj.attacking && !releaseObj.releasing) {
+                    if(enabled && sustaining) {
                         ampMod.gain.cancelScheduledValues(now);
                         ampMod.gain.setValueAtTime(sustainLevel, now);
                     }
@@ -64,39 +62,35 @@ define([
             
                 function setAttack(value) {
                     var now = App.context.currentTime;
-                    attackTime = util.getFaderCurve(value) * attackMax + envelopeOffset;
+                    var attacking = now < timing.attack + attackLength;
+                    
+                    attackLength = util.getFaderCurve(value) * attackMax + envelopeOffset;
                 
-                    if(enabled && attackObj.attacking) {
-                        resetAttack();
+                    if(enabled && attacking) {
+                        that.noteOn(ampMod.gain.value);
                     }
                 }
             
                 function setDecay(value) {
                     var now = App.context.currentTime;
-                    decayTime = util.getFaderCurve(value) * decayReleaseMax + envelopeOffset;
+                    var decaying = now < timing.attack + attackLength + decayLength;
+                    
+                    decayLength = util.getFaderCurve(value) * decayReleaseMax + envelopeOffset;
                 
-                    if(enabled && !attackObj.attacking && !releaseObj.releasing) {
-                        ampMod.gain.exponentialRampToValueAtTime(sustainLevel, now + decayTime);
+                    if(enabled && decaying) {
+                        ampMod.gain.exponentialRampToValueAtTime(sustainLevel, now + decayLength);
                     }
                 }
             
                 function setRelease(value) {
                     var now = App.context.currentTime;
-                    releaseTime = util.getFaderCurve(value) * decayReleaseMax + envelopeOffset;
+                    var releasing = now < timing.release + releaseLength;
+                    
+                    releaseLength = util.getFaderCurve(value) * decayReleaseMax + envelopeOffset;
                 
-                    if(enabled && releaseObj.releasing) {
-                        resetRelease();
+                    if(enabled && releasing) {
+                        that.noteOff();
                     }
-                }
-                
-                function resetAttack() {
-                    window.clearTimeout(attackObj.attackTimeout);
-                    that.noteOn(ampMod.gain.value);
-                }
-                
-                function resetRelease() {                
-                    window.clearTimeout(releaseObj.releaseTimeout);
-                    that.noteOff();
                 }
             
                 // Trigger the envelope on a keypress
@@ -108,15 +102,9 @@ define([
                     ampMod.gain.setValueAtTime(initial, now);
                 
                     if(enabled) {
-                        attackObj.attacking = true;
-                        attackObj.attackTime = now;
-                        
-                        attackObj.attackTimeout = window.setTimeout(function() {
-                            attackObj.attacking = false;
-                        }, (attackTime * 1000));
-                        
-                        ampMod.gain.linearRampToValueAtTime(maxLevel, now + attackTime);
-                        ampMod.gain.exponentialRampToValueAtTime(sustainLevel, now + attackTime + decayTime);
+                        timing.attack = now;
+                        ampMod.gain.linearRampToValueAtTime(maxLevel, now + attackLength);
+                        ampMod.gain.exponentialRampToValueAtTime(sustainLevel, now + attackLength + decayLength);
                     } else {
                         ampMod.gain.linearRampToValueAtTime(maxLevel, now + envelopeOffset);
                     }
@@ -129,19 +117,10 @@ define([
                 
                     ampMod.gain.cancelScheduledValues(now);
                     ampMod.gain.setValueAtTime(ampMod.gain.value, now);
-                    
-                    attackObj.attacking = false;
                 
                     if(enabled) {
-                        releaseObj.releasing = true;
-                        releaseObj.releaseTime = now;
-                        
-                        releaseObj.releaseTimeout = window.setTimeout(function() {
-                            releaseObj.releasing = false;
-                            that.trigger('released');
-                        }, (releaseTime * 1000));
-                        
-                        ampMod.gain.exponentialRampToValueAtTime(minSustain, now + releaseTime);
+                        timing.release = now;
+                        ampMod.gain.exponentialRampToValueAtTime(minSustain, now + releaseLength);
                     } else {
                         ampMod.gain.exponentialRampToValueAtTime(minSustain, now + envelopeOffset);
                     }
@@ -149,31 +128,47 @@ define([
             
                 Object.defineProperties(this, {
                     'attack': {
-                        'get': function() { return attackTime; },
+                        'get': function() { return attackLength; },
                         'set': function(value) { 
+                            var e = {
+                                value: value,
+                                timing: timing
+                            };
                             setAttack(value);
-                            this.trigger('attack', value);
+                            this.trigger('attack', e);
                         }
                     },
                     'decay': {
-                        'get': function() { return decayTime; },
+                        'get': function() { return decayLength; },
                         'set': function(value) {
+                            var e = {
+                                value: value,
+                                timing: timing
+                            };
                             setDecay(value);
-                            this.trigger('decay', value);
+                            this.trigger('decay', e);
                         }
                     },
                     'sustain': {
                         'get': function() { return sustainModifier; },
                         'set': function(value) {
+                            var e = {
+                                value: value,
+                                timing: timing
+                            };
                             setSustain(value);
-                            this.trigger('sustain', value);
+                            this.trigger('sustain', e);
                         }
                     },
                     'release': {
-                        'get': function() { return releaseTime; },
+                        'get': function() { return releaseLength; },
                         'set': function(value) {
+                            var e = {
+                                value: value,
+                                timing: timing
+                            };
                             setRelease(value);
-                            this.trigger('release', value);
+                            this.trigger('release', e);
                         }
                     },
                     'ampMod': {
