@@ -64,14 +64,13 @@ define([
             
                 var voice = new Voice({
                     frequency: this.synth.getCurrentRange(frequency),
-                    waveform: this.synth.getCurrentWaveforms(),
+                    waveform: this.synth.getCurrentWaveform(),
                     envelope: this.synth.getCurrentEnvelope(),
-                    subLevel: this.synth.get('dco-sub'),
                     lfoPwmEnabled: this.synth.get('dco-lfoPwmEnabled'),
                     vcfFreq: this.synth.get('vcf-cutoff'),
                     res: this.synth.get('vcf-res'),
                     vcfEnv: this.synth.get('vcf-envMod'),
-                    maxLevel: this.synth.get('vca-level'),
+                    volume: this.synth.get('vca-level'),
                     hpf: this.synth.get('hpf-cutoff'),
                     cho: this.cho,
                     lfo: this.lfo

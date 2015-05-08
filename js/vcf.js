@@ -26,26 +26,13 @@ define([
             var vcfEnv = options.vcfEnv;
             var filterCutoff = getCutoffFreqFromValue(options.frequency);
             
-            var attackTime;
-            var decayTime;
+            var attackLength;
+            var decayLength;
             var sustainLevel;
-            var releaseTime;
+            var releaseLength;
             
             var envModAmount;
             var maxLevel;
-            
-            var releaseObj = {
-                releasing: false,
-                releaseMoment: null,
-                releaseTimeout: null,
-                releaseCutoff: null
-            };
-            
-            var attackObj = {
-                attacking: false,
-                attackMoment: null,
-                attackTimeout: null
-            };
             
             setupEnvelope();
             filter1.connect(filter2);
@@ -59,45 +46,35 @@ define([
             }
             
             function setFilter(value) {
-                value = value || sustainLevel;
+                value = value || filterCutoff;
                 
                 var now = App.context.currentTime;
-                filter1.frequency.cancelScheduledValues(now);
-                filter2.frequency.cancelScheduledValues(now);
                 filter1.frequency.setValueAtTime(value, now);
                 filter2.frequency.setValueAtTime(value, now);
             }
             
             // Helper methods
             function setupEnvelope() {
-                attackTime = getAttackTime();
-                decayTime = getDecayTime();
-                releaseTime = getReleaseTime();
+                attackLength = getAttackLength();
+                decayLength = getDecayLength();
+                releaseLength = getReleaseLength();
                 sustainLevel = getSustainLevel();
-                
                 envModAmount = getEnvModAmount();
-                maxLevel = getMaxLevel();
-            }
-            
-            function getMaxLevel() {
-                var nyquist = App.context.sampleRate / 2;
-                var value = filterCutoff + envModAmount;
-                return value > nyquist ? nyquist : value;
             }
             
             function getSustainLevel() {
-                return filterCutoff + (envModAmount * util.getFaderCurve(envelope.sustain));
+                return  (envModAmount * util.getFaderCurve(envelope.sustain)) || minSustain;
             }
             
-            function getAttackTime() {
+            function getAttackLength() {
                 return util.getFaderCurve(envelope.attack) * attackMax + envelopeOffset;
             }
             
-            function getDecayTime() {
+            function getDecayLength() {
                 return util.getFaderCurve(envelope.decay) * decayReleaseMax + envelopeOffset;
             }
             
-            function getReleaseTime() {
+            function getReleaseLength() {
                 return util.getFaderCurve(envelope.release) * decayReleaseMax + envelopeOffset;
             }
             
@@ -117,35 +94,25 @@ define([
             
             function resetAttack() {
                 var now = App.context.currentTime;
-                var elapsed = now - attackObj.attackMoment;
                 
-                attackTime -= elapsed;
-            
-                maxLevel = getMaxLevel();
-                sustainLevel = getSustainLevel();
                 
-                window.clearTimeout(attackObj.attackTimeout);
-                that.noteOn(filter1.frequency.value);
+                that.noteOn(filter1.detune.value);
             }
             
             function resetRelease() {
                 var now = App.context.currentTime;
-                var elapsed = now - releaseObj.releaseMoment;
                 
-                releaseTime -= elapsed;
                 
-                window.clearTimeout(releaseObj.releaseTimeout);
-
-                that.noteOff();
+                that.noteOff(envModAmount);
             }
             
             function setDecay() {
                 var now = App.context.currentTime;
-                decayTime = getDecayTime();
+                decayLength = getdecayLength();
                 filter1.frequency.cancelScheduledValues(now);
                 filter2.frequency.cancelScheduledValues(now);
-                filter1.frequency.exponentialRampToValueAtTime(sustainLevel, now + decayTime);
-                filter2.frequency.exponentialRampToValueAtTime(sustainLevel, now + decayTime);
+                filter1.frequency.exponentialRampToValueAtTime(sustainLevel, now + decayLength);
+                filter2.frequency.exponentialRampToValueAtTime(sustainLevel, now + decayLength);
             }
             
             // Trigger the filter on keypress
@@ -153,47 +120,35 @@ define([
                 var now = App.context.currentTime;
                 
                 if(!initial) {
-                    initial = filterCutoff;
+                    initial = 0;
                     setupEnvelope();
+                    setFilter();
                 }
-
-                attackObj.attacking = true;
-                attackObj.attackMoment = now;
                 
-                attackObj.attackTimeout = window.setTimeout(function() {
-                    attackObj.attacking = false;
-                }, (attackTime * 1000));
-
-                filter1.frequency.cancelScheduledValues(now);
-                filter1.frequency.setValueAtTime(initial, now);
-                filter1.frequency.linearRampToValueAtTime(maxLevel, now + attackTime);
-                filter1.frequency.exponentialRampToValueAtTime(sustainLevel, now + attackTime + decayTime);
-    
-                filter2.frequency.cancelScheduledValues(now);
-                filter2.frequency.setValueAtTime(initial, now);
-                filter2.frequency.linearRampToValueAtTime(maxLevel, now + attackTime);
-                filter2.frequency.linearRampToValueAtTime(sustainLevel, now + attackTime + decayTime);
+                filter1.detune.cancelScheduledValues(now);
+                filter1.detune.setValueAtTime(initial, now);
+                filter1.detune.linearRampToValueAtTime(envModAmount, now + attackLength);
+                filter1.detune.exponentialRampToValueAtTime(sustainLevel, now + attackLength + decayLength);
+                
+                filter2.detune.cancelScheduledValues(now);
+                filter2.detune.setValueAtTime(initial, now);
+                filter2.detune.linearRampToValueAtTime(envModAmount, now + attackLength);
+                filter2.detune.linearRampToValueAtTime(sustainLevel, now + attackLength + decayLength);
             };
             
             // Release the filter on keyup
-            this.noteOff = function() {
+            this.noteOff = function(initial) {
                 var now = App.context.currentTime;
                 
-                releaseObj.releaseMoment = now;
-                attackObj.attacking = false;
-                releaseObj.releasing = true;
-                
-                releaseObj.releaseTimeout = window.setTimeout(function() {
-                    releaseObj.releasing = false;
-                }, (releaseTime * 1000));
+                initial = initial || filter1.detune.value;
         
-                filter1.frequency.cancelScheduledValues(now);
-                filter1.frequency.setValueAtTime(filter1.frequency.value, now);
-                filter1.frequency.exponentialRampToValueAtTime(filterCutoff, now + releaseTime);
+                filter1.detune.cancelScheduledValues(now);
+                filter1.detune.setValueAtTime(initial, now);
+                filter1.detune.exponentialRampToValueAtTime(minSustain, now + releaseLength);
     
-                filter2.frequency.cancelScheduledValues(now);
-                filter2.frequency.setValueAtTime(filter1.frequency.value, now);
-                filter2.frequency.exponentialRampToValueAtTime(filterCutoff, now + releaseTime);
+                filter2.detune.cancelScheduledValues(now);
+                filter2.detune.setValueAtTime(initial, now);
+                filter2.detune.exponentialRampToValueAtTime(minSustain, now + releaseLength);
             };
             
             Object.defineProperties(this, {
@@ -201,16 +156,7 @@ define([
                     'get': function() { return sustainLevel; },
                     'set': function(value) { 
                         filterCutoff = getCutoffFreqFromValue(value);
-                        envModAmount = getEnvModAmount();
-                        
-                        if(attackObj.attacking) {
-                            resetAttack();
-                        } else if(releaseObj.releasing) {
-                            resetRelease();
-                        } else {
-                            setupEnvelope();
-                            setFilter();
-                        }
+                        setFilter();
                     }
                 },
                 'envMod': {
@@ -218,6 +164,7 @@ define([
                     'set': function(value) { 
                         vcfEnv = value;
                         envModAmount = getEnvModAmount();
+                        sustainLevel = getSustainLevel();
                         
                         if(attackObj.attacking) {
                             resetAttack();
@@ -231,11 +178,11 @@ define([
                 },
                 'attack': {
                     'set': function(value) { 
+                        
+                        
                         envelope.attack = value;
                         setupEnvelope();
-                        if(attackObj.attacking) {
-                            that.noteOn(filter1.frequency.value);
-                        }
+                        
                     }
                 },
                 'decay': {
@@ -247,10 +194,14 @@ define([
                     }
                 },
                 'sustain': {
-                    'set': function(value) {
+                    'set': function(e) {
+                        var now = App.context.currentTime;
+                        var sustaining = now > e.timing.attack + attackLength + decayLength && 
+                            e.timing.release === null;
+                        
                         envelope.sustain = value;
                         sustainLevel = getSustainLevel();
-                        if(! attackObj.attacking && !releaseObj.releasing) {
+                        if(sustaining) {
                             setFilter();
                         }
                     }

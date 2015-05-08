@@ -32,13 +32,13 @@ define([
                 };
             },
             
-            getCurrentWaveforms: function() {
+            getCurrentWaveform: function() {
                 return {
-                    sawtooth: this.get('dco-sawtooth'),
-                    pulse: this.get('dco-pulse'),
-                    noise: this.get('dco-noise'),
-                    sub: this.get('dco-sub'),
-                    pwm: this.getPulseWidth()
+                    sawtoothLevel: this.get('dco-sawtooth'),
+                    pulseLevel: this.get('dco-pulse'),
+                    noiseLevel: this.get('dco-noise'),
+                    subLevel: this.get('dco-sub'),
+                    pulseWidth: this.getPulseWidth()
                 };
             },
             

@@ -1,8 +1,9 @@
 define([
-    'application'
+    'application',
+    'util'
 ],
     
-    function(App) {
+    function(App, util) {
         return Backbone.Marionette.Object.extend({
             initialize: function(options) {
                 this.output = [];
@@ -13,25 +14,29 @@ define([
                 var lfoPwmEnabled = options.lfoPwmEnabled;
             
                 // Sawtooth osc
-                var sawtooth = createOsc.call(this, options.frequency, 'sawtooth', options.waveform.sawtooth);
+                var sawtooth = createOsc.call(this, options.frequency, 'sawtooth', options.waveform.sawtoothLevel);
             
                 // Pulse osc
                 var pulseWidth;
                 var pulseWidthNode;
-                var pulse = createPulse.call(this, options.frequency, options.waveform.pwm, options.waveform.pulse);
+                var pulse = createPulse.call(this, options.frequency, options.waveform.pulseWidth, options.waveform.pulseLevel);
             
                 // Sub osc is a square wave -1 8ve from the main osc
-                var sub = createOsc.call(this, options.frequency / 2, 'square', options.subLevel);
+                var sub = createOsc.call(this, options.frequency / 2, 'square', options.waveform.subLevel);
+                
+                var noise = createNoise.call(this, options.waveform.noiseLevel);
             
                 // Start the oscillators, set up mod inputs
                 _.each(this.oscillators, function(oscillator) {
                     oscillator.start(0);
                     oscillator.onended = destroyOscillator;
-                    this.input.push(oscillator.frequency);
+                    if(oscillator.frequency) {
+                        this.input.push(oscillator.frequency);
+                    }
                 }, this);
             
                 // Setter methods
-                function setSub(level) {
+                function setSubLevel(level) {
                     var now = App.context.currentTime;
                     sub.gain.cancelScheduledValues(now);
                     sub.gain.setValueAtTime(level, now);
@@ -41,16 +46,22 @@ define([
 
                 }
             
-                function setSawtooth(level) {
+                function setSawtoothLevel(level) {
                     var now = App.context.currentTime;
                     sawtooth.gain.cancelScheduledValues(now);
                     sawtooth.gain.setValueAtTime(level, now);
                 }
                 
-                function setPulse(level) {
+                function setPulseLevel(level) {
                     var now = App.context.currentTime;
                     pulse.gain.cancelScheduledValues(now);
                     pulse.gain.setValueAtTime(level, now);
+                }
+                
+                function setNoiseLevel(level) {
+                    var now = App.context.currentTime;
+                    noise.gain.cancelScheduledValues(now);
+                    noise.gain.setValueAtTime(level, now);
                 }
                 
                 function setPulseWidth(width) {
@@ -63,6 +74,26 @@ define([
                     pulseWidthNode.setValueAtTime(width, now);
                 }
                 
+                function createNoise(level) {
+                    var bufferSize = App.context.sampleRate;
+                    var noiseBuffer = App.context.createBuffer(1, bufferSize, App.context.sampleRate);
+                    var output = noiseBuffer.getChannelData(0);
+                    var whiteNoise = App.context.createBufferSource();
+                    var gain = App.context.createGain();
+                    
+                    for(var i = 0; i < bufferSize; i++) {
+                        output[i] = Math.random() * 2 - 1;
+                    }
+
+                    whiteNoise.buffer = noiseBuffer;
+                    whiteNoise.loop = true;
+                    gain.gain.value = util.getFaderCurve(level);
+                    whiteNoise.connect(gain);
+                    this.oscillators.push(whiteNoise);
+                    this.output.push(gain);
+                    return gain;
+                }
+                
                 function createPulse(frequency, pwm, level) {
                     var osc = App.context.createPulseOscillator();
                     var gain = App.context.createGain();
@@ -70,7 +101,7 @@ define([
                     pwm *= 0.8;
                     
                     osc.frequency.value = frequency;
-                    gain.gain.value = level;
+                    gain.gain.value = util.getFaderCurve(level);
                     osc.connect(gain);
                     
                     if(lfoPwmEnabled) {
@@ -91,7 +122,7 @@ define([
                     var gain = App.context.createGain();
                     osc.type = type;
                     osc.frequency.value = frequency;                
-                    gain.gain.value = level;
+                    gain.gain.value = util.getFaderCurve(level);
                     osc.connect(gain);
                     this.oscillators.push(osc);
                     this.output.push(gain);
@@ -111,13 +142,16 @@ define([
             
                 Object.defineProperties(this, {
                     'sawtooth': {
-                        'set': function(value) { setSawtooth(value); }
+                        'set': function(value) { setSawtoothLevel(util.getFaderCurve(value)); }
                     },
                     'pulse': {
-                        'set': function(value) { setPulse(value); }
+                        'set': function(value) { setPulseLevel(util.getFaderCurve(value)); }
                     },
                     'sub': {
-                        'set': function(value) { setSub(value); }
+                        'set': function(value) { setSubLevel(util.getFaderCurve(value)); }
+                    },
+                    'noise': {
+                        'set': function(value) { setNoiseLevel(util.getFaderCurve(value)); }
                     },
                     'pwm': {
                         'get': function() { return pulseWidthNode; },
