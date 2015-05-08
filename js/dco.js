@@ -75,21 +75,36 @@ define([
                 }
                 
                 function createNoise(level) {
-                    var bufferSize = App.context.sampleRate;
+                    var b0, b1, b2, b3, b4, b5, b6;
+                    b0 = b1 = b2 = b3 = b4 = b5 = b6 = 0.0;
+                    var bufferSize = App.context.sampleRate * 2;
                     var noiseBuffer = App.context.createBuffer(1, bufferSize, App.context.sampleRate);
                     var output = noiseBuffer.getChannelData(0);
-                    var whiteNoise = App.context.createBufferSource();
-                    var gain = App.context.createGain();
+                    var white;
+                    var pinkNoise;
+                    var gain;
                     
-                    for(var i = 0; i < bufferSize; i++) {
-                        output[i] = Math.random() * 2 - 1;
+                    for (var i = 0; i < bufferSize; i++) {
+                        white = Math.random() * 2 - 1;
+                        b0 = 0.99886 * b0 + white * 0.0555179;
+                        b1 = 0.99332 * b1 + white * 0.0750759;
+                        b2 = 0.96900 * b2 + white * 0.1538520;
+                        b3 = 0.86650 * b3 + white * 0.3104856;
+                        b4 = 0.55000 * b4 + white * 0.5329522;
+                        b5 = -0.7616 * b5 - white * 0.0168980;
+                        output[i] = b0 + b1 + b2 + b3 + b4 + b5 + b6 + white * 0.5362;
+                        output[i] *= 0.11; // (roughly) compensate for gain
+                        b6 = white * 0.115926;            
                     }
-
-                    whiteNoise.buffer = noiseBuffer;
-                    whiteNoise.loop = true;
+                    pinkNoise = App.context.createBufferSource();
+                    pinkNoise.buffer = noiseBuffer;
+                    pinkNoise.loop = true;
+                    
+                    gain = App.context.createGain();
                     gain.gain.value = util.getFaderCurve(level);
-                    whiteNoise.connect(gain);
-                    this.oscillators.push(whiteNoise);
+                    pinkNoise.connect(gain);
+                    
+                    this.oscillators.push(pinkNoise);
                     this.output.push(gain);
                     return gain;
                 }
