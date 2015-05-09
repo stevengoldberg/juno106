@@ -24,6 +24,7 @@ define([
                     'vcf-cutoff': 1,
                     'vcf-res': 0,
                     'vcf-envMod': 0,
+                    'vcf-invert': 1,
                     'lfo-pitchMod': 0,
                     'lfo-rate': 0,
                     'lfo-delay': 0,
@@ -65,6 +66,10 @@ define([
             
             getPulseWidth: function() {
                 return this.get('dco-pwm') * 0.8;
+            },
+            
+            isFilterInverted: function() {
+                return !this.get('vcf-invert');
             },
             
             // Faders register 0.0775 at their lowest position, so convert that to 0

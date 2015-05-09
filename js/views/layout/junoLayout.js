@@ -85,6 +85,7 @@ define([
                     frequency: this.synth.getCurrentRange(frequency),
                     waveform: this.synth.getCurrentWaveform(),
                     envelope: this.synth.getCurrentEnvelope(),
+                    vcfInverted: this.synth.isFilterInverted(),
                     lfoPwmEnabled: this.synth.get('dco-lfoPwmEnabled'),
                     vcfFreq: this.synth.get('vcf-cutoff'),
                     res: this.synth.get('vcf-res'),

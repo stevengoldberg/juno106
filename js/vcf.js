@@ -21,6 +21,7 @@ define([
             filter1.Q.value = getResonanceFromValue(options.res);
             filter2.Q.value = getResonanceFromValue(options.res);
             
+            var inverted = options.inverted;
             var envMod = App.context.createGain();
             envMod.gain.value = getEnvModAmount(options.vcfEnv);
             
@@ -84,8 +85,10 @@ define([
             
             function getEnvModAmount(value) {
                 // Multiply fader value (0-1) by log2(2200) for total octaves 
-                // in filter, then by 1200 for cents/octave
-                return util.getFaderCurve(value) * 13323.94537;
+                // in filter, then by 1200 for cents/octave; negative value
+                // for inverted filter
+                return inverted ? -(util.getFaderCurve(value) * 13323.94537) :
+                    util.getFaderCurve(value) * 13323.94537;
             }
             
             function getResonanceFromValue(value) {
@@ -220,6 +223,9 @@ define([
                 },
                 'output': {
                     'get': function() { return filter2; }
+                },
+                'invert': {
+                    'set': function(value) { inverted = !value; }
                 }
             });
         }
