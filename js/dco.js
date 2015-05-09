@@ -75,7 +75,7 @@ define([
                 }
                 
                 function createNoise(level) {
-                    var bufferSize = App.context.sampleRate * 2;
+                    var bufferSize = App.context.sampleRate;
                     var noiseBuffer = App.context.createBuffer(1, bufferSize, App.context.sampleRate);
                     var output = noiseBuffer.getChannelData(0);
                     var gain;
@@ -132,7 +132,6 @@ define([
                 }
             
                 function destroyOscillator() {
-                    console.log('trigger destroy');
                     that.trigger('destroyed');
                 }
             
@@ -144,8 +143,6 @@ define([
                     releaseLength = releaseLength || 0;
                     
                     _.each(this.oscillators, function(oscillator) {
-                        console.log('stopping oscs');
-                        console.log(releaseLength);
                         oscillator.stop(now + releaseLength);
                     });
                 };

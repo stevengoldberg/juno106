@@ -22,14 +22,14 @@ define([
                 };
                 
                 // After all the oscillators are stopped, remove the voice from the pool
+                // and disconnect it from the graph for garbage collection
                 var triggerKillVoice = _.after(4, function() {
                     that.trigger('killVoice');
-                    console.log('voice killed');
+                    that.disconnect();
                 });
                 
                 this.lfo = options.lfo;
                 this.cho = options.cho;
-                this.masterGain = options.masterGain;
                 
                 this.vcf = new VCF({
                     frequency: options.vcfFreq,
@@ -98,8 +98,6 @@ define([
                 connect(this.vcf.output, this.vca.level);
                 connect(this.vca.level, this.env.ampMod);
                 connect(this.env.ampMod, this.cho.input);
-                connect(this.cho, this.masterGain);
-                connect(this.masterGain, App.context.destination);
                 
                 function connect(output, input) {
                     if(_.isArray(output)) {
@@ -130,6 +128,10 @@ define([
             
             stealNote: function() {
                 this.dco.noteOff();
+            },
+            
+            disconnect: function() {
+                this.env.ampMod.disconnect(this.cho.input);
             }
     });
 });

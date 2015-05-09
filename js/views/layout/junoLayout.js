@@ -45,6 +45,7 @@ define([
                 
                 this.masterGain = App.context.createGain();
                 this.masterGain.gain.value = 0.5;
+                this.masterGain.connect(App.context.destination);
                 
                 this.lfo = new LFO({
                     lfoRate: this.synth.get('lfo-rate'),
@@ -72,9 +73,13 @@ define([
             
             noteOnHandler: function(note, frequency) {
                 var that = this;
-                var currentNote = _.find(this.activeVoices, function(voice) {
-                    return voice.note === note;
-                });
+                var currentNote;
+                
+                for(var i = 0; i < this.activeVoices.length; i++) {
+                    if(this.activeVoices[i].note === note) {
+                        currentNote = this.activeVoices[i];
+                    }
+                }
             
                 var voice = new Voice({
                     frequency: this.synth.getCurrentRange(frequency),
@@ -87,36 +92,39 @@ define([
                     volume: this.synth.get('vca-level'),
                     hpf: this.synth.get('hpf-cutoff'),
                     lfo: this.lfo,
-                    cho: this.cho,
-                    masterGain: this.masterGain
+                    cho: this.cho
                 });
                 
                 if(currentNote) {
                     currentNote.stealNote();
                     this.stopListening(currentNote);
                     this.activeVoices = _.without(this.activeVoices, currentNote);
+                    console.log(currentNote.note + ' stolen');
                 }
                 
                 if(this.activeVoices.length === this.maxPolyphony) {
                     this.stopListening(this.activeVoices[0]);
                     this.activeVoices[0].stealNote();
                     this.activeVoices.shift();
+                    console.log(this.activeVoices[0].note + ' stolen');
                 }
                 
-                voice.noteOn();
+                voice.cho.connect(this.masterGain);
                 
+                voice.noteOn();
                 voice.note = note;
-    
                 this.activeVoices.push(voice);
             },
             
             noteOffHandler: function(note) {
-                var currentNote = _.find(this.activeVoices, function(voice) {
-                    return voice.note === note;
-                });
+                var currentNote;
                 
-                currentNote.env.ampMod.disconnect(this.cho.input);
-                
+                for(var i = 0; i < this.activeVoices.length; i++) {
+                    if(this.activeVoices[i].note === note) {
+                        currentNote = this.activeVoices[i];
+                    }
+                }
+                            
                 currentNote.noteOff();
                 
                 this.listenToOnce(currentNote, 'killVoice', function() {
