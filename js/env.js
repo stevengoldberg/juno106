@@ -24,7 +24,6 @@ define([
             
                 var attackLength;
                 var decayLength;
-                var sustainModifier;
                 var sustainLevel;
                 var releaseLength;
                 
@@ -153,7 +152,7 @@ define([
                         }
                     },
                     'sustain': {
-                        'get': function() { return sustainModifier; },
+                        'get': function() { return sustainLevel; },
                         'set': function(value) {
                             var e = {
                                 value: value,

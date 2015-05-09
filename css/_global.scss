@@ -44,15 +44,17 @@ h4 {
 .readme {
     text-align: center;
     margin: 5px;
-    span {
-        color: $led-off-clr;
-    }
-    a {
-        color: $led-off-clr;
-        text-decoration: none;
-        &:hover {
-            color: $led-on-clr;
-            text-decoration: underline;
-        }
+}
+
+.readme__title {
+    color: $led-off-clr;
+}
+
+.readme__link {
+    color: $led-off-clr;
+    text-decoration: none;
+    &:hover {
+        color: $led-on-clr;
+        text-decoration: underline;
     }
 }

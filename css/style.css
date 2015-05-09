@@ -39,14 +39,16 @@ h4 {
   text-align: center;
   margin: 5px;
 }
-.readme span {
+
+.readme__title {
   color: #800000;
 }
-.readme a {
+
+.readme__link {
   color: #800000;
   text-decoration: none;
 }
-.readme a:hover {
+.readme__link:hover {
   color: #CC3300;
   text-decoration: underline;
 }

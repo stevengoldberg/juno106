@@ -68,7 +68,7 @@ define([
             }
             
             function getSustainLevel() {
-                return util.getFaderCurve(envelope.sustain) || minSustain;
+                return envelope.sustain || minSustain;
             }
             
             function getAttackLength() {
@@ -87,8 +87,8 @@ define([
                 // Multiply fader value (0-1) by log2(2200) for total octaves 
                 // in filter, then by 1200 for cents/octave; negative value
                 // for inverted filter
-                return inverted ? -(util.getFaderCurve(value) * 13323.94537) :
-                    util.getFaderCurve(value) * 13323.94537;
+                return inverted ? -(value * 13323.94537) :
+                    value * 13323.94537;
             }
             
             function getResonanceFromValue(value) {
@@ -103,9 +103,13 @@ define([
             
             function setDecay() {
                 var now = App.context.currentTime;
-                decayLength = getDecayLength();
                 filterEnvelope.gain.cancelScheduledValues(now);
                 filterEnvelope.gain.linearRampToValueAtTime(sustainLevel, now + decayLength);
+            }
+            
+            function setSustain() {
+                var now = App.context.currentTime;
+                filterEnvelope.gain.setValueAtTime(sustainLevel, now);
             }
             
             
@@ -181,6 +185,7 @@ define([
                         var decaying = now < e.timing.attack + attackLength + decayLength;
                         
                         envelope.decay = e.value;
+                        decayLength = getDecayLength();
                         if(decaying) {
                             setDecay();
                         }
@@ -195,7 +200,7 @@ define([
                         envelope.sustain = e.value;
                         sustainLevel = getSustainLevel();
                         if(sustaining) {
-                            setFilter();
+                            setSustain();
                         }
                     }
                 },
