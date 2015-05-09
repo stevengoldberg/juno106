@@ -18,12 +18,16 @@ define([
             var filter2 = App.context.createBiquadFilter();
             filter1.type = 'lowpass';
             filter2.type = 'lowpass';
+            filter1.Q.value = getResonanceFromValue(options.res);
+            filter2.Q.value = getResonanceFromValue(options.res);
             
-            filter1.Q.value = getResonanceFromValue(options.res / 2);
-            filter2.Q.value = getResonanceFromValue(options.res / 2);
+            var envMod = App.context.createGain();
+            envMod.gain.value = getEnvModAmount(options.vcfEnv);
+            
+            var offset = createDCOffset();
+            var filterEnvelope = App.context.createGain();
             
             var envelope = options.envelope;
-            var vcfEnv = options.vcfEnv;
             var filterCutoff = getCutoffFreqFromValue(options.frequency);
             
             var attackLength;
@@ -31,11 +35,12 @@ define([
             var sustainLevel;
             var releaseLength;
             
-            var envModAmount;
-            var maxLevel;
-            
             setupEnvelope();
             filter1.connect(filter2);
+            offset.connect(filterEnvelope);
+            filterEnvelope.connect(envMod);
+            envMod.connect(filter1.detune);
+            envMod.connect(filter2.detune);
             
             // Setter methods
             function setRes(value) {
@@ -59,11 +64,10 @@ define([
                 decayLength = getDecayLength();
                 releaseLength = getReleaseLength();
                 sustainLevel = getSustainLevel();
-                envModAmount = getEnvModAmount();
             }
             
             function getSustainLevel() {
-                return  (envModAmount * util.getFaderCurve(envelope.sustain)) || minSustain;
+                return util.getFaderCurve(envelope.sustain) || minSustain;
             }
             
             function getAttackLength() {
@@ -78,8 +82,14 @@ define([
                 return util.getFaderCurve(envelope.release) * decayReleaseMax + envelopeOffset;
             }
             
+            function getEnvModAmount(value) {
+                // Multiply fader value (0-1) by log2(2200) for total octaves 
+                // in filter, then by 1200 for cents/octave
+                return util.getFaderCurve(value) * 13323.94537;
+            }
+            
             function getResonanceFromValue(value) {
-                return util.getFaderCurve(value) * 50 + 1;
+                return util.getFaderCurve(value) * 20 + 1;
             }
             
             function getCutoffFreqFromValue(value) {
@@ -88,31 +98,25 @@ define([
                 return freq > filterMinimum ? freq : filterMinimum;
             }
             
-            function getEnvModAmount() {
-                return getCutoffFreqFromValue(util.getFaderCurve(vcfEnv)) - filterMinimum;
-            }
-            
-            function resetAttack() {
-                var now = App.context.currentTime;
-                
-                
-                that.noteOn(filter1.detune.value);
-            }
-            
-            function resetRelease() {
-                var now = App.context.currentTime;
-                
-                
-                that.noteOff(envModAmount);
-            }
-            
             function setDecay() {
                 var now = App.context.currentTime;
-                decayLength = getdecayLength();
-                filter1.frequency.cancelScheduledValues(now);
-                filter2.frequency.cancelScheduledValues(now);
-                filter1.frequency.exponentialRampToValueAtTime(sustainLevel, now + decayLength);
-                filter2.frequency.exponentialRampToValueAtTime(sustainLevel, now + decayLength);
+                decayLength = getDecayLength();
+                filterEnvelope.gain.cancelScheduledValues(now);
+                filterEnvelope.gain.linearRampToValueAtTime(sustainLevel, now + decayLength);
+            }
+            
+            
+            // Suggested by Chris Wilson on stackoverflow
+            // http://stackoverflow.com/questions/30019666/web-audio-synthesis-how-to-handle-changing-the-filter-cutoff-during-the-attack
+            function createDCOffset() {
+                var buffer = App.context.createBuffer(1, 1, App.context.sampleRate);
+                var data = buffer.getChannelData(0);
+                var bufferSource = App.context.createBufferSource();
+                data[0] = 1;
+                bufferSource.buffer = buffer;
+                bufferSource.loop = true;
+                bufferSource.start(0);
+                return bufferSource;
             }
             
             // Trigger the filter on keypress
@@ -125,30 +129,21 @@ define([
                     setFilter();
                 }
                 
-                filter1.detune.cancelScheduledValues(now);
-                filter1.detune.setValueAtTime(initial, now);
-                filter1.detune.linearRampToValueAtTime(envModAmount, now + attackLength);
-                filter1.detune.exponentialRampToValueAtTime(sustainLevel, now + attackLength + decayLength);
-                
-                filter2.detune.cancelScheduledValues(now);
-                filter2.detune.setValueAtTime(initial, now);
-                filter2.detune.linearRampToValueAtTime(envModAmount, now + attackLength);
-                filter2.detune.linearRampToValueAtTime(sustainLevel, now + attackLength + decayLength);
+                filterEnvelope.gain.cancelScheduledValues(now);
+                filterEnvelope.gain.setValueAtTime(initial, now);
+                filterEnvelope.gain.linearRampToValueAtTime(1, now + attackLength);
+                filterEnvelope.gain.linearRampToValueAtTime(sustainLevel, now + attackLength + decayLength);
             };
             
             // Release the filter on keyup
             this.noteOff = function(initial) {
                 var now = App.context.currentTime;
                 
-                initial = initial || filter1.detune.value;
+                initial = initial || filterEnvelope.gain.value;
         
-                filter1.detune.cancelScheduledValues(now);
-                filter1.detune.setValueAtTime(initial, now);
-                filter1.detune.exponentialRampToValueAtTime(minSustain, now + releaseLength);
-    
-                filter2.detune.cancelScheduledValues(now);
-                filter2.detune.setValueAtTime(initial, now);
-                filter2.detune.exponentialRampToValueAtTime(minSustain, now + releaseLength);
+                filterEnvelope.gain.cancelScheduledValues(now);
+                filterEnvelope.gain.setValueAtTime(initial, now);
+                filterEnvelope.gain.linearRampToValueAtTime(minSustain, now + releaseLength);
             };
             
             Object.defineProperties(this, {
@@ -160,35 +155,30 @@ define([
                     }
                 },
                 'envMod': {
-                    'get': function() { return envModAmount; },
+                    'get': function() { return envMod.gain.value; },
                     'set': function(value) { 
-                        vcfEnv = value;
-                        envModAmount = getEnvModAmount();
-                        sustainLevel = getSustainLevel();
-                        
-                        if(attackObj.attacking) {
-                            resetAttack();
-                        } else if(releaseObj.releasing) {
-                            resetRelease();
-                        } else {
-                            setupEnvelope();
-                            setFilter();
-                        }
+                        envMod.gain.value = getEnvModAmount(value);
                     }
                 },
                 'attack': {
-                    'set': function(value) { 
+                    'set': function(e) { 
+                        var now = App.context.currentTime;
+                        var attacking = now < e.timing.attack + attackLength;
                         
-                        
-                        envelope.attack = value;
+                        envelope.attack = e.value;
                         setupEnvelope();
-                        
+                        if(attacking) {
+                            that.noteOn(filterEnvelope.gain.value);
+                        }
                     }
                 },
                 'decay': {
-                    'set': function(value) {
-                        envelope.decay = value;
-                        if(!attackObj.attacking && !releaseObj.releasing) {
+                    'set': function(e) {
+                        var now = App.context.currentTime;
+                        var decaying = now < e.timing.attack + attackLength + decayLength;
+                        
+                        envelope.decay = e.value;
+                        if(decaying) {
                             setDecay();
                         }
                     }
@@ -200,7 +190,6 @@ define([
                             e.timing.release === null;
                     
                         envelope.sustain = e.value;
-
                         sustainLevel = getSustainLevel();
                         if(sustaining) {
                             setFilter();
@@ -208,10 +197,14 @@ define([
                     }
                 },
                 'release': {
-                    'set': function(value) {
-                        envelope.release = value;
+                    'set': function(e) {
+                        var now = App.context.currentTime;
+                        var releasing = e.timing.release && 
+                            now < e.timing.release + releaseLength;
+                        
+                        envelope.release = e.value;
                         setupEnvelope();
-                        if(releaseObj.releasing) {
+                        if(releasing) {
                             that.noteOff();
                         }
                     }

@@ -6,7 +6,7 @@ define([
         
         return {
             getFaderCurve: function(value) {
-                return Math.pow(value, 2);
+                return Math.pow(value, 4);
             },
             
             nyquist: function() {

@@ -1,12 +1,13 @@
 define([
-    'application'
+    'application',
+    'util'
 ],
     
-    function(App) {
+    function(App, util) {
         function VCA(options) {
             // Initialization
             var amplifier = App.context.createGain();
-            amplifier.gain.value = options.maxLevel;
+            amplifier.gain.value = util.getFaderCurve(options.maxLevel);
             
             // Setter methods
             function setLevel(level) {
@@ -18,7 +19,7 @@ define([
             Object.defineProperties(this, {
                 'level': {
                     'get': function() { return amplifier; },
-                    'set': function(value) { setLevel(value); }
+                    'set': function(value) { setLevel(0.75 * util.getFaderCurve(value)); }
                 }
             });
         }

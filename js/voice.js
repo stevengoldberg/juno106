@@ -21,23 +21,15 @@ define([
                     minSustain: 0.0001
                 };
                 
+                // After all the oscillators are stopped, remove the voice from the pool
                 var triggerKillVoice = _.after(4, function() {
                     that.trigger('killVoice');
+                    console.log('voice killed');
                 });
                 
                 this.lfo = options.lfo;
                 this.cho = options.cho;
-                
-                if(!_.has(this.cho, 'chorusToggle')) {
-                    Object.defineProperties(this.cho, {
-                        'chorusToggle': {
-                            'set': function(value) { 
-                                that.cho.chorusLevel = value;
-                                chorusToggle.call(that.cho);
-                            }
-                        }
-                    });
-                }
+                this.masterGain = options.masterGain;
                 
                 this.vcf = new VCF({
                     frequency: options.vcfFreq,
@@ -106,7 +98,8 @@ define([
                 connect(this.vcf.output, this.vca.level);
                 connect(this.vca.level, this.env.ampMod);
                 connect(this.env.ampMod, this.cho.input);
-                connect(this.cho, App.context.destination);
+                connect(this.cho, this.masterGain);
+                connect(this.masterGain, App.context.destination);
                 
                 function connect(output, input) {
                     if(_.isArray(output)) {
@@ -121,26 +114,6 @@ define([
                         output.connect(input);
                     }
                 }
-                
-                function chorusToggle() {
-                    switch(this.chorusLevel) {
-                        case 0:
-                            this.bypass = 1;
-                            break;
-                        case 1:
-                            this.bypass = 0;
-                            this.feedback = 0.15;
-                            this.delay = 0.05;
-                            this.rate = 0.1;
-                            break;
-                        case 2:
-                            this.bypass = 0;
-                            this.feedback = 0.5;
-                            this.delay = 0.25;
-                            this.rate = 0.6;
-                            break;
-                    }
-                }
             },
             
             noteOn: function() {
@@ -150,9 +123,13 @@ define([
             },
         
             noteOff: function() {
-                this.listenToOnce(this.env, 'released', this.dco.noteOff.bind(this.dco));
+                this.listenTo(this.env, 'noteOff', this.dco.noteOff.bind(this.dco));
                 this.env.noteOff();
                 this.vcf.noteOff();
+            },
+            
+            stealNote: function() {
+                this.dco.noteOff();
             }
     });
 });

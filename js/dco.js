@@ -75,36 +75,23 @@ define([
                 }
                 
                 function createNoise(level) {
-                    var b0, b1, b2, b3, b4, b5, b6;
-                    b0 = b1 = b2 = b3 = b4 = b5 = b6 = 0.0;
                     var bufferSize = App.context.sampleRate * 2;
                     var noiseBuffer = App.context.createBuffer(1, bufferSize, App.context.sampleRate);
                     var output = noiseBuffer.getChannelData(0);
-                    var white;
-                    var pinkNoise;
                     var gain;
                     
                     for (var i = 0; i < bufferSize; i++) {
-                        white = Math.random() * 2 - 1;
-                        b0 = 0.99886 * b0 + white * 0.0555179;
-                        b1 = 0.99332 * b1 + white * 0.0750759;
-                        b2 = 0.96900 * b2 + white * 0.1538520;
-                        b3 = 0.86650 * b3 + white * 0.3104856;
-                        b4 = 0.55000 * b4 + white * 0.5329522;
-                        b5 = -0.7616 * b5 - white * 0.0168980;
-                        output[i] = b0 + b1 + b2 + b3 + b4 + b5 + b6 + white * 0.5362;
-                        output[i] *= 0.11; // (roughly) compensate for gain
-                        b6 = white * 0.115926;            
+                        output[i] = Math.random() * 2 - 1;       
                     }
-                    pinkNoise = App.context.createBufferSource();
-                    pinkNoise.buffer = noiseBuffer;
-                    pinkNoise.loop = true;
+                    whiteNoise = App.context.createBufferSource();
+                    whiteNoise.buffer = noiseBuffer;
+                    whiteNoise.loop = true;
                     
                     gain = App.context.createGain();
-                    gain.gain.value = util.getFaderCurve(level);
-                    pinkNoise.connect(gain);
+                    gain.gain.value = level;
+                    whiteNoise.connect(gain);
                     
-                    this.oscillators.push(pinkNoise);
+                    this.oscillators.push(whiteNoise);
                     this.output.push(gain);
                     return gain;
                 }
@@ -137,7 +124,7 @@ define([
                     var gain = App.context.createGain();
                     osc.type = type;
                     osc.frequency.value = frequency;                
-                    gain.gain.value = util.getFaderCurve(level);
+                    gain.gain.value = level;
                     osc.connect(gain);
                     this.oscillators.push(osc);
                     this.output.push(gain);
@@ -145,28 +132,36 @@ define([
                 }
             
                 function destroyOscillator() {
+                    console.log('trigger destroy');
                     that.trigger('destroyed');
                 }
             
-                this.noteOff = function() {
+                // Stop the oscillators immediately for note-stealing or after the 
+                // release envelope completes
+                this.noteOff = function(releaseLength) {
                     var now = App.context.currentTime;
+                    
+                    releaseLength = releaseLength || 0;
+                    
                     _.each(this.oscillators, function(oscillator) {
-                        oscillator.stop(now);
+                        console.log('stopping oscs');
+                        console.log(releaseLength);
+                        oscillator.stop(now + releaseLength);
                     });
                 };
             
                 Object.defineProperties(this, {
                     'sawtooth': {
-                        'set': function(value) { setSawtoothLevel(util.getFaderCurve(value)); }
+                        'set': function(value) { setSawtoothLevel(0.5 * value); }
                     },
                     'pulse': {
-                        'set': function(value) { setPulseLevel(util.getFaderCurve(value)); }
+                        'set': function(value) { setPulseLevel(0.5 * value); }
                     },
                     'sub': {
-                        'set': function(value) { setSubLevel(util.getFaderCurve(value)); }
+                        'set': function(value) { setSubLevel(value); }
                     },
                     'noise': {
-                        'set': function(value) { setNoiseLevel(util.getFaderCurve(value)); }
+                        'set': function(value) { setNoiseLevel(value); }
                     },
                     'pwm': {
                         'get': function() { return pulseWidthNode; },

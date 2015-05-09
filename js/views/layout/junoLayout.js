@@ -25,7 +25,7 @@ define([
             
             initialize: function() {
                 this.maxPolyphony = 6;
-                this.activeVoices = {};
+                this.activeVoices = [];
                 
                 // Initialize long-lived components
                 this.synth = new JunoModel();
@@ -34,6 +34,17 @@ define([
                 
                 this.cho = new tuna.Chorus();
                 this.cho.chorusLevel = this.synth.get('cho-chorusToggle');
+                
+                /*this.drive = new tuna.Overdrive({
+                    outputGain: 0,
+                    drive: 0.1,
+                    curveAmount: 0.2,
+                    algorithmIndex: 3,
+                    bypass: 0 
+                });*/
+                
+                this.masterGain = App.context.createGain();
+                this.masterGain.gain.value = 0.5;
                 
                 this.lfo = new LFO({
                     lfoRate: this.synth.get('lfo-rate'),
@@ -61,6 +72,9 @@ define([
             
             noteOnHandler: function(note, frequency) {
                 var that = this;
+                var currentNote = _.find(this.activeVoices, function(voice) {
+                    return voice.note === note;
+                });
             
                 var voice = new Voice({
                     frequency: this.synth.getCurrentRange(frequency),
@@ -72,30 +86,43 @@ define([
                     vcfEnv: this.synth.get('vcf-envMod'),
                     volume: this.synth.get('vca-level'),
                     hpf: this.synth.get('hpf-cutoff'),
+                    lfo: this.lfo,
                     cho: this.cho,
-                    lfo: this.lfo
+                    masterGain: this.masterGain
                 });
                 
-                if(this.activeVoices[note]) {
-                    this.activeVoices[note].dco.noteOff();
-                    delete this.activeVoices[note];
+                if(currentNote) {
+                    currentNote.stealNote();
+                    this.stopListening(currentNote);
+                    this.activeVoices = _.without(this.activeVoices, currentNote);
+                }
+                
+                if(this.activeVoices.length === this.maxPolyphony) {
+                    this.stopListening(this.activeVoices[0]);
+                    this.activeVoices[0].stealNote();
+                    this.activeVoices.shift();
                 }
                 
                 voice.noteOn();
+                
+                voice.note = note;
     
-                this.activeVoices[note] = voice;
+                this.activeVoices.push(voice);
             },
             
             noteOffHandler: function(note) {
-                try {
-                    this.activeVoices[note].noteOff();
-                } catch(e) {
-                    console.log(this.activeVoices);
-                    _.each(this.activeVoices, function(voice) {
-                        voice.noteOff();
-                    });
-                    throw new Error('Error killing note: ' + note);
-                }
+                var currentNote = _.find(this.activeVoices, function(voice) {
+                    return voice.note === note;
+                });
+                
+                currentNote.env.ampMod.disconnect(this.cho.input);
+                
+                currentNote.noteOff();
+                
+                this.listenToOnce(currentNote, 'killVoice', function() {
+                    this.activeVoices = _.without(this.activeVoices, currentNote);
+                });
+                
             },
             
             synthUpdateHandler: _.throttle(function(update) {                    

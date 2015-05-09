@@ -78,13 +78,14 @@ define([
                     decayLength = util.getFaderCurve(value) * decayReleaseMax + envelopeOffset;
                 
                     if(enabled && decaying) {
-                        ampMod.gain.exponentialRampToValueAtTime(sustainLevel, now + decayLength);
+                        ampMod.gain.linearRampToValueAtTime(sustainLevel, now + decayLength);
                     }
                 }
             
                 function setRelease(value) {
                     var now = App.context.currentTime;
-                    var releasing = now < timing.release + releaseLength;
+                    var releasing = timing.release && 
+                        now < timing.release + releaseLength;
                     
                     releaseLength = util.getFaderCurve(value) * decayReleaseMax + envelopeOffset;
                 
@@ -104,7 +105,7 @@ define([
                     if(enabled) {
                         timing.attack = now;
                         ampMod.gain.linearRampToValueAtTime(maxLevel, now + attackLength);
-                        ampMod.gain.exponentialRampToValueAtTime(sustainLevel, now + attackLength + decayLength);
+                        ampMod.gain.linearRampToValueAtTime(sustainLevel, now + attackLength + decayLength);
                     } else {
                         ampMod.gain.linearRampToValueAtTime(maxLevel, now + envelopeOffset);
                     }
@@ -120,10 +121,12 @@ define([
                 
                     if(enabled) {
                         timing.release = now;
-                        ampMod.gain.exponentialRampToValueAtTime(minSustain, now + releaseLength);
+                        ampMod.gain.linearRampToValueAtTime(minSustain, now + releaseLength);
                     } else {
-                        ampMod.gain.exponentialRampToValueAtTime(minSustain, now + envelopeOffset);
+                        ampMod.gain.linearRampToValueAtTime(minSustain, now + envelopeOffset);
                     }
+                    // Set the DCO's stop time
+                    this.trigger('noteOff', enabled ? releaseLength : envelopeOffset);
                 };
             
                 Object.defineProperties(this, {

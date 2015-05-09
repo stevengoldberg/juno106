@@ -7,7 +7,7 @@ define([
             
             defaults: function() {
                 return {
-                    'vca-level': 0.3,
+                    'vca-level': 0.5,
                     'env-attack': 0,
                     'env-decay': 0,
                     'env-sustain': 1,

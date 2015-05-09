@@ -373,7 +373,7 @@
         this.delay = properties.delay || this.defaults.delay.value;
         this.depth = properties.depth || this.defaults.depth.value;
         this.lfoR.phase = Math.PI / 2;
-        this.attenuator.gain.value = 0.6934; // 1 / (10 ^ (((20 * log10(3)) / 3) / 20))
+        //this.attenuator.gain.value = 0.6934; // 1 / (10 ^ (((20 * log10(3)) / 3) / 20))
         this.lfoL.activate(true);
         this.lfoR.activate(true);
         this.bypass = properties.bypass || false;
