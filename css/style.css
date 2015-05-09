@@ -27,6 +27,30 @@ p {
   width: 1024px;
 }
 
+h4 {
+  color: white;
+  font-family: 'Raleway', sans-serif;
+  font-weight: 700;
+  font-size: 25px;
+  margin: 0;
+}
+
+.readme {
+  text-align: center;
+  margin: 5px;
+}
+.readme span {
+  color: #800000;
+}
+.readme a {
+  color: #800000;
+  text-decoration: none;
+}
+.readme a:hover {
+  color: #CC3300;
+  text-decoration: underline;
+}
+
 .module-container {
   display: flex;
   flex-flow: row wrap;
@@ -73,10 +97,6 @@ p {
   text-align: center;
   line-height: 30px;
   background-color: #BC4016;
-  color: white;
-  font-family: 'Raleway', sans-serif;
-  font-weight: 700;
-  font-size: 25px;
   height: 10%;
 }
 

@@ -13,7 +13,7 @@ define([
                 var JN = new Backbone.Marionette.Application();
 
                 JN.addRegions({
-                    header: '#reg-header',
+                    header: '#top-bar',
                     content: '#reg-content',
                     footer: '#reg-footer',
                     modal: '#reg-modal'

@@ -4,9 +4,10 @@ require([
     'application',
     'routers', // Do not remove. This is required as a dependency. Routers must be loaded prior to App.start();
     'views/layout/junoLayout',
+    'views/item/readmeItemView'
 ],
 
-    function (Backbone, Marionette, App, Routers, JunoLayout) {
+    function (Backbone, Marionette, App, Routers, JunoLayout, ReadmeItemView) {
         
         try {
             window.AudioContext = window.AudioContext || window.webkitAudioContext;
@@ -62,7 +63,10 @@ require([
     	};
         
         var junoLayout = new JunoLayout();
+        var readmeView = new ReadmeItemView();
+        
         App.router = Routers;
         App.start();
+        App.header.show(readmeView);
         App.content.show(junoLayout);
 });
