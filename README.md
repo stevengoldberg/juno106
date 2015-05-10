@@ -10,7 +10,7 @@ Minimum window size of 1024x768. Please use an updated version of **Google Chrom
 
 # How to play
 
-Notes can be played on the Juno by clicking the keys on the keyboard with the mouse. However, this synth can play up to 6 notes once if played via the computer keyboard or a MIDI keyboard. The letter "A" on your keyboard corresponds to the lowest note on the synthesizer keyboard, a C3.
+Notes can be played on the Juno by clicking the keys on the keyboard with the mouse. However, this synth can play up to 6 notes at a time if played via the computer keyboard or a MIDI keyboard. The letter "A" on your keyboard corresponds to the lowest note on the synthesizer keyboard, a C3.
 
 **Synthesis Quickstart Manual**
 
