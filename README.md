@@ -1,54 +1,20 @@
-# juno106
+# Juno-106.JS v 1.0
 
-An emulation of the classic [Roland Juno-106 analog synthesizer](http://en.wikipedia.org/wiki/Roland_Juno-106).
+The Juno-106.JS is an emulation of the classic [Roland Juno-106 analog synthesizer](http://en.wikipedia.org/wiki/Roland_Juno-106).
 
-Current live WIP version:
-http://stevegoldberg.neocities.org/#juno
+[You can play the Juno-106.JS here](http://stevegoldberg.neocities.org/#juno).
 
-Requires a minimum 1024x768 window and an updated browser (tested in Chrome only).
+# System Requirements
 
-Active features:
+Minimum window size of 1024x768. Please use an updated version of **Google Chrome**. For MIDI connectivity, you must use **Chrome 43** or newer (currently in beta), or enable the MIDI feature flag in **Chrome 38** or newer by pointing your browser to `chrome://flags`, searching for "Enable Web MIDI API," and clicking "enable."
 
-* Play notes with the QWERTY keyboard -- QWERTY A = C3
-* LFO rate
-* LFO delay
-* DCO range
-* DCO modulation by LFO
-* DCO sawtooth and pulse on/off
-* DCO set pulse width manually or set pulse width modulation by LFO
-* DCO sub level
-* VCF cutoff
-* VCF res
-* VCF modulation by ENV
-* VCF modulation by LFO
-* HPF level
-* VCA level
-* VCA ENV/GATE switch
-* ADSR envelope
-* Chorus effect
+# How to play
 
-**TODO:**
+Notes can be played on the Juno by clicking the keys on the keyboard with the mouse. However, this synth is can play up to 6 notes once if played via the computer keyboard or a MIDI keyboard. The letter "A" on your keyboard corresponds to the lowest note on the synthesizer keyboard, a C3.
 
-1.0:
+**Synthesis Quickstart Manual**
 
-* Noise generator
-* Filter key tracking
-* Filter invert
-* Clean up
-* WebMIDI?
-* Optimize for iPad?
- 
-Post-1.0:
-
-* Save/load presets
-* Replace QwertyHancock?
-* Arpeggiator/sequencer
-* Improve chorus
-* "Analog" waveshaping/distortion
-
-For detailed instructions, consult the [Juno 106 owner's manual](http://www.synthfool.com/docs/Roland/Juno_Series/Roland_Juno_106/Roland_Juno106_Owners_Manual.pdf).
-
-**QUICKSTART MANUAL**
+This is an overview of the controls on the Juno-106.JS. For detailed instructions, consult the [Juno 106 owner's manual](http://www.synthfool.com/docs/Roland/Juno_Series/Roland_Juno_106/Roland_Juno106_Owners_Manual.pdf).
 
 * LFO - Low Frequency Oscillator  
  Triangle-wave oscillator used to modulate other synth parameters.
@@ -102,3 +68,10 @@ For detailed instructions, consult the [Juno 106 owner's manual](http://www.synt
  OFF: No effect.  
  I: Moderate chorus effect.  
  II: Stronger chorus effect.
+
+**TO-DO**
+
+* Tweak chorus
+* Alternate PWM Implementation
+* Filter self-resonance
+* Deeper MIDI implementation
