@@ -9,7 +9,7 @@ define(['backbone', 'backbone.marionette'],
             },
 
             routeToApplication: function() {
-                Backbone.history.navigate('/juno', {trigger: true});
+                Backbone.history.navigate('/js', {trigger: true});
             }
         });
     });
