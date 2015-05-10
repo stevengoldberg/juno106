@@ -31,7 +31,7 @@ define([
                     oscillator.start(0);
                     oscillator.onended = destroyOscillator;
                     if(oscillator.frequency) {
-                        this.input.push(oscillator.frequency);
+                        this.input.push(oscillator.detune);
                     }
                 }, this);
             

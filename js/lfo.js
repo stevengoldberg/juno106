@@ -62,21 +62,18 @@ define([
                 return util.getFaderCurve(value) * 3;
             }
             
-            // Helper methods
-            function getAmplitude(value) {
-                return util.getFaderCurve(value) * 40;
-            }
-            
             function getRate(value) {
                  return util.getFaderCurve(value) * 25;
             }
             
             function getPitchModFactor(value) {
-                return getAmplitude(value);
+                // +/- 400 cents
+                return value * 400;
             }
             
             function getFreqModFactor(value) {
-                return getAmplitude(value) * 200;
+                // +/- 3.5 octaves
+                return value * 4200;
             }
             
             function disablePwmMod() {
