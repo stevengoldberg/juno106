@@ -1,3 +1,10 @@
 <select>
-    <option>No MIDI detected</option>
+    {{#if midi}}
+        <option disabled default>--Select MIDI--</option>
+        {{#each inputs}}
+        <option>{{this.name}}</option>
+        {{/each}}
+    {{else}}
+        <option disabled>No MIDI detected</option>
+    {{/if}}
 </select>
