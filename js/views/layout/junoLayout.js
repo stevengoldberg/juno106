@@ -134,13 +134,12 @@ define([
                 }
                             
                 if(currentNote) {
+                    this.listenToOnce(currentNote, 'killVoice', function() {
+                        this.activeVoices = _.without(this.activeVoices, currentNote);
+                    });
                     currentNote.noteOff();
                 }
-                
-                this.listenToOnce(currentNote, 'killVoice', function() {
-                    this.activeVoices = _.without(this.activeVoices, currentNote);
-                });
-                
+
             },
             
             handleMidi: function(message) {
