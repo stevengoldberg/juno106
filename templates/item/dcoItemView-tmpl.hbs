@@ -10,7 +10,7 @@
         <p class="range">8'</p>
         <p class="range">16'</p>
         <div class="switch" data-param="dco-range" data-value="1">
-            <div class="switch__knob--middle"></div>
+            <div class="switch__knob--middle" title="Oscillator range"></div>
         </div>
     </div>
 </div>
@@ -23,12 +23,12 @@
         <div class="fader">
             <div class="fader__scale">
                 <div class="fader__slot">
-                    <div class="fader__knob" data-param="lfo-pitchMod" data-value="0">
+                    <div class="fader__knob" data-param="lfo-pitchMod" data-value="0" title="Pitch LFO">
                         <hr>
                     </div>
                 </div>
                 <div class="fader__slot">
-                    <div class="fader__knob" data-param="dco-pwm" data-value="0">
+                    <div class="fader__knob" data-param="dco-pwm" data-value="0" title="Pulse width modulation">
                         <hr>
                     </div>
                 </div>
@@ -39,7 +39,7 @@
 <div class="module__switch-control-group">
     <div class="knob-container--pwm">
         <p class="label">LFO</p>
-        <div class="switch" data-param="dco-lfoPwmEnabled" data-value="0">
+        <div class="switch" data-param="dco-lfoPwmEnabled" data-value="0" title="Manual/LFO to Pulse width">
             <div class="switch__knob">
             </div>
         </div>
@@ -49,12 +49,12 @@
 <div class="button-container--top">    
     <p class="wave-label">PULSE</p>
     <div class="led"></div>
-    <div class="button button--yellow" data-param="dco-pulse" data-value="0"></div>
+    <div class="button button--yellow" data-param="dco-pulse" data-value="0" title="Pulse on/off"></div>
 </div>
 <div class="button-container--top">
     <p class="wave-label">SAW</p>
     <div class="led led--lit"></div>
-    <div class="button button--yellow pressed" data-param="dco-sawtooth" data-value="1"></div>
+    <div class="button button--yellow pressed" data-param="dco-sawtooth" data-value="1" title="Saw on/off"></div>
 </div>
 <div class="module__control-group">
     <div class="label-container">
@@ -65,12 +65,12 @@
         <div class="fader">   
             <div class="fader__scale">
                 <div class="fader__slot">
-                    <div class="fader__knob" data-param="dco-sub" data-value="0">
+                    <div class="fader__knob" data-param="dco-sub" data-value="0" title="Sub-osc volume">
                         <hr>
                     </div>
                 </div>
                 <div class="fader__slot">
-                    <div class="fader__knob" data-param="dco-noise" data-value="0">
+                    <div class="fader__knob" data-param="dco-noise" data-value="0" title="Noise volume">
                         <hr>
                     </div>
                 </div>

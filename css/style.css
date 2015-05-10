@@ -21,6 +21,10 @@ p, span {
   margin: 5px;
 }
 
+i {
+  vertical-align: top;
+}
+
 .juno {
   background-color: #5A5F66;
   margin: auto;
@@ -246,7 +250,8 @@ hr {
 }
 
 .button--midi {
-  height: 25px;
+  height: 30px;
+  padding-top: 5px;
   width: 60px;
   display: inline-block;
   margin: 5px;
