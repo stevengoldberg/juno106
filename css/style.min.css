@@ -112,17 +112,22 @@ h4 {
 .module__header, .module__header--first, .module__header--last {
   text-align: center;
   line-height: 30px;
-  background-color: #BC4016;
+  background: -webkit-linear-gradient(90deg, #8e3011, #BC4016);
+  background: linear-gradient(0deg, #8e3011, #BC4016);
   height: 10%;
   margin: 0 3px;
   width: 100%;
 }
 
 .module__header--first {
+  background: -webkit-linear-gradient(0deg, #8e3011, #BC4016);
+  background: linear-gradient(90deg, #8e3011, #BC4016);
   margin-left: 0;
 }
 
 .module__header--last {
+  background: -webkit-linear-gradient(180deg, #8e3011, #BC4016);
+  background: linear-gradient(270deg, #8e3011, #BC4016);
   margin-right: 0;
 }
 
@@ -279,11 +284,13 @@ hr {
 }
 
 .button--orange {
-  background-color: #FF9933;
+  background: -webkit-linear-gradient(90deg, #ff7f00, #FF9933);
+  background: linear-gradient(0 deg, #ff7f00, #FF9933);
 }
 
 .button--yellow {
-  background-color: #FFE0A3;
+  background: -webkit-linear-gradient(90deg, #ffcf70, #FFE0A3);
+  background: linear-gradient(0 deg, #ffcf70, #FFE0A3);
 }
 
 .button--midi {

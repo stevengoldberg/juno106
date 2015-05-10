@@ -46,7 +46,7 @@
 .module__header {
     text-align: center;
     line-height: $header-line-height;
-    background-color: $module-header-clr;
+    background: linear-gradient(0deg, darken($module-header-clr, 10%), $module-header-clr);
     height: 10%;
     margin: 0 3px;
     width: 100%;
@@ -54,11 +54,13 @@
 
 .module__header--first {
     @extend .module__header;
+    background: linear-gradient(90deg, darken($module-header-clr, 10%), $module-header-clr);
     margin-left: 0;
 }
 
 .module__header--last {
     @extend .module__header;
+    background: linear-gradient(270deg, darken($module-header-clr, 10%), $module-header-clr);
     margin-right: 0;
 }
 

@@ -19,12 +19,12 @@
 
 .button--orange {
     @extend .button;
-    background-color: $button-orange-clr;
+    background: linear-gradient(0 deg, darken($button-orange-clr, 10%), $button-orange-clr);
 }
 
 .button--yellow {
     @extend .button;
-    background-color: $button-yellow-clr;
+    background: linear-gradient(0 deg, darken($button-yellow-clr, 10%), $button-yellow-clr);
 }
 
 .button--midi {
