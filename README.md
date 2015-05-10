@@ -2,7 +2,7 @@
 
 Juno-106.js is an emulation of the classic [Roland Juno-106 analog synthesizer](http://en.wikipedia.org/wiki/Roland_Juno-106).
 
-[You can play the Juno-106.js here](http://stevegoldberg.neocities.org/#juno).
+[You can play the Juno-106.js here](http://resistorsings.com/juno-106).
 
 # System Requirements
 
