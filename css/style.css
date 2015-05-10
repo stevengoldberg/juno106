@@ -246,6 +246,7 @@ hr {
 .button-container, .knob-container--range, .knob-container--pwm, .knob-container--vca {
   display: flex;
   justify-content: center;
+  height: 75%;
 }
 
 .button-container--top {

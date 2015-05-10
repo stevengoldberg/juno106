@@ -6,7 +6,7 @@ define([
     'views/item/hpfItemView',
     'views/item/vcaItemView',
     'views/item/envItemView',
-    'views/item/choItemView',
+    'views/layout/choLayout',
     'hbs!tmpl/layout/moduleLayout-tmpl'
     ],
     
