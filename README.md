@@ -1,16 +1,16 @@
 # Juno-106.JS v 1.0
 
-The Juno-106.JS is an emulation of the classic [Roland Juno-106 analog synthesizer](http://en.wikipedia.org/wiki/Roland_Juno-106).
+Juno-106.JS is an emulation of the classic [Roland Juno-106 analog synthesizer](http://en.wikipedia.org/wiki/Roland_Juno-106).
 
 [You can play the Juno-106.JS here](http://stevegoldberg.neocities.org/#juno).
 
 # System Requirements
 
-Minimum window size of 1024x768. Please use an updated version of **Google Chrome**. For MIDI connectivity, you must use **Chrome 43** or newer (currently in beta), or enable the MIDI feature flag in **Chrome 38** or newer by pointing your browser to `chrome://flags`, searching for "Enable Web MIDI API," and clicking "enable."
+Minimum window size of 1024x768. Please use an updated version of **Google Chrome**. For MIDI connectivity, you must either use **Chrome 43** or newer (currently in beta), or enable the MIDI feature flag in **Chrome 38** or newer by pointing your browser to `chrome://flags`, searching for "Enable Web MIDI API," and clicking "enable."
 
 # How to play
 
-Notes can be played on the Juno by clicking the keys on the keyboard with the mouse. However, this synth is can play up to 6 notes once if played via the computer keyboard or a MIDI keyboard. The letter "A" on your keyboard corresponds to the lowest note on the synthesizer keyboard, a C3.
+Notes can be played on the Juno by clicking the keys on the keyboard with the mouse. However, this synth can play up to 6 notes once if played via the computer keyboard or a MIDI keyboard. The letter "A" on your keyboard corresponds to the lowest note on the synthesizer keyboard, a C3.
 
 **Synthesis Quickstart Manual**
 
@@ -68,6 +68,10 @@ This is an overview of the controls on the Juno-106.JS. For detailed instruction
  OFF: No effect.  
  I: Moderate chorus effect.  
  II: Stronger chorus effect.
+
+**Technology**
+
+Juno-106.JS was written in Javascript using the [WebAudio API](http://webaudio.github.io/web-audio-api/) and [Backbone.Marionette](marionettejs.com). It also uses some effects from [tuna.js](https://github.com/Dinahmoe/tuna/blob/master/tuna.js), and [QWERTYHancock](https://github.com/stuartmemo/qwerty-hancock) for its keyboard.
 
 **TO-DO**
 
