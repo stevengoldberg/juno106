@@ -98,13 +98,21 @@ h4 {
   width: 50%;
 }
 
-.module__header {
+.module__header, .module__header--first, .module__header--last {
   text-align: center;
   line-height: 30px;
   background-color: #BC4016;
   height: 10%;
   margin: 0 3px;
   width: 100%;
+}
+
+.module__header--first {
+  margin-left: 0;
+}
+
+.module__header--last {
+  margin-right: 0;
 }
 
 .module__back {
@@ -285,7 +293,7 @@ hr {
 
 .knob-container--range {
   position: relative;
-  margin-top: 50px;
+  margin-top: 60px;
   display: flex;
   flex-flow: column wrap;
   height: 110px;

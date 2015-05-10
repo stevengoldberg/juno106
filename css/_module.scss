@@ -52,6 +52,16 @@
     width: 100%;
 }
 
+.module__header--first {
+    @extend .module__header;
+    margin-left: 0;
+}
+
+.module__header--last {
+    @extend .module__header;
+    margin-right: 0;
+}
+
 .module__back {
     height: 88%;
     margin: 2px 0px;
