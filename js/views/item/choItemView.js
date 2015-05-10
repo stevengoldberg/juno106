@@ -7,12 +7,12 @@ define([
     function(Backbone, Template, ModuleBaseItemView) {
         return ModuleBaseItemView.extend({
             
-            className: 'cho',
+            className: 'control cho',
             
             template: Template,
             
             onShow: function() {
-                this.styleParent('three');
+                this.styleParent('four');
                 this.bindButtons();
             }
             

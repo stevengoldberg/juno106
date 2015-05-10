@@ -7,12 +7,12 @@ define([
     function(Backbone, Template, ModuleBaseItemView) {
         return ModuleBaseItemView.extend({
             
-            className: 'vcf',
+            className: 'vcf control',
             
             template: Template,
             
             onShow: function() {
-                this.styleParent('six');
+                this.styleParent('five');
                 this.bindFaders();
                 this.bindSwitches();
             }

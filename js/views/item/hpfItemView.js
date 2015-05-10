@@ -7,7 +7,7 @@ define([
     function(Backbone, Template, ModuleBaseItemView) {
         return ModuleBaseItemView.extend({
             
-            className: 'hpf',
+            className: 'hpf control',
             
             template: Template,
             

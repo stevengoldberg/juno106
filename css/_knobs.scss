@@ -4,7 +4,7 @@
     margin-top: 50px;
     display: flex;
     flex-flow: column wrap;
-    height: 90px;
+    height: 110px;
     .switch {
         height: 80px;
         position: relative;
@@ -14,7 +14,14 @@
 .knob-container--pwm {
     @extend .button-container;
     position: relative;
-    top: 20px;
-    margin: auto;
+    top: 41px;
+    margin: 50px auto 0;
     height: 38%;
+    display: inline-block;
+}
+
+.knob-container--vca {
+    @extend .knob-container--pwm;
+    vertical-align: top;
+    top: 0;
 }

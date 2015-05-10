@@ -7,12 +7,12 @@ define([
     function(Backbone, Template, ModuleBaseItemView) {
         return ModuleBaseItemView.extend({
             
-            className: 'env',
+            className: 'env control',
             
             template: Template,
             
             onShow: function() {
-                this.styleParent('four');
+                this.styleParent('six');
                 this.bindFaders();
             }
             

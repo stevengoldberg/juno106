@@ -1,3 +1,15 @@
+.fader-container {
+    height: 75%;
+    width: 95%;
+    margin: auto;
+    display: inline-block;
+}
+
+.fader-container--slim {
+    @extend .fader-container;
+    width: 55%;
+}
+
 .fader__scale {
     background: repeating-linear-gradient(
         0deg,
@@ -11,11 +23,6 @@
     margin: auto;
     display: flex;
     align-self: center;
-    &.env {
-        .fader__slot {
-            margin: 5% auto 0 auto;
-        }
-    }
 }
 
 .fader__scale--hpf {
@@ -36,17 +43,8 @@
 
 .fader {
     margin: auto;
-    height: 75%;
+    height: 100%;
     width: 100%;
-    &.two {
-        width: 27%;
-    }
-    &.three {
-        width: 55%;
-    }
-    &.vcf {
-        width: 35%;
-    }
 }
 
 .fader__slot {
@@ -57,6 +55,12 @@
     border-radius: $border-radius;
     align-self: center;
     position: relative;
+}
+
+.env {
+    .fader__slot {
+        margin-top: 10px;
+    }
 }
 
 .fader__knob {
@@ -73,7 +77,6 @@
     &:hover {
         box-shadow: 0 0 7px white;
     }
-    
     &.dragging {
         border: 1px dashed $led-on-clr;
         box-shadow: 0 0 7px white;

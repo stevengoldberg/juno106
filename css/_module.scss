@@ -1,46 +1,45 @@
 .module-container {
     display: flex;
+    flex-flow: column wrap;
+}
+
+.control {
+    display: flex;
     flex-flow: row wrap;
 }
 
+.module-row {
+    text-align: center;
+    display: block;
+    width: 100%;
+}
+
 .module {
-    margin: 0 2px;
     text-align: center;
     height: 300px;
-    min-width: 100px;
+    display: inline-block;
+    vertical-align: top;
+    margin: 0 -3px;
     &.one {
-        flex: 1 0 auto;
-        width: 7%;
+        width: 10%;
     }
     &.two {
-        flex: 2 0 auto;
-        width: 13%;
-    }
-    &.three {
-        flex: 3 0 auto;
         width: 15%;
     }
-    &.four {
-        flex: 4 0 auto;
+    &.three {
         width: 20%;
     }
-    &.six {
-        flex: 6 0 auto;
+    &.four {
         width: 30%;
     }
-    &.eight {
-        flex: 8 0 auto;
-        width: 47%;
+    &.five {
+        width: 35%;
     }
-    &:first-child, &:nth-child(4) {
-        >.module__back {
-        border-left: none;
-        }  
+    &.six {
+        width: 40%;
     }
-    &:last-child, &:nth-child(3) {
-        >.module__back {
-        border-right: none;
-        }
+    &.seven {
+        width: 50%;
     }
 }
 
@@ -49,14 +48,31 @@
     line-height: $header-line-height;
     background-color: $module-header-clr;
     height: 10%;
+    margin: 0 3px;
+    width: 100%;
 }
 
 .module__back {
     height: 88%;
-    border-left: 1px solid white;
-    border-right: 1px solid white;
-    margin: 2px -2px;
+    margin: 2px 0px;
     display: flex;
     flex-direction: row;
     justify-content: center
+}
+
+.module__control-group {
+    height: 88%;
+    flex: 1 0 auto;
+    &:nth-child(2) {
+        border-left: 2px solid white;
+    }
+    &:last-child {
+        border-right: 2px solid white;
+    }
+}
+
+.module__switch-control-group {
+    @extend .module__control-group;
+    flex: 0 1 10%;
+    margin-top: 6px;
 }

@@ -1,7 +1,10 @@
 .button {
     height: 35px;
     width: 55px;
-    margin: 3px;
+    &:first-of-type {
+        margin: 80px 3px 3px 3px;
+    }
+    margin: 10px 3px 3px 3px;
     align-self: center;
     border-radius: 2px;
     opacity: .8;
@@ -25,24 +28,11 @@
 }
 
 .button-container {
-    align-self: center;
-    text-align: center;
+    display: flex;
+    justify-content: center;
 }
 
 .button-container--top {
-    @extend .button-container;
-    align-self: flex-start;
-    margin-top: 30px;
-    .led {
-        margin-top: 55px;
-    }
-    .button {
-        &:first-of-type {
-            margin-top: 80px;
-        }
-        margin-top: 10px;
-    }
-    .switch {
-        margin-top: 5px;
-    }
+    margin-top: 10px;
+    display: inline-block;
 }

@@ -15,7 +15,7 @@ div, section {
   box-sizing: border-box;
 }
 
-p {
+p, span {
   color: white;
   font-family: 'Raleway';
   font-weight: 600;
@@ -59,64 +59,54 @@ h4 {
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
+  -webkit-flex-flow: column wrap;
+      -ms-flex-flow: column wrap;
+          flex-flow: column wrap;
+}
+
+.control {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
   -webkit-flex-flow: row wrap;
       -ms-flex-flow: row wrap;
           flex-flow: row wrap;
 }
 
+.module-row {
+  text-align: center;
+  display: block;
+  width: 100%;
+}
+
 .module {
-  margin: 0 2px;
   text-align: center;
   height: 300px;
-  min-width: 100px;
+  display: inline-block;
+  vertical-align: top;
+  margin: 0 -3px;
 }
 .module.one {
-  -webkit-box-flex: 1;
-  -webkit-flex: 1 0 auto;
-      -ms-flex: 1 0 auto;
-          flex: 1 0 auto;
-  width: 7%;
+  width: 10%;
 }
 .module.two {
-  -webkit-box-flex: 2;
-  -webkit-flex: 2 0 auto;
-      -ms-flex: 2 0 auto;
-          flex: 2 0 auto;
-  width: 13%;
-}
-.module.three {
-  -webkit-box-flex: 3;
-  -webkit-flex: 3 0 auto;
-      -ms-flex: 3 0 auto;
-          flex: 3 0 auto;
   width: 15%;
 }
-.module.four {
-  -webkit-box-flex: 4;
-  -webkit-flex: 4 0 auto;
-      -ms-flex: 4 0 auto;
-          flex: 4 0 auto;
+.module.three {
   width: 20%;
 }
-.module.six {
-  -webkit-box-flex: 6;
-  -webkit-flex: 6 0 auto;
-      -ms-flex: 6 0 auto;
-          flex: 6 0 auto;
+.module.four {
   width: 30%;
 }
-.module.eight {
-  -webkit-box-flex: 8;
-  -webkit-flex: 8 0 auto;
-      -ms-flex: 8 0 auto;
-          flex: 8 0 auto;
-  width: 47%;
+.module.five {
+  width: 35%;
 }
-.module:first-child > .module__back, .module:nth-child(4) > .module__back {
-  border-left: none;
+.module.six {
+  width: 40%;
 }
-.module:last-child > .module__back, .module:nth-child(3) > .module__back {
-  border-right: none;
+.module.seven {
+  width: 50%;
 }
 
 .module__header {
@@ -124,13 +114,13 @@ h4 {
   line-height: 30px;
   background-color: #BC4016;
   height: 10%;
+  margin: 0 3px;
+  width: 100%;
 }
 
 .module__back {
   height: 88%;
-  border-left: 1px solid white;
-  border-right: 1px solid white;
-  margin: 2px -2px;
+  margin: 2px 0px;
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -144,6 +134,39 @@ h4 {
   -webkit-justify-content: center;
       -ms-flex-pack: center;
           justify-content: center;
+}
+
+.module__control-group, .module__switch-control-group {
+  height: 88%;
+  -webkit-box-flex: 1;
+  -webkit-flex: 1 0 auto;
+      -ms-flex: 1 0 auto;
+          flex: 1 0 auto;
+}
+.module__control-group:nth-child(2), .module__switch-control-group:nth-child(2) {
+  border-left: 2px solid white;
+}
+.module__control-group:last-child, .module__switch-control-group:last-child {
+  border-right: 2px solid white;
+}
+
+.module__switch-control-group {
+  -webkit-box-flex: 0;
+  -webkit-flex: 0 1 10%;
+      -ms-flex: 0 1 10%;
+          flex: 0 1 10%;
+  margin-top: 6px;
+}
+
+.fader-container, .fader-container--slim {
+  height: 75%;
+  width: 95%;
+  margin: auto;
+  display: inline-block;
+}
+
+.fader-container--slim {
+  width: 55%;
 }
 
 .fader__scale, .fader__scale--hpf {
@@ -160,9 +183,6 @@ h4 {
       -ms-flex-item-align: center;
           align-self: center;
 }
-.fader__scale.env .fader__slot, .env.fader__scale--hpf .fader__slot {
-  margin: 5% auto 0 auto;
-}
 
 .fader__scale--hpf {
   background: -webkit-repeating-linear-gradient(90deg, white, white 2px, transparent 3px, transparent 50px);
@@ -176,17 +196,8 @@ h4 {
 
 .fader {
   margin: auto;
-  height: 75%;
+  height: 100%;
   width: 100%;
-}
-.fader.two {
-  width: 27%;
-}
-.fader.three {
-  width: 55%;
-}
-.fader.vcf {
-  width: 35%;
 }
 
 .fader__slot {
@@ -199,6 +210,10 @@ h4 {
       -ms-flex-item-align: center;
           align-self: center;
   position: relative;
+}
+
+.env .fader__slot {
+  margin-top: 10px;
 }
 
 .fader__knob {
@@ -237,13 +252,16 @@ hr {
 .button, .button--orange, .button--yellow {
   height: 35px;
   width: 55px;
-  margin: 3px;
+  margin: 10px 3px 3px 3px;
   -webkit-align-self: center;
       -ms-flex-item-align: center;
           align-self: center;
   border-radius: 2px;
   opacity: .8;
   cursor: pointer;
+}
+.button:first-of-type, .button--orange:first-of-type, .button--yellow:first-of-type {
+  margin: 80px 3px 3px 3px;
 }
 .button.pressed, .pressed.button--orange, .pressed.button--yellow {
   opacity: 1;
@@ -260,40 +278,30 @@ hr {
   background-color: #FFE0A3;
 }
 
-.button-container, .button-container--top, .knob-container--range, .knob-container--pwm {
-  -webkit-align-self: center;
-      -ms-flex-item-align: center;
-          align-self: center;
-  text-align: center;
+.button-container, .knob-container--range, .knob-container--pwm, .knob-container--vca {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+      -ms-flex-pack: center;
+          justify-content: center;
 }
 
 .button-container--top {
-  -webkit-align-self: flex-start;
-      -ms-flex-item-align: start;
-          align-self: flex-start;
-  margin-top: 30px;
-}
-.button-container--top .led {
-  margin-top: 55px;
-}
-.button-container--top .button, .button-container--top .button--orange, .button-container--top .button--yellow {
   margin-top: 10px;
-}
-.button-container--top .button:first-of-type, .button-container--top .button--orange:first-of-type, .button-container--top .button--yellow:first-of-type {
-  margin-top: 80px;
-}
-.button-container--top .switch {
-  margin-top: 5px;
+  display: inline-block;
 }
 
 .switch {
-  display: inline-block;
+  display: block;
   position: relative;
   border-radius: 10px;
   height: 40px;
   width: 10px;
   background-color: black;
-  margin: auto;
+  margin: 15px auto;
 }
 
 .switch__knob, .switch__knob--up, .switch__knob--down, .switch__knob--middle {
@@ -335,52 +343,55 @@ hr {
   -webkit-flex-flow: column wrap;
       -ms-flex-flow: column wrap;
           flex-flow: column wrap;
-  height: 90px;
+  height: 110px;
 }
 .knob-container--range .switch {
   height: 80px;
   position: relative;
 }
 
-.knob-container--pwm {
+.knob-container--pwm, .knob-container--vca {
   position: relative;
-  top: 20px;
-  margin: auto;
+  top: 41px;
+  margin: 50px auto 0;
   height: 38%;
+  display: inline-block;
 }
 
-.control-label {
-  font-family: 'Raleway', sans-serif;
-  font-size: 16px;
-  font-weight: bold;
-  color: white;
-  width: 22%;
-}
-.control-label.lfo {
-  width: 36%;
-  margin: auto;
-}
-.control-label.DCO {
-  width: 13%;
-  margin: 0 6px;
+.knob-container--vca {
+  vertical-align: top;
+  top: 0;
 }
 
 .label {
   display: inline-block;
-  margin: 0 6px;
-}
-.label.env {
-  width: 20%;
+  margin: 0 5%;
 }
 
-.led {
+.label--wide {
+  display: inline-block;
+  margin: 0 10%;
+}
+
+.wave-label {
+  display: inline-block;
+  margin: 5px 0 20px;
+}
+
+.label-container {
+  height: 10%;
+  margin: 15px 0 0 0;
+}
+
+.led, .led--lit {
   background-color: #800000;
   width: 10px;
   height: 10px;
   border-radius: 10px;
-  margin: 15px auto;
+  margin: 35px auto;
 }
-.led.lit {
+
+.led--lit {
   background-color: #CC3300;
   box-shadow: 0px 0px 8px #CC3300;
 }
@@ -396,5 +407,5 @@ hr {
 }
 
 .range {
-  margin: 3px 0px 8px 5px;
+  margin-top: 8px;
 }

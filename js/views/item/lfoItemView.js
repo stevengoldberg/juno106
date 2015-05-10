@@ -7,7 +7,7 @@ define([
     function(Backbone, Template, ModuleBaseItemView) {
         return ModuleBaseItemView.extend({
             
-            className: 'lfo',
+            className: 'lfo control',
             
             template: Template,
             

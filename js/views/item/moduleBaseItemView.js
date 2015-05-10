@@ -123,11 +123,11 @@ define([
                     
                     if(button.hasClass('js-chorus')) {
                         button.addClass('pressed');
-                        button.siblings('.led').addClass('lit');
-                        button.parent().siblings().children().removeClass('pressed lit');
+                        button.siblings('.led').addClass('led--lit');
+                        button.parent().siblings().children().removeClass('pressed led--lit');
                     } else {
                         button.toggleClass('pressed');
-                        button.siblings('.led').toggleClass('lit');
+                        button.siblings('.led').toggleClass('led--lit');
                         newValue = (data.value + 1) % 2;
                         button.data('value', newValue);
                     }

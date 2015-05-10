@@ -1,10 +1,13 @@
 <div class="module__header">
     <h4>VCF</h4>
 </div>
-    <div class="module__back">
-        <div class="fader vcf">
-            <p class="label">FREQ</p>
-            <p class="label">RES</p>
+<div class="module__control-group">
+    <div class="label-container">
+        <span class="label">FREQ</span>
+        <span class="label">RES</span>
+    </div>
+    <div class="fader-container">
+        <div class="fader">
             <div class="fader__scale">
                 <div class="fader__slot">
                     <div class="fader__knob" data-param="vcf-cutoff" data-value="1">
@@ -18,18 +21,26 @@
                 </div>
             </div>
         </div>
-        <div class="knob-container--pwm">
-            <p>^</p>
-            <div class="switch" data-param="vcf-invert" data-value="1">
-                <div class="switch__knob">
-                </div>
+    </div>
+</div>
+<div class="module__switch-control-group">
+    <div class="knob-container--pwm">
+        <p class="label">^</p>
+        <div class="switch" data-param="vcf-invert" data-value="1">
+            <div class="switch__knob">
             </div>
-            <p>v</p>
         </div>
-        <div class="fader three">
-            <p class="label">ENV</p>
-            <p class="label">LFO</p>
-            <p class="label">KBD</p>
+        <p class="label">v</p>
+    </div>
+</div>
+<div class="module__control-group">
+    <div class="label-container">
+        <span class="label">ENV</span>
+        <span class="label">LFO</span>
+        <span class="label">KBD</span>
+    </div>
+    <div class="fader-container">
+        <div class="fader">
             <div class="fader__scale">
                 <div class="fader__slot">
                     <div class="fader__knob" data-param="vcf-envMod" data-value="0">
@@ -49,3 +60,4 @@
             </div>
         </div>
     </div>
+</div>

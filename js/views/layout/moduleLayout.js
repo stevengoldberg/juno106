@@ -14,7 +14,7 @@ define([
         ENVItemView, CHOItemView, Template) {
         return Backbone.Marionette.LayoutView.extend({
             
-            className: 'module-container',
+            className: 'module-layout-container',
             
             template: Template,
             

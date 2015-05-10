@@ -1,11 +1,11 @@
 .switch {
-    display: inline-block;
+    display: block;
     position: relative;
     border-radius: 10px;
     height: 40px;
     width: 10px;
     background-color: black;
-    margin:auto;
+    margin: 15px auto;
 }
 
 .switch__knob {

@@ -1,25 +1,21 @@
-.control-label {
-    font-family: 'Raleway', sans-serif;
-    font-size: $label-size;
-    font-weight: bold;
-    color: $module-header-text-clr;
-    width: 22%;
-    &.lfo {
-        width: 36%;
-        margin: auto;
-    }
-    &.DCO {
-        width: 13%;
-        margin: 0 6px;
-    }
-}
-
 .label {
     display:inline-block;
-    margin: 0 6px;
-    &.env {
-        width: 20%;
-    }
+    margin: 0 5%;
+}
+
+.label--wide {
+    display: inline-block;
+    margin: 0 10%;
+}
+
+.wave-label {
+    display: inline-block;
+    margin: 5px 0 20px;
+}
+
+.label-container {
+    height: 10%;
+    margin: 15px 0 0 0;
 }
 
 .led {
@@ -27,11 +23,13 @@
     width: 10px;
     height: 10px;
     border-radius: 10px;
-    margin: 15px auto;
-    &.lit {
-        background-color: $led-on-clr;
-        box-shadow: 0px 0px 8px $led-on-clr;
-    }
+    margin: 35px auto;
+}
+
+.led--lit {
+    @extend .led;
+    background-color: $led-on-clr;
+    box-shadow: 0px 0px 8px $led-on-clr;
 }
 
 .line {
@@ -46,6 +44,6 @@
 }
 
 .range {
-    margin: 3px 0px 8px 5px;
+    margin-top: 8px;
 }
 

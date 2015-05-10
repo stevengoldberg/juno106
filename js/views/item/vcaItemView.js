@@ -7,12 +7,12 @@ define([
     function(Backbone, Template, ModuleBaseItemView) {
         return ModuleBaseItemView.extend({
             
-            className: 'vca',
+            className: 'vca control',
             
             template: Template,
             
             onShow: function() {
-                this.styleParent('two');
+                this.styleParent('three');
                 this.bindFaders();
                 this.bindSwitches();
             }
