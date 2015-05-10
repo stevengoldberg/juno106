@@ -1,4 +1,8 @@
-<p class="label">MIDI</p>
+<div class="button--midi {{#if midi}} pressed {{/if}}">
+    <span class="label js-midi-label">MIDI {{#if midi}}<i class="fa fa-check js-midi-success"></i> 
+    {{else}}<i class="fa fa-times js-midi-error"></i>{{/if}}
+    <i class="fa fa-spinner fa-spin js-midi-spinner"></i></span>
+</div>
 <select class="js-active-midi">
     {{#if midi}}
         <option disabled default>Select MIDI Input</option>

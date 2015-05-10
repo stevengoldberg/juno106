@@ -11,11 +11,17 @@ define([
             template: Template,
             
             ui: {
-                select: '.js-active-midi'
+                select: '.js-active-midi',
+                midiButton: '.button--midi',
+                midiLabel: '.js-midi-label',
+                midiSpinner: '.js-midi-spinner',
+                check: '.js-midi-check',
+                error: '.js-midi-error'
             },
             
             events: {
-                'change @ui.select': 'selectMidi'
+                'change @ui.select': 'selectMidi',
+                'click @ui.midiButton': 'requestMidi'
             },
             
             initialize: function(options) {
@@ -23,28 +29,42 @@ define([
                 this.midi = false;
                 this.inputs = [];
                 this.activeDevice = null;
-                
-                this.requestMidi();
+            },
+            
+            onRender: function() {
+                this.ui.midiSpinner.hide();
             },
             
             onShow: function() {
-
+                this.requestMidi();
             },
             
             requestMidi: function() {
                 var that = this;
                 var inputs; 
-                navigator.requestMIDIAccess().then(function(access) {
-                    if(access.inputs && access.inputs.size > 0) {
-                        that.midi = true;
-                        inputs = access.inputs.values();
-                        for (input = inputs.next(); input && !input.done; input = inputs.next()) {
-                            that.inputs.push(input.value);
+                this.inputs = [];
+                
+                this.ui.midiLabel.hide();
+                this.ui.midiSpinner.show();
+                
+                try {
+                        navigator.requestMIDIAccess().then(function(access) {
+                        if(access.inputs && access.inputs.size > 0) {
+                            that.midi = true;
+                            inputs = access.inputs.values();
+                            for (input = inputs.next(); input && !input.done; input = inputs.next()) {
+                                that.inputs.push(input.value);
+                            }
+                            that.render();
+                            that.selectMidi();
+                        } else {
+                            that.render();
                         }
-                        that.render();
-                        that.selectMidi();
-                    }
-                });
+                    });
+                } catch (e) {
+                    console.log('No MIDI access');
+                    this.render();
+                }
             },
             
             selectMidi: function() {

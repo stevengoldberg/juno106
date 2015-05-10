@@ -286,6 +286,25 @@ hr {
   background-color: #FFE0A3;
 }
 
+.button--midi {
+  height: 25px;
+  width: 60px;
+  display: inline-block;
+  margin: 5px;
+  background-color: #800000;
+  color: white;
+  border-radius: 4px;
+  opacity: .7;
+  cursor: pointer;
+}
+.button--midi.pressed {
+  box-shadow: 0 0 7px white;
+  opacity: 1;
+}
+.button--midi:hover {
+  opacity: 1;
+}
+
 .button-container, .knob-container--range, .knob-container--pwm, .knob-container--vca {
   display: -webkit-box;
   display: -webkit-flex;
@@ -376,6 +395,7 @@ hr {
   display: inline-block;
   margin: 0 5%;
   font-size: 15px;
+  vertical-align: middle;
 }
 
 .label--wide {

@@ -27,6 +27,25 @@
     background-color: $button-yellow-clr;
 }
 
+.button--midi {
+    height: 25px;
+    width: 60px;
+    display: inline-block;
+    margin: 5px;
+    background-color: $led-off-clr;
+    color: white;
+    border-radius: 4px;
+    opacity: .7;
+    cursor: pointer;
+    &.pressed {
+        box-shadow: 0 0 7px white;
+        opacity: 1;
+    }
+    &:hover {
+        opacity: 1;
+    }
+}
+
 .button-container {
     display: flex;
     justify-content: center;
