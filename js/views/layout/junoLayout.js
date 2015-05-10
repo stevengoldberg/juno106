@@ -35,13 +35,13 @@ define([
                 this.cho = new tuna.Chorus();
                 this.cho.chorusLevel = this.synth.get('cho-chorusToggle');
                 
-                /*this.drive = new tuna.Overdrive({
+                this.drive = new tuna.Overdrive({
                     outputGain: 0,
                     drive: 0.1,
                     curveAmount: 0.2,
                     algorithmIndex: 3,
                     bypass: 0 
-                });*/
+                });
                 
                 this.masterGain = App.context.createGain();
                 this.masterGain.gain.value = 0.5;
@@ -110,7 +110,8 @@ define([
                     console.log(this.activeVoices[0].note + ' stolen');
                 }
                 
-                voice.cho.connect(this.masterGain);
+                voice.cho.connect(this.drive.input);
+                this.drive.connect(this.masterGain);
                 
                 voice.noteOn();
                 voice.note = note;
