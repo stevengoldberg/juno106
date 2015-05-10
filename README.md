@@ -1,8 +1,8 @@
-# Juno-106.JS v 1.0
+# Juno-106.js v 1.0
 
-Juno-106.JS is an emulation of the classic [Roland Juno-106 analog synthesizer](http://en.wikipedia.org/wiki/Roland_Juno-106).
+Juno-106.js is an emulation of the classic [Roland Juno-106 analog synthesizer](http://en.wikipedia.org/wiki/Roland_Juno-106).
 
-[You can play the Juno-106.JS here](http://stevegoldberg.neocities.org/#juno).
+[You can play the Juno-106.js here](http://stevegoldberg.neocities.org/#juno).
 
 # System Requirements
 
@@ -71,7 +71,7 @@ This is an overview of the controls on the Juno-106.JS. For detailed instruction
 
 **Technology**
 
-Juno-106.JS was written in Javascript using the [WebAudio API](http://webaudio.github.io/web-audio-api/) and [Backbone.Marionette](marionettejs.com). It also uses some effects from [tuna.js](https://github.com/Dinahmoe/tuna/blob/master/tuna.js), and [QWERTYHancock](https://github.com/stuartmemo/qwerty-hancock) for its keyboard.
+Juno-106.js was written in Javascript using the [WebAudio API](http://webaudio.github.io/web-audio-api/) and [Backbone.Marionette](marionettejs.com). It also uses some effects from [tuna.js](https://github.com/Dinahmoe/tuna/blob/master/tuna.js), and [QWERTYHancock](https://github.com/stuartmemo/qwerty-hancock) for its keyboard.
 
 **TO-DO**
 
