@@ -10,9 +10,20 @@ define([
             
             template: Template,
             
-            initialize: function() {
+            ui: {
+                select: '.js-active-midi'
+            },
+            
+            events: {
+                'change @ui.select': 'selectMidi'
+            },
+            
+            initialize: function(options) {
+                this.midiListener = options.midiListener;
                 this.midi = false;
                 this.inputs = [];
+                this.activeDevice = null;
+                
                 this.requestMidi();
             },
             
@@ -24,17 +35,25 @@ define([
                 var that = this;
                 var inputs; 
                 navigator.requestMIDIAccess().then(function(access) {
-                    console.log(access);
                     if(access.inputs && access.inputs.size > 0) {
                         that.midi = true;
                         inputs = access.inputs.values();
                         for (input = inputs.next(); input && !input.done; input = inputs.next()) {
                             that.inputs.push(input.value);
                         }
-                        console.log(that.inputs);
                         that.render();
+                        that.selectMidi();
                     }
                 });
+            },
+            
+            selectMidi: function() {
+                this.activeDevice = _.findWhere(this.inputs, {name: this.ui.select.val() });
+                this.activeDevice.onmidimessage = this.handleMidi.bind(this);
+            },
+            
+            handleMidi: function(e) {
+                this.midiListener.trigger('midiMessage', e.data);
             },
             
             serializeData: function() {

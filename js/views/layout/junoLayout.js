@@ -1,6 +1,7 @@
 define([
     'backbone',
     'application',
+    'util',
     'views/layout/moduleLayout',
     'views/item/keyboardItemView',
     'voice',
@@ -10,7 +11,7 @@ define([
     'hbs!tmpl/layout/junoLayout-tmpl'
     ],
     
-    function(Backbone, App, ModuleLayout, KeyboardItemView, Voice, LFO, Tuna, JunoModel, Template) {
+    function(Backbone, App, util, ModuleLayout, KeyboardItemView, Voice, LFO, Tuna, JunoModel, Template) {
         
         return Backbone.Marionette.LayoutView.extend({
             
@@ -55,11 +56,14 @@ define([
                     lfoPwmEnabled: this.synth.get('dco-lfoPwmEnabled'),
                     lfoPwm: this.synth.get('dco-pwm')
                 });
+                
+                this.midiListener = new Backbone.Marionette.Object();
             },
             
             onShow: function() {
                 this.moduleLayout = new ModuleLayout({
-                    synth: this.synth
+                    synth: this.synth,
+                    midiListener: this.midiListener
                 });
                 this.synthRegion.show(this.moduleLayout);
                 
@@ -68,6 +72,7 @@ define([
                 
                 this.listenTo(this.keyboardView, 'noteOn', this.noteOnHandler);
                 this.listenTo(this.keyboardView, 'noteOff', this.noteOffHandler);
+                this.listenTo(this.midiListener, 'midiMessage', this.handleMidi);
                 this.listenTo(this.synth, 'change', this.synthUpdateHandler);
             },
             
@@ -128,12 +133,28 @@ define([
                     }
                 }
                             
-                currentNote.noteOff();
+                if(currentNote) {
+                    currentNote.noteOff();
+                }
                 
                 this.listenToOnce(currentNote, 'killVoice', function() {
                     this.activeVoices = _.without(this.activeVoices, currentNote);
                 });
                 
+            },
+            
+            handleMidi: function(message) {
+                var note;
+                var frequency;
+                
+                if(message[0] === 145) {
+                    frequency = util.frequencyFromMidiNote(message[1]);
+                    note = util.noteFromMidiNumber(message[1]);
+                    this.noteOnHandler(note, frequency);
+                } else if(message[0] === 129 || (message[0] === 145 && message[2] === 0)) {
+                    note = util.noteFromMidiNumber(message[1]);
+                    this.noteOffHandler(note);
+                }
             },
             
             synthUpdateHandler: _.throttle(function(update) {                    

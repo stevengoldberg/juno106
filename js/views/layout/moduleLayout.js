@@ -11,7 +11,7 @@ define([
     ],
     
     function(Backbone, LFOItemView, DCOItemView, VCFItemView, HPFItemView, VCAItemView,
-        ENVItemView, CHOItemView, Template) {
+        ENVItemView, CHOLayout, Template) {
         return Backbone.Marionette.LayoutView.extend({
             
             className: 'module-layout-container',
@@ -30,6 +30,7 @@ define([
             
             initialize: function(data) {
                 this.synth = data.synth;
+                this.midiListener = data.midiListener;
                 this.modules = this.setupModules();
                 this.currentParam = null;
                 this.currentValue = null;
@@ -43,7 +44,9 @@ define([
                     hpf: new HPFItemView(),
                     vca: new VCAItemView(),
                     env: new ENVItemView(),
-                    cho: new CHOItemView()
+                    cho: new CHOLayout({
+                        midiListener: this.midiListener
+                    })
                 };
             },
             
