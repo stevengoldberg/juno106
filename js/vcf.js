@@ -32,7 +32,8 @@ define([
             var filterCutoff = getCutoffFreqFromValue(options.frequency);
             
             var keyFrequency = options.keyFreq;
-            var keyFollow = options.keyFollow;
+            var keyFollow = App.context.createGain();
+            keyFollow.gain.value = setKeyFollow(options.keyFollow);
             
             var attackLength;
             var decayLength;
@@ -45,6 +46,9 @@ define([
             filterEnvelope.connect(envMod);
             envMod.connect(filter1.detune);
             envMod.connect(filter2.detune);
+            offset.connect(keyFollow);
+            keyFollow.connect(filter1.detune);
+            keyFollow.connect(filter2.detune);
             
             // Setter methods
             function setRes(value) {
@@ -60,6 +64,11 @@ define([
                 var now = App.context.currentTime;
                 filter1.frequency.setValueAtTime(value, now);
                 filter2.frequency.setValueAtTime(value, now);
+            }
+            
+            function setKeyFollow(value) {
+                var octavesFromMiddleC = Math.log2(keyFrequency / 261.6);
+                return value * octavesFromMiddleC * 1200;
             }
             
             // Helper methods
@@ -234,6 +243,12 @@ define([
                 },
                 'invert': {
                     'set': function(value) { inverted = !value; }
+                },
+                'keyFollow': {
+                    'set': function(value) { 
+                        var now = App.context.currentTime;
+                        keyFollow.gain.setValueAtTime(setKeyFollow(value), now); 
+                    }
                 }
             });
         }
