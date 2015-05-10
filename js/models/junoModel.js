@@ -25,6 +25,7 @@ define([
                     'vcf-res': 0,
                     'vcf-envMod': 0,
                     'vcf-invert': 1,
+                    'vcf-keyFollow': 0,
                     'lfo-pitchMod': 0,
                     'lfo-rate': 0,
                     'lfo-delay': 0,

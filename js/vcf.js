@@ -31,6 +31,9 @@ define([
             var envelope = options.envelope;
             var filterCutoff = getCutoffFreqFromValue(options.frequency);
             
+            var keyFrequency = options.keyFreq;
+            var keyFollow = options.keyFollow;
+            
             var attackLength;
             var decayLength;
             var sustainLevel;

@@ -88,6 +88,7 @@ define([
                     vcfInverted: this.synth.isFilterInverted(),
                     lfoPwmEnabled: this.synth.get('dco-lfoPwmEnabled'),
                     vcfFreq: this.synth.get('vcf-cutoff'),
+                    keyFollow: this.synth.get('vcf-keyFollow'),
                     res: this.synth.get('vcf-res'),
                     vcfEnv: this.synth.get('vcf-envMod'),
                     volume: this.synth.get('vca-level'),

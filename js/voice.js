@@ -48,7 +48,9 @@ define([
                     envelope: options.envelope,
                     vcfEnv: options.vcfEnv,
                     envConstants: envConstants,
-                    inverted: options.vcfInverted
+                    inverted: options.vcfInverted,
+                    keyFreq: options.frequency,
+                    keyFollow: options.keyFollow
                 });
                 
                 this.env = new ENV({
