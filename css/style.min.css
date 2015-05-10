@@ -285,12 +285,12 @@ hr {
 
 .button--orange {
   background: -webkit-linear-gradient(90deg, #ff7f00, #FF9933);
-  background: linear-gradient(0 deg, #ff7f00, #FF9933);
+  background: linear-gradient(0deg, #ff7f00, #FF9933);
 }
 
 .button--yellow {
   background: -webkit-linear-gradient(90deg, #ffcf70, #FFE0A3);
-  background: linear-gradient(0 deg, #ffcf70, #FFE0A3);
+  background: linear-gradient(0deg, #ffcf70, #FFE0A3);
 }
 
 .button--midi {

@@ -238,11 +238,11 @@ hr {
 }
 
 .button--orange {
-  background: linear-gradient(0 deg, #ff7f00, #FF9933);
+  background: linear-gradient(0deg, #ff7f00, #FF9933);
 }
 
 .button--yellow {
-  background: linear-gradient(0 deg, #ffcf70, #FFE0A3);
+  background: linear-gradient(0deg, #ffcf70, #FFE0A3);
 }
 
 .button--midi {
