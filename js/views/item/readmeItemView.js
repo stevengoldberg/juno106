@@ -8,6 +8,18 @@ define([
             
             className: 'readme',
             
-            template: Template    
+            template: Template,
+            
+            ui: {
+                init: '.js-init'
+            },
+            
+            events: {
+                'click @ui.init': 'triggerInit'
+            },
+            
+            triggerInit: function() {
+                this.trigger('init');
+            }
         });
     });

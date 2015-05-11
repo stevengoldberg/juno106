@@ -4,6 +4,7 @@ define([
     'util',
     'views/layout/moduleLayout',
     'views/item/keyboardItemView',
+    'views/item/readmeItemView',
     'voice',
     'lfo',
     'tuna',
@@ -11,17 +12,18 @@ define([
     'hbs!tmpl/layout/junoLayout-tmpl'
     ],
     
-    function(Backbone, App, util, ModuleLayout, KeyboardItemView, Voice, LFO, Tuna, JunoModel, Template) {
+    function(Backbone, App, util, ModuleLayout, KeyboardItemView, ReadmeItemView, Voice, LFO, Tuna, JunoModel, Template) {
         
         return Backbone.Marionette.LayoutView.extend({
             
-            className: 'juno',
+            className: 'juno-container',
             
             template: Template,
             
             regions: {
                 synthRegion: '.js-synth-region',
-                keyboardRegion: '.js-keyboard-region'
+                keyboardRegion: '.js-keyboard-region',
+                readmeRegion: '.js-readme-region'
             },
             
             initialize: function() {
@@ -30,12 +32,9 @@ define([
                 
                 // Initialize long-lived components
                 this.synth = new JunoModel();
-                
                 var tuna = new Tuna(App.context);
-                
                 this.cho = new tuna.Chorus();
                 this.cho.chorusLevel = this.synth.get('cho-chorusToggle');
-                
                 this.drive = new tuna.Overdrive({
                     outputGain: 0,
                     drive: 0.1,
@@ -43,11 +42,9 @@ define([
                     algorithmIndex: 3,
                     bypass: 0 
                 });
-                
                 this.masterGain = App.context.createGain();
                 this.masterGain.gain.value = 0.5;
                 this.masterGain.connect(App.context.destination);
-                
                 this.lfo = new LFO({
                     lfoRate: this.synth.get('lfo-rate'),
                     lfoPitch: this.synth.get('lfo-pitch'),
@@ -56,11 +53,15 @@ define([
                     lfoPwmEnabled: this.synth.get('dco-lfoPwmEnabled'),
                     lfoPwm: this.synth.get('dco-pwm')
                 });
-                
                 this.midiListener = new Backbone.Marionette.Object();
+                
+                // Cache a copy of the synth's initial values
+                this.synthCopy = JSON.stringify(this.synth.attributes);
             },
             
             onShow: function() {
+                var readme = new ReadmeItemView();
+                
                 this.moduleLayout = new ModuleLayout({
                     synth: this.synth,
                     midiListener: this.midiListener
@@ -70,10 +71,13 @@ define([
                 this.keyboardView = new KeyboardItemView();
                 this.keyboardRegion.show(this.keyboardView);
                 
+                this.readmeRegion.show(readme);
+                
                 this.listenTo(this.keyboardView, 'noteOn', this.noteOnHandler);
                 this.listenTo(this.keyboardView, 'noteOff', this.noteOffHandler);
                 this.listenTo(this.midiListener, 'midiMessage', this.handleMidi);
                 this.listenTo(this.synth, 'change', this.synthUpdateHandler);
+                this.listenTo(readme, 'init', this.handleInit);
             },
             
             noteOnHandler: function(note, frequency) {
@@ -165,7 +169,12 @@ define([
                 _.each(this.activeVoices, function(voice) {
                     voice[component][attr] = value;
                 });
-            }, 15)
+            }, 15),
+            
+            handleInit: function() {
+                this.synth.set(JSON.parse(this.synthCopy));
+                this.moduleLayout.updateUIState();
+            }
             
         });
     });
