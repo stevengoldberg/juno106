@@ -12,9 +12,9 @@ Minimum window size of 1024x768. Please use an updated version of **Google Chrom
 
 Notes can be played on the Juno by clicking the keys on the keyboard with the mouse. However, this synth can play up to 6 notes at a time if played via the computer keyboard or a MIDI keyboard. The letter "A" on your computer keyboard corresponds to the lowest note on the synthesizer keyboard, a C3.
 
-**Synthesis Quickstart Manual**
+**Synthesis Overview**
 
-This is an overview of the controls on the Juno-106.js, and many other analog and virtual analog synthesizers. For more detailed instructions, consult the [Juno 106 owner's manual](http://www.synthfool.com/docs/Roland/Juno_Series/Roland_Juno_106/Roland_Juno106_Owners_Manual.pdf).
+This is brief look at the controls on the Juno-106.js, and many other analog and virtual analog synthesizers. For more detailed instructions, consult the [Juno 106 owner's manual](http://www.synthfool.com/docs/Roland/Juno_Series/Roland_Juno_106/Roland_Juno106_Owners_Manual.pdf).
 
 * LFO - Low Frequency Oscillator  
  Triangle-wave oscillator used to modulate other synth parameters.
