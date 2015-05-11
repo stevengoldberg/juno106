@@ -6,7 +6,7 @@ Juno-106.js is an emulation of the classic [Roland Juno-106 analog synthesizer](
 
 # System Requirements
 
-Minimum window size of 1024x768. Please use an updated version of **Google Chrome**. For MIDI connectivity, you must either use **Chrome 43** or newer (currently in beta), or enable the MIDI feature flag in **Chrome 38** or newer by pointing your browser to `chrome://flags`, searching for "Enable Web MIDI API," clicking "enable," and then restarting the browser.
+Minimum window size of 1024x768. Please use an updated version of **Google Chrome**. For MIDI connectivity, you must either use **Chrome 43** or newer ([currently in beta](https://www.chromium.org/getting-involved/dev-channel)), or enable the MIDI feature flag in **Chrome 38** or newer by pointing your browser to `chrome://flags`, searching for "Enable Web MIDI API," clicking "enable," and then restarting the browser.
 
 # How to play
 
