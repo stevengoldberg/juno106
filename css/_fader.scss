@@ -11,18 +11,35 @@
 }
 
 .fader__scale {
-    background: repeating-linear-gradient(
-        0deg,
-        white,
-        white 2px,
-        transparent 3px,
-        transparent 20px
-    );
     height: 100%;
     width: 95%;
     margin: auto;
     display: flex;
     align-self: center;
+}
+
+.fader__scale--light {
+    @extend .fader__scale;
+    background: repeating-linear-gradient(
+        0deg,
+        white,
+        white 1px,
+        transparent 1px,
+        transparent 20px
+    );
+}
+
+.fader__scale--heavy {
+    @extend .fader__scale;
+    position: absolute;
+    left: 2.5%;
+    background: repeating-linear-gradient(
+        0deg,
+        white,
+        white 3px,
+        transparent 3px,
+        transparent 100px
+    );
 }
 
 .fader__scale--hpf {
@@ -45,6 +62,7 @@
     margin: auto;
     height: 100%;
     width: 100%;
+    position: relative;
 }
 
 .fader__slot {

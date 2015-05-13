@@ -1,0 +1,19 @@
+.key-label {
+    font-size: 20px;
+    position: absolute;
+    opacity: 0.6;
+}
+
+.key-label--white {
+    @extend .key-label;
+    color: black;
+    left: 37%;
+    top: 70%;
+}
+
+.key-label--black {
+    @extend .key-label;
+    color: white;
+    left: 0;
+    top: 60%;
+}

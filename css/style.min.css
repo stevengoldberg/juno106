@@ -20,6 +20,7 @@ p, span {
   font-family: 'Raleway';
   font-weight: 600;
   margin: 5px;
+  cursor: default;
 }
 
 i {
@@ -186,9 +187,7 @@ h4 {
   width: 55%;
 }
 
-.fader__scale, .fader__scale--hpf {
-  background: -webkit-repeating-linear-gradient(90deg, white, white 2px, transparent 3px, transparent 20px);
-  background: repeating-linear-gradient(0deg, white, white 2px, transparent 3px, transparent 20px);
+.fader__scale, .fader__scale--light, .fader__scale--heavy, .fader__scale--hpf {
   height: 100%;
   width: 95%;
   margin: auto;
@@ -199,6 +198,18 @@ h4 {
   -webkit-align-self: center;
       -ms-flex-item-align: center;
           align-self: center;
+}
+
+.fader__scale--light {
+  background: -webkit-repeating-linear-gradient(90deg, white, white 1px, transparent 1px, transparent 20px);
+  background: repeating-linear-gradient(0deg, white, white 1px, transparent 1px, transparent 20px);
+}
+
+.fader__scale--heavy {
+  position: absolute;
+  left: 2.5%;
+  background: -webkit-repeating-linear-gradient(90deg, white, white 3px, transparent 3px, transparent 100px);
+  background: repeating-linear-gradient(0deg, white, white 3px, transparent 3px, transparent 100px);
 }
 
 .fader__scale--hpf {
@@ -215,6 +226,7 @@ h4 {
   margin: auto;
   height: 100%;
   width: 100%;
+  position: relative;
 }
 
 .fader__slot {
@@ -451,4 +463,22 @@ hr {
 
 .range {
   margin-top: 8px;
+}
+
+.key-label, .key-label--white, .key-label--black {
+  font-size: 20px;
+  position: absolute;
+  opacity: 0.6;
+}
+
+.key-label--white {
+  color: black;
+  left: 37%;
+  top: 70%;
+}
+
+.key-label--black {
+  color: white;
+  left: 0;
+  top: 60%;
 }
