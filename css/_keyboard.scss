@@ -2,18 +2,51 @@
     font-size: 20px;
     position: absolute;
     opacity: 0.6;
+    bottom: 5%;
+    font-family: 'Audiowide', cursive;
 }
 
 .key-label--white {
     @extend .key-label;
     color: black;
-    left: 37%;
-    top: 70%;
+    left: 30%;
+    text-shadow: 1px 1px 1px black;
 }
 
 .key-label--black {
     @extend .key-label;
     color: white;
-    left: 0;
-    top: 60%;
+    left: 15%;
+    text-shadow: 1px 1px 1px white;
+}
+
+.keyboard-container {
+    list-style: none;
+    width: $synth-width - 4px;
+    margin: 0 1.5%;
+    position: relative;
+}
+
+%keyboard-key {
+    position: absolute;
+    display: inline-block;
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
+}
+
+.white-key {
+    @extend %keyboard-key;
+    background-color: white;
+    height: 100px;
+    width: 66px;
+    border: 1px solid black;
+    z-index: 1;
+}
+
+.black-key {
+    @extend %keyboard-key;
+    background-color: black;
+    height: 60px;
+    width: 40px;
+    z-index: 2;
 }

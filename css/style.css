@@ -30,6 +30,7 @@ i {
   background-color: #5A5F66;
   margin: auto;
   width: 1024px;
+  border-radius: 8px;
 }
 
 h4 {
@@ -103,7 +104,7 @@ h4 {
   width: 50%;
 }
 
-.module__header, .module__header--first, .module__header--last {
+.module__header, .module__header--first, .module__header--left-corner, .module__header--last, .module__header--right-corner {
   text-align: center;
   line-height: 30px;
   background: linear-gradient(0deg, #8e3011, #BC4016);
@@ -112,12 +113,20 @@ h4 {
   width: 100%;
 }
 
-.module__header--first {
+.module__header--first, .module__header--left-corner {
   background: linear-gradient(90deg, #8e3011, #BC4016);
   margin-left: 0;
 }
 
-.module__header--last {
+.module__header--left-corner {
+  border-top-left-radius: 10px;
+}
+
+.module__header--right-corner {
+  border-top-right-radius: 10px;
+}
+
+.module__header--last, .module__header--right-corner {
   background: linear-gradient(270deg, #8e3011, #BC4016);
   margin-right: 0;
 }
@@ -130,15 +139,23 @@ h4 {
   justify-content: center;
 }
 
-.module__control-group, .module__switch-control-group {
+.module__control-group, .module__control-group--left-corner, .module__control-group--right-corner, .module__switch-control-group {
   height: 88%;
   flex: 1 0 auto;
 }
-.module__control-group:nth-child(2), .module__switch-control-group:nth-child(2) {
+.module__control-group:nth-child(2), .module__control-group--left-corner:nth-child(2), .module__control-group--right-corner:nth-child(2), .module__switch-control-group:nth-child(2) {
   border-left: 2px solid white;
 }
-.module__control-group:last-child, .module__switch-control-group:last-child {
+.module__control-group:last-child, .module__control-group--left-corner:last-child, .module__control-group--right-corner:last-child, .module__switch-control-group:last-child {
   border-right: 2px solid white;
+}
+
+.module__control-group--left-corner {
+  border-bottom-left-radius: 10px;
+}
+
+.module__control-group--right-corner {
+  border-bottom-right-radius: 10px;
 }
 
 .module__switch-control-group {
@@ -408,18 +425,49 @@ hr {
   font-size: 20px;
   position: absolute;
   opacity: 0.6;
+  bottom: 5%;
+  font-family: 'Audiowide', cursive;
 }
 
 .key-label--white {
   color: black;
-  left: 37%;
-  top: 70%;
+  left: 30%;
+  text-shadow: 1px 1px 1px black;
 }
 
 .key-label--black {
   color: white;
-  left: 0;
-  top: 60%;
+  left: 15%;
+  text-shadow: 1px 1px 1px white;
+}
+
+.keyboard-container {
+  list-style: none;
+  width: 1020px;
+  margin: 0 1.5%;
+  position: relative;
+}
+
+.white-key, .black-key {
+  position: absolute;
+  display: inline-block;
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+}
+
+.white-key {
+  background-color: white;
+  height: 100px;
+  width: 66px;
+  border: 1px solid black;
+  z-index: 1;
+}
+
+.black-key {
+  background-color: black;
+  height: 60px;
+  width: 40px;
+  z-index: 2;
 }
 
 /*# sourceMappingURL=style.css.map */

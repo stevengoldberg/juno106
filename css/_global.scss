@@ -8,6 +8,9 @@ $header-size: 25px;
 $header-line-height: 30px;
 $label-size: 16px;
 
+$synth-width: 1024px;
+$synth-corner: 10px;
+
 body {
     background-color: black;
 }
@@ -35,7 +38,8 @@ i {
 .juno {
     background-color: $synth-body-clr;
     margin: auto;
-    width: 1024px;
+    width: $synth-width;
+    border-radius: 8px;
 }
 
 h4 {

@@ -7,9 +7,18 @@ define([
     function(Backbone, QwertyHancock, Template) {
         return Backbone.Marionette.ItemView.extend({
             
+            tagName: 'ul',
+            
             className: 'keyboard-container',
             
             template: Template,
+            
+            ui: {
+                keys: 'li',
+                whiteKeys: '.white-key',
+                blackKeys: '.black-key',
+                labels: 'span'
+            },
             
             initialize: function() {
                 this.keyArray = ['A', 'W', 'S', 'E', 'D', 'F', 'T', 'G', 'Y', 'H',
@@ -17,8 +26,9 @@ define([
             },
 
             onShow: function() {
+                this.positionKeys();
             
-                var keyboard = new QwertyHancock({
+                /*var keyboard = new QwertyHancock({
                     id: 'js-keyboard',
                     width: 1024,
                     height: 120,
@@ -31,9 +41,7 @@ define([
                 
                 keyboard.keyDown = this.keyDownHandler.bind(this);
                 
-                keyboard.keyUp = this.keyUpHandler.bind(this);
-                
-                //this.labelKeyboard();
+                keyboard.keyUp = this.keyUpHandler.bind(this);*/
             },
             
             keyUpHandler: function(note, frequency) {
@@ -63,6 +71,31 @@ define([
                     }
                     label = $('<span class="key-label--' + color + '">' + that.keyArray[i] + '</span>');
                     $(this).append(label);
+                });
+            },
+            
+            positionKeys: function() {
+                var whiteWidth = this.ui.whiteKeys.first().width();
+                var blackWidth = this.ui.blackKeys.first().width();
+                var thisKey;
+                var whiteKeyCounter = 0;
+                
+                this.ui.whiteKeys.each(function(i, key) {
+                thisKey = $(this);
+                    thisKey.css({
+                        left: i * thisKey.width()
+                    });
+                });
+                
+                this.ui.keys.each(function(i, key) {
+                    thisKey = $(this);
+                    if(thisKey.hasClass('white-key')) {
+                        whiteKeyCounter++;
+                    } else if(thisKey.hasClass('black-key')) {
+                        thisKey.css({
+                            left: (whiteKeyCounter * whiteWidth) - (0.5 * blackWidth)
+                        });
+                    }
                 });
             }
 
