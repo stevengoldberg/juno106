@@ -12,7 +12,7 @@ Minimum window size of 1024x768. Please use an updated version of **Google Chrom
 
 106.js is best played with a MIDI keyboard. See the next section for MIDI setup instructions. Notes can also be played with a computer keyboard, or by clicking the keys on the keyboard with the mouse. Like the original hardware, the 106.js can play up to 6 notes at a time.
 
-Please note that due to a phenomenon known as [keyboard ghosting](http://www.microsoft.com/appliedsciences/antighostingexplained.mspx), certain simultaneous combnations of more than 2-keys will not register when held on the computer keyboard. This is a limitation of computer keyboard hardware, and not an issue with 106.js.
+Please note that due to a phenomenon known as [keyboard ghosting](http://www.microsoft.com/appliedsciences/antighostingexplained.mspx), certain simultaneous combnations of more than 2 keys will not register when held on the computer keyboard. This is a limitation of computer keyboard hardware, and not an issue with 106.js.
 
 Also note that in addition to the labeled key assignments which appear on the keyboard, the key mappings extend to cover the entire top and bottom row of the `QWERTY` keyboard, in order to allow for a variety of playing positions.
 
