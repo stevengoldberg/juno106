@@ -66,7 +66,7 @@ For more detailed instructions, consult the [Juno 106 owner's manual](http://www
  Controls the overall volume level.
 
 * ENV/GATE: In ENV mode, the volume will be shaped by the envelope. In GATE mode, notes will instantly turn on and off when keys are pressed and released. Note that in GATE mode, the ENV can still be applied to the filter cutoff.  
- * LEVEL: Overall volume.
+* LEVEL: Overall volume.
 
 **ENV - Envelope**    
  Envelope shared by both the amplifier and filter.
