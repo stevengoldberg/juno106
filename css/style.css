@@ -376,6 +376,7 @@ hr {
   margin: 0 5%;
   font-size: 15px;
   vertical-align: middle;
+  pointer-events: none;
 }
 
 .label--wide {

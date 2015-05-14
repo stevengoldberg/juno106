@@ -73,7 +73,24 @@ define([
             },
             
             handleMidi: function(e) {
-                this.midiListener.trigger('midiMessage', e.data);
+                var significantNibble = +(e.data[0].toString(2).slice(0, 4));
+                var note = e.data[1];
+                var velocity = e.data[2];
+                var type;
+                var message;
+                
+                if(significantNibble === 1000 || (significantNibble === 1001 && velocity === 0)) {
+                    type = 'noteOff';
+                } else if(significantNibble === 1001) {
+                    type = 'noteOn';
+                } 
+                
+                message = {
+                    type: type,
+                    note: note
+                };
+                
+                this.midiListener.trigger('midiMessage', message);
             },
             
             serializeData: function() {

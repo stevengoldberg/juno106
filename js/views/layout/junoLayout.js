@@ -149,12 +149,12 @@ define([
                 var note;
                 var frequency;
                 
-                if(message[0] === 144) {
-                    frequency = util.frequencyFromMidiNote(message[1]);
-                    note = util.noteFromMidiNumber(message[1]);
+                if(message.type === 'noteOn') {
+                    frequency = util.frequencyFromMidiNote(message.note);
+                    note = util.noteFromMidiNumber(message.note);
                     this.noteOnHandler(note, frequency);
-                } else if(message[0] === 128 || (message[0] === 14 && message[2] === 0)) {
-                    note = util.noteFromMidiNumber(message[1]);
+                } else if(message.type === 'noteOff') {
+                    note = util.noteFromMidiNumber(message.note);
                     this.noteOffHandler(note);
                 }
             },
