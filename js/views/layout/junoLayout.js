@@ -31,8 +31,8 @@ define([
                 this.activeVoices = [];
                 
                 // Initialize long-lived components
-                this.synth = new JunoModel();
                 var tuna = new Tuna(App.context);
+                this.synth = new JunoModel();
                 this.cho = new tuna.Chorus();
                 this.cho.chorusLevel = this.synth.get('cho-chorusToggle');
                 this.drive = new tuna.Overdrive({
