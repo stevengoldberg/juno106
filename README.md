@@ -16,6 +16,8 @@ Please note that due to a phenomenon known as [keyboard ghosting](http://www.mic
 
 Also note that in addition to the labeled key assignments which appear on the keyboard, the key mappings extend to cover the entire top and bottom row of the `QWERTY` keyboard, in order to allow for a variety of playing positions.
 
+Click `Reset` at the top of the screen at any time to return the 106.js to its initial state.
+
 # MIDI
 
 For MIDI connectivity, you must either use **Chrome 43** or newer ([currently in beta](https://www.chromium.org/getting-involved/dev-channel)), or enable the MIDI feature flag in **Chrome 38** or newer by pointing your browser to `chrome://flags`, searching for "Enable Web MIDI API," clicking "enable," and then restarting the browser.
@@ -25,8 +27,6 @@ For MIDI connectivity, you must either use **Chrome 43** or newer ([currently in
 The following is a brief description of each control on the 106.js. Many of these controls are also found on other analog and virtual analog synthesizers. 
 
 If you've never played with synthesizers before, the controls may seem overwhelming at first. A good entry point is to experiment with the filter cutoff (the `FREQ` knob in the `VCF` section) and the amplifier envelope (the `A`, `D`, `S`, and `R` knobs in the `ENV` section). The former alters the brightness of the sound, and the latter change the attack, decay, sustain, and release, respectively, shaping the volume of the sound over time as you press and then let go of the keys.
-
-Click `Reset` at the top of the screen at any time to return the 106.js to its initial state.
 
 For more detailed instructions, consult the [Juno 106 owner's manual](http://www.synthfool.com/docs/Roland/Juno_Series/Roland_Juno_106/Roland_Juno106_Owners_Manual.pdf).
 
