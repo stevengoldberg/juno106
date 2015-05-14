@@ -20,15 +20,19 @@ define([
                 labels: 'span'
             },
             
+            events: {
+                'mousedown @ui.keys': 'mouseDownHandler'
+            },
+            
             initialize: function() {
                 this.keysDown = [];
+                this.mouseNote = null;
             },
 
             onShow: function() {
                 this.positionKeys();
                 
                 $(window).on('keydown', this.keyDownHandler.bind(this));
-                
                 $(window).on('keyup', this.keyUpHandler.bind(this));
                 
             },
@@ -43,38 +47,60 @@ define([
                     return;
                 }
                 
-                this.keysDown = _.without(this.keysDown[keyCode]);
                 noteEl = this.$('[id*=' + '"' + util.keyMap[keyCode] + '"]').parent();
                 noteName = noteEl.attr('id');
-                frequency = this.getFrequency(noteName);
-                noteEl.removeClass('white-key--playing black-key--playing');
-                
-                this.trigger('noteOff', noteName, frequency);
+                this.stopNote(noteName, noteEl);
             },
             
             keyDownHandler: function(e) {
                 var keyCode = e.which;
-                var noteEl;
+                var noteEl = this.$('[id*=' + '"' + util.keyMap[keyCode] + '"]').parent();
+                var noteName = noteEl.attr('id');
                 var frequency;
-                var noteName;
                 
-                if(_.contains(this.keysDown, keyCode)) {
+                if(_.contains(this.keysDown, noteName)) {
                     return;
                 } else if(!_.has(util.keyMap, keyCode)) {
                     return;
                 } else {
-                    this.keysDown.push(keyCode);
-                    noteEl = this.$('[id*=' + '"' + util.keyMap[keyCode] + '"]').parent();
-                    noteName = noteEl.attr('id');
-                    
-                    if(noteEl.hasClass('white-key')) {
-                        noteEl.addClass('white-key--playing');
-                    } else {
-                        noteEl.addClass('black-key--playing');
-                    }
+                    this.playNote(noteName, noteEl);
+                }
+            },
+            
+            playNote: function(noteName, noteEl) {
+                this.keysDown.push(noteName);
+                
+                if(noteEl.hasClass('white-key')) {
+                    noteEl.addClass('white-key--playing');
+                } else {
+                    noteEl.addClass('black-key--playing');
                 }
                 frequency = this.getFrequency(noteName);
                 this.trigger('noteOn', noteName, frequency);
+            },
+            
+            stopNote: function(noteName, noteEl) {
+                this.keysDown = _.without(this.keysDown, noteName);
+                frequency = this.getFrequency(noteName);
+                noteEl.removeClass('white-key--playing black-key--playing');
+                this.trigger('noteOff', noteName, frequency);
+            },
+            
+            mouseDownHandler: function(e) {
+                var noteEl = $(e.currentTarget);
+                var noteName = noteEl.attr('id');
+                
+                if(_.contains(this.keysDown, noteName)) {
+                    return;
+                } else {
+                    this.mouseNote = noteName;
+                    this.playNote(noteName, noteEl);
+                    
+                    $(window).on('mouseup.keyboard', function(e) {
+                        this.stopNote(noteName, noteEl);
+                        $(window).off('mouseup.keyboard');
+                    }.bind(this));
+                }
             },
             
             getFrequency: function(noteName) {
