@@ -11,13 +11,22 @@
     }
 }
 
-.knob-container--pwm {
+.knob-container--vcf {
     @extend .button-container;
     position: relative;
     top: 41px;
     margin: 50px auto 0;
     height: 38%;
     display: inline-block;
+}
+
+.knob-container--pwm {
+    @extend .knob-container--vcf;
+    top: 0;
+    margin-top: 3px;
+    > .line {
+        margin-top: -2px;
+    }  
 }
 
 .knob-container--vca {

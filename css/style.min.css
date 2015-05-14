@@ -266,7 +266,7 @@ h4 {
   position: absolute;
   top: 173px;
   left: -17px;
-  background-color: #393B43;
+  background-color: #33353C;
   border-radius: 5px;
   width: 44px;
   height: 22px;
@@ -346,7 +346,7 @@ hr {
   opacity: 1;
 }
 
-.button-container, .knob-container--range, .knob-container--pwm, .knob-container--vca {
+.button-container, .knob-container--range, .knob-container--vcf, .knob-container--pwm, .knob-container--vca {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -419,7 +419,7 @@ hr {
   position: relative;
 }
 
-.knob-container--pwm, .knob-container--vca {
+.knob-container--vcf, .knob-container--pwm, .knob-container--vca {
   position: relative;
   top: 41px;
   margin: 50px auto 0;
@@ -427,12 +427,20 @@ hr {
   display: inline-block;
 }
 
+.knob-container--pwm, .knob-container--vca {
+  top: 0;
+  margin-top: 3px;
+}
+.knob-container--pwm > .line, .knob-container--vca > .line {
+  margin-top: -2px;
+}
+
 .knob-container--vca {
   vertical-align: top;
   top: 0;
 }
 
-.label {
+.label, .label--line {
   display: inline-block;
   margin: 0 5%;
   font-size: 15px;
@@ -443,6 +451,10 @@ hr {
 .label--wide {
   display: inline-block;
   margin: 0 9.5%;
+}
+
+.label--line {
+  margin: 0;
 }
 
 .wave-label {
@@ -469,13 +481,10 @@ hr {
   box-shadow: 0px 0px 8px #CC3300;
 }
 
-.line, .line--chorus {
+.line {
   width: 2px;
   background-color: white;
   margin: auto;
-}
-
-.line--chorus {
   height: 65px;
 }
 

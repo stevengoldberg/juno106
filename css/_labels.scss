@@ -11,6 +11,11 @@
     margin: 0 9.5%;
 }
 
+.label--line {
+    @extend .label;
+    margin: 0;
+}
+
 .wave-label {
     font-size: 15px;
     display: inline-block;
@@ -40,10 +45,6 @@
     width: 2px;
     background-color: white;
     margin: auto;
-}
-
-.line--chorus {
-    @extend .line;
     height: 65px;
 }
 
