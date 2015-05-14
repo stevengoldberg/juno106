@@ -1,20 +1,34 @@
-# Juno-106.js v 1.0
+# 106.js
 
-Juno-106.js is an emulation of the classic [Roland Juno-106 analog synthesizer](http://en.wikipedia.org/wiki/Roland_Juno-106).
+106.js is an emulation of the classic [Roland Juno-106 analog synthesizer](http://en.wikipedia.org/wiki/Roland_Juno-106).
 
-[You can play the Juno-106.js here](http://resistorsings.com/juno-106).
+[You can play 106.js here](http://resistorsings.com/106).
 
 # System Requirements
 
-Minimum window size of 1024x768. Please use an updated version of **Google Chrome**. For MIDI connectivity, you must either use **Chrome 43** or newer ([currently in beta](https://www.chromium.org/getting-involved/dev-channel)), or enable the MIDI feature flag in **Chrome 38** or newer by pointing your browser to `chrome://flags`, searching for "Enable Web MIDI API," clicking "enable," and then restarting the browser.
+Minimum window size of 1024x768. Please use an updated version of **Google Chrome**.
 
 # How to play
 
-Notes can be played on the Juno by clicking the keys on the keyboard with the mouse. However, this synth can play up to 6 notes at a time if played via the computer keyboard or a MIDI keyboard. The letter "A" on your computer keyboard corresponds to the lowest note on the synthesizer keyboard, a C3.
+106.js is best played with a MIDI keyboard. See the next section for MIDI setup instructions. Notes can also be played with a computer keyboard, or by clicking the keys on the keyboard with the mouse. Like the original hardware, the 106.js can play up to 6 notes at a time.
+
+Please note that due to a phenomenon known as [keyboard ghosting](http://www.microsoft.com/appliedsciences/antighostingexplained.mspx), certain simultaneous combnations of more than 2-keys will not register when held on the computer keyboard. This is a limitation of computer keyboard hardware, and not an issue with 106.js.
+
+Also note that in addition to the labeled key assignments which appear on the keyboard, the key mappings extend to cover the entire top and bottom row of the `QWERTY` keyboard, in order to allow for a variety of playing positions.
+
+# MIDI
+
+For MIDI connectivity, you must either use **Chrome 43** or newer ([currently in beta](https://www.chromium.org/getting-involved/dev-channel)), or enable the MIDI feature flag in **Chrome 38** or newer by pointing your browser to `chrome://flags`, searching for "Enable Web MIDI API," clicking "enable," and then restarting the browser.
 
 **Synthesis Overview**
 
-This is brief look at the controls on the Juno-106.js, and many other analog and virtual analog synthesizers. For more detailed instructions, consult the [Juno 106 owner's manual](http://www.synthfool.com/docs/Roland/Juno_Series/Roland_Juno_106/Roland_Juno106_Owners_Manual.pdf).
+The following is a brief description of each control on the 106.js. Many of these controls are also found on other analog and virtual analog synthesizers. 
+
+If you've never played with synthesizers before, the controls may seem overwhelming at first. A good entry point is to experiment with the filter cutoff (the `FREQ` knob in the `VCF` section) and the amplifier envelope (the `A`, `D`, `S`, and `R` knobs in the `ENV` section). The former alters the brightness of the sound, and the latter change the attack, decay, sustain, and release, respectively, shaping the volume of the sound over time as you press and then let go of the keys.
+
+Click `Reset` at the top of the screen at any time to return the 106.js to its initial state.
+
+For more detailed instructions, consult the [Juno 106 owner's manual](http://www.synthfool.com/docs/Roland/Juno_Series/Roland_Juno_106/Roland_Juno106_Owners_Manual.pdf).
 
 * LFO - Low Frequency Oscillator  
  Triangle-wave oscillator used to modulate other synth parameters.
@@ -71,7 +85,7 @@ This is brief look at the controls on the Juno-106.js, and many other analog and
 
 **Technology**
 
-Juno-106.js was written in Javascript using the [WebAudio API](http://webaudio.github.io/web-audio-api/) and [Backbone.Marionette](marionettejs.com). It also uses some effects from [tuna.js](https://github.com/Dinahmoe/tuna/blob/master/tuna.js), and [QWERTYHancock](https://github.com/stuartmemo/qwerty-hancock) for its keyboard.
+Juno-106.js was written in Javascript using the [WebAudio API](http://webaudio.github.io/web-audio-api/) and [Backbone.Marionette](marionettejs.com). It also uses some effects from [tuna.js](https://github.com/Dinahmoe/tuna/blob/master/tuna.js).
 
 **TO-DO**
 
@@ -81,3 +95,7 @@ Juno-106.js was written in Javascript using the [WebAudio API](http://webaudio.g
 * Deeper MIDI implementation
 * Portamento
 * Bender
+
+**Changelog**
+
+* v. 1.0: First public release
