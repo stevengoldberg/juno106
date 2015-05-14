@@ -79,3 +79,5 @@ Juno-106.js was written in Javascript using the [WebAudio API](http://webaudio.g
 * Alternate PWM Implementation
 * Filter self-resonance
 * Deeper MIDI implementation
+* Portamento
+* Bender
