@@ -1,10 +1,10 @@
 define([
     'backbone',
-    'qwerty-hancock',
+    'util',
     'hbs!tmpl/item/keyboardItemView-tmpl'
     ],
     
-    function(Backbone, QwertyHancock, Template) {
+    function(Backbone, util, Template) {
         return Backbone.Marionette.ItemView.extend({
             
             tagName: 'ul',
@@ -21,58 +21,84 @@ define([
             },
             
             initialize: function() {
-                this.keyArray = ['A', 'W', 'S', 'E', 'D', 'F', 'T', 'G', 'Y', 'H',
-                    'U', 'J', 'K', 'O', 'L', 'P', ';', '\'', '\]', '\\'];
+                this.keysDown = [];
             },
 
             onShow: function() {
                 this.positionKeys();
-            
-                /*var keyboard = new QwertyHancock({
-                    id: 'js-keyboard',
-                    width: 1024,
-                    height: 120,
-                    octaves: 2,
-                    startNote: 'C3',
-                    whiteNotesColour: 'white',
-                    blackNotesColour: 'black',
-                    hoverColour: '#f3e939'
-                });
                 
-                keyboard.keyDown = this.keyDownHandler.bind(this);
+                $(window).on('keydown', this.keyDownHandler.bind(this));
                 
-                keyboard.keyUp = this.keyUpHandler.bind(this);*/
+                $(window).on('keyup', this.keyUpHandler.bind(this));
+                
             },
             
-            keyUpHandler: function(note, frequency) {
-                this.trigger('noteOff', note, frequency);
-            },
-            
-            keyDownHandler: function(note, frequency) {
-                this.trigger('noteOn', note, frequency);
-            },
-            
-            labelKeyboard: function() {
-                var that = this;
-                var keys = this.$('li');
-                var label;
-                var color;
+            keyUpHandler: function(e) {
+                var keyCode = e.which;
+                var noteEl;
+                var frequency;
+                var noteName;
                 
-                keys.each(function(i, key) {
-                    color = $(this).data().noteType;
-                    if(color === 'white') {
-                        $(this).css({
-                            position: 'relative'
-                        });
+                if(!_.has(util.keyMap, keyCode)) {
+                    return;
+                }
+                
+                this.keysDown = _.without(this.keysDown[keyCode]);
+                noteEl = this.$('[id*=' + '"' + util.keyMap[keyCode] + '"]').parent();
+                noteName = noteEl.attr('id');
+                frequency = this.getFrequency(noteName);
+                noteEl.removeClass('white-key--playing black-key--playing');
+                
+                this.trigger('noteOff', noteName, frequency);
+            },
+            
+            keyDownHandler: function(e) {
+                var keyCode = e.which;
+                var noteEl;
+                var frequency;
+                var noteName;
+                
+                if(_.contains(this.keysDown, keyCode)) {
+                    return;
+                } else if(!_.has(util.keyMap, keyCode)) {
+                    return;
+                } else {
+                    this.keysDown.push(keyCode);
+                    noteEl = this.$('[id*=' + '"' + util.keyMap[keyCode] + '"]').parent();
+                    noteName = noteEl.attr('id');
+                    
+                    if(noteEl.hasClass('white-key')) {
+                        noteEl.addClass('white-key--playing');
                     } else {
-                        $(this).css({
-                            'z-index': 2
-                        });
+                        noteEl.addClass('black-key--playing');
                     }
-                    label = $('<span class="key-label--' + color + '">' + that.keyArray[i] + '</span>');
-                    $(this).append(label);
-                });
+                }
+                frequency = this.getFrequency(noteName);
+                this.trigger('noteOn', noteName, frequency);
             },
+            
+            getFrequency: function(noteName) {
+                var notes = ['A', 'A#', 'B', 'C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#'];
+                var keyNumber;
+                var octave;
+
+                if (noteName.length === 3) {
+                    octave = noteName.charAt(2);
+                } else {
+                    octave = noteName.charAt(1);
+                }
+
+                keyNumber = notes.indexOf(noteName.slice(0, -1));
+
+                if (keyNumber < 3) {
+                    keyNumber = keyNumber + 12 + ((octave - 1) * 12) + 1;
+                } else {
+                    keyNumber = keyNumber + ((octave - 1) * 12) + 1;
+                }
+
+                return 440 * Math.pow(2, (keyNumber - 49) / 12);
+            },
+            
             
             positionKeys: function() {
                 var whiteWidth = this.ui.whiteKeys.first().width();

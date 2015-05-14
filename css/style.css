@@ -448,14 +448,15 @@ hr {
   position: relative;
 }
 
-.white-key, .black-key {
+.white-key, .white-key--playing, .black-key, .black-key--playing {
   position: absolute;
   display: inline-block;
   border-bottom-left-radius: 8px;
   border-bottom-right-radius: 8px;
+  transition: background-color 0.1s ease-out;
 }
 
-.white-key {
+.white-key, .white-key--playing {
   background-color: white;
   height: 100px;
   width: 66px;
@@ -463,11 +464,19 @@ hr {
   z-index: 1;
 }
 
-.black-key {
+.black-key, .black-key--playing {
   background-color: black;
   height: 60px;
   width: 40px;
   z-index: 2;
+}
+
+.white-key--playing {
+  background-color: #CC3300;
+}
+
+.black-key--playing {
+  background-color: #800000;
 }
 
 /*# sourceMappingURL=style.css.map */
