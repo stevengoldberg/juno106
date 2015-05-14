@@ -151,6 +151,8 @@ define([
                     this.updateFaderPosition(el, value);
                 } else if(el.hasClass('switch')) {
                     this.updateSwitchPosition(el, value);
+                } else if(el.hasClass('button')) {
+                    this.updateButtonState(el, value);
                 }
             },
             
@@ -173,6 +175,25 @@ define([
             updateSwitchPosition: function(el, value) {
                 var param = el.data().param;
                 this.updateSwitchUI(el, param, value);
+            },
+            
+            updateButtonState: function(el, value) {
+                var chorusOn;
+                var data;
+                
+                if(el.length === 3) {
+                    chorusOn = el.filter(function(i) { return $(this).data().value === value; });
+                    this.$('.led').removeClass('led--lit');
+                    this.$('.button').removeClass('pressed');
+                    chorusOn.addClass('pressed');
+                    chorusOn.siblings('.led').addClass('led--lit');
+                    value = chorusOn.data().value;
+                } else {
+                    el.toggleClass('pressed', !!value);
+                    el.siblings('.led').toggleClass('led--lit', !!value);
+                    el.data('value', value);
+                }
+                this.triggerUpdate(el.data().param, value);
             }
             
         });

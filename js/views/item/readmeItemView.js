@@ -15,11 +15,11 @@ define([
             },
             
             events: {
-                'click @ui.init': 'triggerInit'
+                'click @ui.init': 'triggerReset'
             },
             
-            triggerInit: function() {
-                this.trigger('init');
+            triggerReset: function() {
+                this.trigger('reset');
             }
         });
     });

@@ -28,6 +28,7 @@ define([
                 this.bindButtons = base.bindButtons;
                 this.updateUIState = base.updateUIState;
                 this.triggerUpdate = base.triggerUpdate;
+                this.updateButtonState = base.updateButtonState;
                 
                 this.midiView = new MidiItemView({
                     midiListener: this.midiListener

@@ -55,8 +55,7 @@ define([
                 });
                 this.midiListener = new Backbone.Marionette.Object();
                 
-                // Cache a copy of the synth's initial values
-                this.synthCopy = JSON.stringify(this.synth.attributes);
+                this.cachedSynth = JSON.stringify(this.synth.attributes);
             },
             
             onShow: function() {
@@ -77,7 +76,7 @@ define([
                 this.listenTo(this.keyboardView, 'noteOff', this.noteOffHandler);
                 this.listenTo(this.midiListener, 'midiMessage', this.handleMidi);
                 this.listenTo(this.synth, 'change', this.synthUpdateHandler);
-                this.listenTo(readme, 'init', this.handleInit);
+                this.listenTo(readme, 'reset', this.handleReset);
             },
             
             noteOnHandler: function(note, frequency) {
@@ -171,8 +170,8 @@ define([
                 });
             }, 15),
             
-            handleInit: function() {
-                this.synth.set(JSON.parse(this.synthCopy));
+            handleReset: function() {
+                this.synth.set(JSON.parse(this.cachedSynth));
                 this.moduleLayout.updateUIState();
             }
             

@@ -75,7 +75,6 @@ define([
             
             handleModuleUpdate: function(update) {
                 if(update.param === this.currentParam && update.value === this.currentValue) return;
-                //console.log(update);
                 
                 this.synth.set(update.param, update.value);
                 this.currentParam = update.param;
