@@ -20,7 +20,7 @@ Also note that in addition to the labeled key assignments which appear on the ke
 
 For MIDI connectivity, you must either use **Chrome 43** or newer ([currently in beta](https://www.chromium.org/getting-involved/dev-channel)), or enable the MIDI feature flag in **Chrome 38** or newer by pointing your browser to `chrome://flags`, searching for "Enable Web MIDI API," clicking "enable," and then restarting the browser.
 
-**Synthesis Overview**
+# Synthesis Overview
 
 The following is a brief description of each control on the 106.js. Many of these controls are also found on other analog and virtual analog synthesizers. 
 
@@ -30,64 +30,64 @@ Click `Reset` at the top of the screen at any time to return the 106.js to its i
 
 For more detailed instructions, consult the [Juno 106 owner's manual](http://www.synthfool.com/docs/Roland/Juno_Series/Roland_Juno_106/Roland_Juno106_Owners_Manual.pdf).
 
-* LFO - Low Frequency Oscillator  
+**LFO - Low Frequency Oscillator**   
  Triangle-wave oscillator used to modulate other synth parameters.
  
- Rate: Controls the speed of the LFO.  
- Delay: Controls the speed at which the LFO fades in on triggering a note.  
+ * Rate: Controls the speed of the LFO.   
+ * Delay: Controls the speed at which the LFO fades in on triggering a note.  
 
-* DCO - Digitally Controlled Oscillator  
+**DCO - Digitally Controlled Oscillator**  
  Oscillators that produce pitches, controlled by the keyboard.
  
- Range: Selects the keyboard octave.  
- LFO: Selects the extent to which the LFO modulates the oscillator pitch -- i.e., adjusts the depth of vibrato.  
- PWM: In manual mode, sets the width of the pulse wave, between 5% and 95%. In LFO mode,  
+ * Range: Selects the keyboard octave.  
+ * LFO: Selects the extent to which the LFO modulates the oscillator pitch -- i.e., adjusts the depth of vibrato. 
+ * PWM: In manual mode, sets the width of the pulse wave, between 5% and 95%. In LFO mode,  
  selects the extent to which the LFO modulates pulse width.  
- PULSE/SAW: Toggles active waveforms.  
- SUB: Sets volume of square-wave sub-oscillator, one octave below main oscillator.  
- NOISE: Sets volume of noise generator.  
+ * PULSE/SAW: Toggles active waveforms.  
+ * SUB: Sets volume of square-wave sub-oscillator, one octave below main oscillator.  
+ * NOISE: Sets volume of noise generator.  
 
-* VCF - Voltage Controlled Filter  
+**VCF - Voltage Controlled Filter**  
  24 dB/octave resonant lowpass filter
 
- FREQ: Sets filter cutoff. Higher values let more high frequencies pass through, for a brighter sound.  
- RES: Controls resonance, which is a gain increase at the point of the filter cutoff.  
- NORM/INV: Whether or not to invert the filter.  
- ENV: The extent to which the envelope is applied to the filter cutoff.  
- LFO: The extent to which the LFO is applied to the filter cutoff.  
- KBD: The extent to which the filter cutoff tracks the keyboard pitch.  
+* FREQ: Sets filter cutoff. Higher values let more high frequencies pass through, for a brighter sound.  
+* RES: Controls resonance, which is a gain increase at the point of the filter cutoff.  
+* NORM/INV: Whether or not to invert the filter.  
+* ENV: The extent to which the envelope is applied to the filter cutoff.  
+* LFO: The extent to which the LFO is applied to the filter cutoff.  
+* KBD: The extent to which the filter cutoff tracks the keyboard pitch.  
 
-* HPF - High Pass Filter  
+**HPF - High Pass Filter**  
  24 dB/octave non-resonant highpass filter
 
- FREQ: Set the level higher to filter out more low-frequency content.
+* FREQ: Set the level higher to filter out more low-frequency content.
 
-* VCA - Voltage Controlled Amplifier  
+**VCA - Voltage Controlled Amplifier**  
  Controls the overall volume level.
 
- ENV/GATE: In ENV mode, the volume will be shaped by the envelope. In GATE mode, notes will instantly turn on and off when keys are pressed and released. Note that in GATE mode, the ENV can still be applied to the filter cutoff.  
- LEVEL: Overall volume.
+* ENV/GATE: In ENV mode, the volume will be shaped by the envelope. In GATE mode, notes will instantly turn on and off when keys are pressed and released. Note that in GATE mode, the ENV can still be applied to the filter cutoff.  
+ * LEVEL: Overall volume.
 
-* ENV - Envelope  
+**ENV - Envelope**    
  Envelope shared by both the amplifier and filter.
  
- A: Attack - how quickly the volume/filter rises to its maximum level when a note is triggered.  
- D: Decay - after reaching its maximum level, how quickly the volume/filter falls back down to the sustain level.  
- S: Sustain - the level at which the volume/filter maintains itself while a note is held.  
- R: Release - how long the volume/filter takes to fade out once a note is released.  
+* A: Attack - how quickly the volume/filter rises to its maximum level when a note is triggered.  
+* D: Decay - after reaching its maximum level, how quickly the volume/filter falls back down to the sustain level.  
+* S: Sustain - the level at which the volume/filter maintains itself while a note is held.  
+* R: Release - how long the volume/filter takes to fade out once a note is released.  
 
-* CHORUS  
+**CHORUS**    
  A chorus effect.
  
- OFF: No effect.  
- I: Moderate chorus effect.  
- II: Stronger chorus effect.
+* OFF: No effect.  
+* I: Moderate chorus effect.  
+* II: Stronger chorus effect.
 
-**Technology**
+# Technology
 
 Juno-106.js was written in Javascript using the [WebAudio API](http://webaudio.github.io/web-audio-api/) and [Backbone.Marionette](marionettejs.com). It also uses some effects from [tuna.js](https://github.com/Dinahmoe/tuna/blob/master/tuna.js).
 
-**TO-DO**
+# TO-DO
 
 * Tweak chorus
 * Alternate PWM Implementation
@@ -96,6 +96,6 @@ Juno-106.js was written in Javascript using the [WebAudio API](http://webaudio.g
 * Portamento
 * Bender
 
-**Changelog**
+# Changelog
 
 * v. 1.0: First public release
