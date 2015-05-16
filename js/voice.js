@@ -73,6 +73,8 @@ define([
                     maxLevel: options.volume
                 });
                 
+                _.extend(this.env, Backbone.Events);
+                
                 // Propogate DCO events
                 this.listenTo(this.dco, 'destroyed', triggerKillVoice);
                 this.listenTo(this.dco, 'pwm', function(e) {
