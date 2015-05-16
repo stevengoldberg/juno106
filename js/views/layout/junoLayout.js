@@ -94,6 +94,7 @@ define([
                     waveform: this.synth.getCurrentWaveform(),
                     envelope: this.synth.getCurrentEnvelope(),
                     vcfInverted: this.synth.isFilterInverted(),
+                    chorusLevel: this.synth.get('cho-chorusToggle'),
                     lfoPwmEnabled: this.synth.get('dco-lfoPwmEnabled'),
                     vcfFreq: this.synth.get('vcf-cutoff'),
                     keyFollow: this.synth.get('vcf-keyFollow'),

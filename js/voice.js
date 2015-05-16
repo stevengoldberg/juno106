@@ -28,20 +28,7 @@ define([
                     that.disconnect();
                 });
                 
-                this.lfo = options.lfo;
-                this.cho = options.cho;
-                
-                if(!_.has(this.cho, 'chorusToggle')) {
-                    Object.defineProperties(this.cho, {
-                        'chorusToggle': {
-                            'set': function(value) { 
-                                that.cho.chorusLevel = value;
-                                chorusToggle.call(that.cho);
-                            }
-                        }
-                    });
-                }
-                
+        
                 this.vcf = new VCF({
                     frequency: options.vcfFreq,
                     res: options.res,
@@ -73,10 +60,25 @@ define([
                     maxLevel: options.volume
                 });
                 
-                // Mix Backbone.Events into the envelope object so it can 
-                // sync with the amplifier and filter
+                this.lfo = options.lfo;
+                this.cho = options.cho;
+                
+                if(!_.has(this.cho, 'chorusToggle')) {
+                    Object.defineProperties(this.cho, {
+                        'chorusToggle': {
+                            'set': function(value) { 
+                                setDetune.call(this, value);
+                                this.cho.chorusLevel = value;
+                                chorusToggle.call(this.cho);
+                            }.bind(this)
+                        }
+                    });
+                }
+                
+                this.cho.chorusToggle = options.chorusLevel;
+                
+                // Mix Backbone.Events into the ENV to sync the amp and filter envelopes
                 _.extend(this.env, Backbone.Events);
-
 
                 this.listenTo(this.env, 'attack', function(newAttack) {
                     this.vcf.attack = newAttack;
@@ -94,6 +96,9 @@ define([
                     this.vcf.release = newRelease;
                 });
 
+                // Mix Backbone.Events into the DCO to sync changes to the LFO
+                // and manage oscillator lifetime
+                _.extend(this.dco, Backbone.Events);
                 
                 this.listenTo(this.dco, 'destroyed', triggerKillVoice);
                 this.listenTo(this.dco, 'pwm', function(pwmValue) {
@@ -102,27 +107,7 @@ define([
                 this.listenTo(this.dco, 'lfoPwmEnabled', function(enabled) {
                     this.lfo.pwmEnabled = enabled;
                 });
-                
-                function chorusToggle() {
-                    switch(this.chorusLevel) {
-                        case 0:
-                            this.bypass = 1;
-                            break;
-                        case 1:
-                            this.bypass = 0;
-                            this.feedback = 0.15;
-                            this.delay = 0.05;
-                            this.rate = 0.1;
-                            break;
-                        case 2:
-                            this.bypass = 0;
-                            this.feedback = 0.5;
-                            this.delay = 0.25;
-                            this.rate = 0.6;
-                            break;
-                    }
-                }
-                
+                                
                 // Connect nodes
                 connect(this.lfo.pitchMod, this.dco.input);
                 connect(this.lfo.pwmMod, this.dco.pwm);
@@ -145,6 +130,37 @@ define([
                     } else {
                         output.connect(input);
                     }
+                }
+                
+                function chorusToggle() {
+                    switch(this.chorusLevel) {
+                        case 0:
+                            this.bypass = 1;
+                            break;
+                        case 1:
+                            this.bypass = 0;
+                            this.feedback = 0.1;
+                            this.delay = 0.3;
+                            this.rate = 0.05;
+                            break;
+                        case 2:
+                            this.bypass = 0;
+                            this.feedback = 0.35;
+                            this.delay = 0.6;
+                            this.rate = 0.15;
+                            break;
+                    }
+                }
+                
+                // Additional detune for chorus effect
+                function setDetune(value) {
+                    var detune = App.context.createOscillator();
+                    var gain = App.context.createGain();
+                    detune.start();
+                    detune.frequency.value = (0.05 * value);
+                    gain.gain.value = (3 * value);
+                    detune.connect(gain);
+                    connect(gain, this.dco.input);
                 }
             },
             

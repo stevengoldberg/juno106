@@ -10,7 +10,7 @@ define([
             this.output = amplifier;
             
             function init() {
-                amplifier.gain.value = util.getFaderCurve(options.maxLevel);
+                amplifier.gain.value = 0.25 * options.maxLevel;
             }
             
             function setLevel(level) {
@@ -21,7 +21,7 @@ define([
             
             Object.defineProperties(this, {
                 'level': {
-                    'set': function(value) { setLevel(0.75 * value); }
+                    'set': function(value) { setLevel(0.25 * value); }
                 }
             });
             
