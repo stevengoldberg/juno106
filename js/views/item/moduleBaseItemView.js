@@ -29,6 +29,7 @@ define([
                 
                 this.ui.faderKnob.mousedown(function(e) {
                     target = $(e.currentTarget);
+                    that.clickOffset = e.clientY - target.offset().top;
                     $(window).on('mousemove', function(e) {
                         target.addClass('dragging');
                         that.calculateFaderMovement(target, e.clientY);
@@ -44,21 +45,16 @@ define([
             
             calculateFaderMovement: function(el, yPos) {
                 var position;
-                var slotTop = el.parent().offset().top;
-                var slotHeight = el.parent().height();
-                var slotBottom = slotTop + slotHeight;
                 var value;
+                var slotTop = el.parent().offset().top;
+                var faderCompensation = this.clickOffset / this.slotHeight * 100;
                 
                 if(yPos < slotTop) {
                     position = -5;
-                } else if (yPos > slotBottom) {
+                } else if(yPos > (slotTop + this.slotHeight)) {
                     position = 95;
                 } else {
-                    position = (yPos - slotTop) / slotHeight * 100;
-                }
-                
-                if(position > 95) {
-                    position = 95;
+                    position = ((yPos - slotTop) / this.slotHeight * 100) - faderCompensation;
                 }
 
                 el.css({
@@ -148,36 +144,34 @@ define([
                 var el = $('[data-param="' + param + '"]');
                 
                 if(el.hasClass('fader__knob')) {
-                    this.updateFaderPosition(el, value);
+                    this.setupFaderPosition(el, value);
                 } else if(el.hasClass('switch')) {
-                    this.updateSwitchPosition(el, value);
+                    this.setupSwitchPosition(el, value);
                 } else if(el.hasClass('button')) {
-                    this.updateButtonState(el, value);
+                    this.setupButtonState(el, value);
                 }
             },
             
-            updateFaderPosition: function(el, value) {
-                var slotHeight = el.parent().height();
-                var percent = 1 - (value + 0.05);
-                var position;
+            setupFaderPosition: function(el, value) {
+                this.slotHeight = el.parent().height();
+                this.slotTop = el.parent().offset().top;
+                this.faderThickness = el.height();
                 
-                if(percent > 0.95) {
-                    percent = 0.95;
-                }
-                
-                position = percent * slotHeight;
+                var topPercentOffset = 1 - value;
+                var topPxOffset = (topPercentOffset * this.slotHeight) -
+                    (0.25 * this.faderThickness);
                 
                 el.css({
-                    top: position
+                    top: topPxOffset
                 });
             },
             
-            updateSwitchPosition: function(el, value) {
+            setupSwitchPosition: function(el, value) {
                 var param = el.data().param;
                 this.updateSwitchUI(el, param, value);
             },
             
-            updateButtonState: function(el, value) {
+            setupButtonState: function(el, value) {
                 var chorusOn;
                 var data;
                 
