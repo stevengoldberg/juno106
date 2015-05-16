@@ -200,6 +200,9 @@ h4 {
 .fader__scale--hpf > .fader__slot {
   margin-top: 50px;
 }
+.fader__scale--hpf > .fader__slot > .fader__knob {
+  transition: top 0.1s;
+}
 
 .fader {
   margin: auto;
@@ -224,7 +227,7 @@ h4 {
 
 .fader__knob {
   position: absolute;
-  top: 173px;
+  top: 95%;
   left: -17px;
   background-color: #33353C;
   border-radius: 5px;
