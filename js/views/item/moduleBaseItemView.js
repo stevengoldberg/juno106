@@ -51,7 +51,7 @@ define([
                 
                 if(yPos < slotTop) {
                     position = -5;
-                } else if(yPos > (slotTop + this.slotHeight)) {
+                } else if(yPos > (slotTop + this.slotHeight - this.faderThickness)) {
                     position = 95;
                 } else {
                     position = ((yPos - slotTop) / this.slotHeight * 100) - faderCompensation;
