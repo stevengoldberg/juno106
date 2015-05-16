@@ -13,6 +13,9 @@ define([
             var filter1 = App.context.createBiquadFilter();
             var filter2 = App.context.createBiquadFilter();
             
+            this.input = filter1;
+            this.output = filter2;
+            
             function init() {
                 filter1.type = 'highpass';
                 filter2.type = 'highpass';
@@ -37,12 +40,6 @@ define([
             Object.defineProperties(this, {
                 'cutoff': {
                     'set': function(value) { setFreq(value); }
-                },
-                'output': {
-                    'get': function() { return filter2; }
-                }, 
-                'input': {
-                    'get': function() { return filter1; }
                 }
             });
             

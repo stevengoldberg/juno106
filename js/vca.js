@@ -5,11 +5,14 @@ define([
     
     function(App, util) {
         function VCA(options) {
-            // Initialization
             var amplifier = App.context.createGain();
-            amplifier.gain.value = util.getFaderCurve(options.maxLevel);
+            this.input = amplifier;
+            this.output = amplifier;
             
-            // Setter methods
+            function init() {
+                amplifier.gain.value = util.getFaderCurve(options.maxLevel);
+            }
+            
             function setLevel(level) {
                 var now = App.context.currentTime;
                 amplifier.gain.cancelScheduledValues(now);
@@ -18,12 +21,12 @@ define([
             
             Object.defineProperties(this, {
                 'level': {
-                    'get': function() { return amplifier; },
-                    'set': function(value) { setLevel(0.75 * util.getFaderCurve(value)); }
+                    'set': function(value) { setLevel(0.75 * value); }
                 }
             });
+            
+            return init();
         }
-        
         return VCA;    
     }
 

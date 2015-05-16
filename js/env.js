@@ -25,6 +25,9 @@ define([
                 decay: null,
                 release: null
             };
+            
+            this.input = ampMod;
+            this.output = ampMod;
         
             function init() { 
                 ampMod.gain.value = minSustain;
@@ -170,12 +173,6 @@ define([
                 },
                 'enabled': {
                     'set': function(value) { enabled = value; }
-                },
-                'input': {
-                    'get': function() { return ampMod; }
-                },
-                'output': {
-                    'get': function() { return ampMod; }
                 }
             });
             

@@ -5,7 +5,6 @@ define([
     
     function(App, util) {
         function VCF(options) {
-            // Initialization  
             var that = this;
             
             var envelopeOffset = options.envConstants.envelopeOffset;
@@ -13,44 +12,48 @@ define([
             var decayReleaseMax = options.envConstants.decayReleaseMax;
             var minSustain = options.envConstants.minSustain;
             var filterMinimum = 10;
-            
+        
             var filter1 = App.context.createBiquadFilter();
             var filter2 = App.context.createBiquadFilter();
-            filter1.type = 'lowpass';
-            filter2.type = 'lowpass';
-            filter1.Q.value = getResonanceFromValue(options.res);
-            filter2.Q.value = getResonanceFromValue(options.res);
-            
             var inverted = options.inverted;
             var envMod = App.context.createGain();
-            envMod.gain.value = getEnvModAmount(options.vcfEnv);
-            
             var offset = createDCOffset();
             var filterEnvelope = App.context.createGain();
             
             var envelope = options.envelope;
             var filterCutoff = getCutoffFreqFromValue(options.frequency);
-            
             var keyFrequency = options.keyFreq;
             var keyFollow = App.context.createGain();
-            keyFollow.gain.value = setKeyFollow(options.keyFollow);
             
             var attackLength;
             var decayLength;
             var sustainLevel;
             var releaseLength;
             
-            setupEnvelope();
-            filter1.connect(filter2);
-            offset.connect(filterEnvelope);
-            filterEnvelope.connect(envMod);
-            envMod.connect(filter1.detune);
-            envMod.connect(filter2.detune);
-            offset.connect(keyFollow);
-            keyFollow.connect(filter1.detune);
-            keyFollow.connect(filter2.detune);
+            this.output = filter2;
+            this.input = [filter1, filter2];
+            this.detune = [filter1.detune, filter2.detune];
             
-            // Setter methods
+            function init() {
+                filter1.type = 'lowpass';
+                filter2.type = 'lowpass';
+                filter1.Q.value = getResonanceFromValue(options.res);
+                filter2.Q.value = getResonanceFromValue(options.res);
+                
+                envMod.gain.value = getEnvModAmount(options.vcfEnv);
+                keyFollow.gain.value = setKeyFollow(options.keyFollow);
+                
+                setupEnvelope();
+                filter1.connect(filter2);
+                offset.connect(filterEnvelope);
+                filterEnvelope.connect(envMod);
+                envMod.connect(filter1.detune);
+                envMod.connect(filter2.detune);
+                offset.connect(keyFollow);
+                keyFollow.connect(filter1.detune);
+                keyFollow.connect(filter2.detune);
+            }
+            
             function setRes(value) {
                 var now = App.context.currentTime;
                 var resonance = getResonanceFromValue(value);
@@ -71,7 +74,6 @@ define([
                 return value * octavesFromMiddleC * 1200;
             }
             
-            // Helper methods
             function setupEnvelope() {
                 attackLength = getAttackLength();
                 decayLength = getDecayLength();
@@ -124,7 +126,6 @@ define([
                 filterEnvelope.gain.setValueAtTime(sustainLevel, now);
             }
             
-            
             // Suggested by Chris Wilson on stackoverflow
             // http://stackoverflow.com/questions/30019666/web-audio-synthesis-how-to-handle-changing-the-filter-cutoff-during-the-attack
             function createDCOffset() {
@@ -167,14 +168,12 @@ define([
             
             Object.defineProperties(this, {
                 'cutoff': {
-                    'get': function() { return sustainLevel; },
                     'set': function(value) { 
                         filterCutoff = getCutoffFreqFromValue(value);
                         setFilter();
                     }
                 },
                 'envMod': {
-                    'get': function() { return envMod.gain.value; },
                     'set': function(value) { 
                         envMod.gain.value = getEnvModAmount(value);
                     }
@@ -232,15 +231,6 @@ define([
                 'res': {
                     'set': function(value) { setRes(value); }
                 },
-                 'input1': {
-                    'get': function() { return filter1; }
-                },
-                'input2': {
-                    'get': function() { return filter2; }
-                },
-                'output': {
-                    'get': function() { return filter2; }
-                },
                 'invert': {
                     'set': function(value) { inverted = !value; }
                 },
@@ -251,6 +241,9 @@ define([
                     }
                 }
             });
+            
+            return init();
+            
         }
         
         return VCF;

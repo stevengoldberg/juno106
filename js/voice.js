@@ -73,36 +73,35 @@ define([
                     maxLevel: options.volume
                 });
                 
+                // Mix Backbone.Events into the envelope object so it can 
+                // sync with the amplifier and filter
                 _.extend(this.env, Backbone.Events);
-                
-                // Propogate DCO events
-                this.listenTo(this.dco, 'destroyed', triggerKillVoice);
-                this.listenTo(this.dco, 'pwm', function(e) {
-                    that.lfo.pwmMod = e;
+
+
+                this.listenTo(this.env, 'attack', function(newAttack) {
+                    this.vcf.attack = newAttack;
                 });
-                this.listenTo(this.dco, 'lfoPwmEnabled', function(e) {
-                    that.lfo.pwmEnabled = e;
+            
+                this.listenTo(this.env, 'decay', function(newDecay) {
+                    this.vcf.decay = newDecay;
+                });
+            
+                this.listenTo(this.env, 'sustain', function(newSustain) {
+                    this.vcf.sustain = newSustain;
+                });
+            
+                this.listenTo(this.env, 'release', function(newRelease) {
+                    this.vcf.release = newRelease;
                 });
 
-                // Sync up the envelope for the amplifier and the filter
-                function setupEnvelopeListeners() {
-                    that.listenTo(that.env, 'attack', function(e) {
-                        that.vcf.attack = e;
-                    });
                 
-                    that.listenTo(that.env, 'decay', function(e) {
-                        that.vcf.decay = e;
-                    });
-                
-                    that.listenTo(that.env, 'sustain', function(e) {
-                        that.vcf.sustain = e;
-                    });
-                
-                    that.listenTo(that.env, 'release', function(e) {
-                        that.vcf.release = e;
-                    });
-                }
-                setupEnvelopeListeners();
+                this.listenTo(this.dco, 'destroyed', triggerKillVoice);
+                this.listenTo(this.dco, 'pwm', function(pwmValue) {
+                    this.lfo.pwmMod = pwmValue;
+                });
+                this.listenTo(this.dco, 'lfoPwmEnabled', function(enabled) {
+                    this.lfo.pwmEnabled = enabled;
+                });
                 
                 function chorusToggle() {
                     switch(this.chorusLevel) {
@@ -127,12 +126,11 @@ define([
                 // Connect nodes
                 connect(this.lfo.pitchMod, this.dco.input);
                 connect(this.lfo.pwmMod, this.dco.pwm);
-                connect(this.lfo.freqMod, this.vcf.input1.detune);
-                connect(this.lfo.freqMod, this.vcf.input2.detune);
+                connect(this.lfo.freqMod, this.vcf.detune);
                 connect(this.dco.output, this.hpf.input);
-                connect(this.hpf.output, this.vcf.input1);
-                connect(this.vcf.output, this.vca.level);
-                connect(this.vca.level, this.env.input);
+                connect(this.hpf.output, this.vcf.input);
+                connect(this.vcf.output, this.vca.input);
+                connect(this.vca.output, this.env.input);
                 connect(this.env.output, this.cho.input);
                 
                 function connect(output, input) {
