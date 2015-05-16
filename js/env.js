@@ -166,11 +166,16 @@ define([
                     }
                 },
                 'ampMod': {
-                    'get': function() { return ampMod; },
                     'set': function() { ampMod.gain.value = value; }
                 },
                 'enabled': {
                     'set': function(value) { enabled = value; }
+                },
+                'input': {
+                    'get': function() { return ampMod; }
+                },
+                'output': {
+                    'get': function() { return ampMod; }
                 }
             });
             

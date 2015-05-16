@@ -129,11 +129,11 @@ define([
                 connect(this.lfo.pwmMod, this.dco.pwm);
                 connect(this.lfo.freqMod, this.vcf.input1.detune);
                 connect(this.lfo.freqMod, this.vcf.input2.detune);
-                connect(this.dco.output, this.hpf.cutoff);
+                connect(this.dco.output, this.hpf.input);
                 connect(this.hpf.output, this.vcf.input1);
                 connect(this.vcf.output, this.vca.level);
-                connect(this.vca.level, this.env.ampMod);
-                connect(this.env.ampMod, this.cho.input);
+                connect(this.vca.level, this.env.input);
+                connect(this.env.output, this.cho.input);
                 
                 function connect(output, input) {
                     if(_.isArray(output)) {
@@ -167,7 +167,7 @@ define([
             },
             
             disconnect: function() {
-                this.env.ampMod.disconnect(this.cho.input);
+                this.env.output.disconnect(this.cho.input);
             }
     });
 });
