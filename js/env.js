@@ -7,7 +7,6 @@ define([
         return Backbone.Marionette.Object.extend({ 
             
             initialize: function(options) {            
-                // Initialization
                 var that = this;
             
                 var envelopeOffset = options.envConstants.envelopeOffset;
@@ -130,7 +129,6 @@ define([
             
                 Object.defineProperties(this, {
                     'attack': {
-                        'get': function() { return attackLength; },
                         'set': function(value) { 
                             var e = {
                                 value: value,
@@ -141,7 +139,6 @@ define([
                         }
                     },
                     'decay': {
-                        'get': function() { return decayLength; },
                         'set': function(value) {
                             var e = {
                                 value: value,
@@ -152,7 +149,6 @@ define([
                         }
                     },
                     'sustain': {
-                        'get': function() { return sustainLevel; },
                         'set': function(value) {
                             var e = {
                                 value: value,
@@ -163,7 +159,6 @@ define([
                         }
                     },
                     'release': {
-                        'get': function() { return releaseLength; },
                         'set': function(value) {
                             var e = {
                                 value: value,
@@ -178,7 +173,6 @@ define([
                         'set': function() { ampMod.gain.value = value; }
                     },
                     'enabled': {
-                        'get': function() { return enabled; },
                         'set': function(value) { enabled = value; }
                     }
                 });
