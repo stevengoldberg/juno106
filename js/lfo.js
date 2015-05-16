@@ -5,33 +5,31 @@ define([
     
     function(App, util) {
         function LFO(options) {
-            // Initialization
             var lfo = App.context.createOscillator();
-            lfo.type = 'triangle';
-            lfo.frequency.value = options.lfoRate;
-            lfo.start(0);
-            
             var pitchMod = App.context.createGain();
-            pitchMod.gain.value = 0;
-            
-            var freqMod = App.context.createGain();
-            freqMod.gain.value = 0;
-            
+            var freqMod = App.context.createGain();       
             var pwmMod = App.context.createGain();
-            pwmMod.gain.value = 0;
             
             var delayTime = setDelay(options.lfoDelay);
             var pitchModFactor = getPitchModFactor(options.lfoPitch);
             var freqModFactor = getFreqModFactor(options.lfoFreq);
             var pwmModFactor = getPitchModFactor(options.lfoPwm);
-            
             var pwmModEnabled = options.lfoPwmEnabled;
             
-            lfo.connect(pitchMod);
-            lfo.connect(freqMod);
-            lfo.connect(pwmMod);
+            function init() { 
+                lfo.type = 'triangle';
+                lfo.frequency.value = options.lfoRate;
+                lfo.start(0);
+                
+                pitchMod.gain.value = 0;
+                freqMod.gain.value = 0;
+                pwmMod.gain.value = 0;
+                
+                lfo.connect(pitchMod);
+                lfo.connect(freqMod);
+                lfo.connect(pwmMod);
+            }
             
-            // Setter methods
             function setPitchMod() {
                 var now = App.context.currentTime;
                 pitchMod.gain.cancelScheduledValues(now);
@@ -135,13 +133,14 @@ define([
                     }
                 },
                 'rate': {
-                    'get': function() { return lfo.frequency; },
                     'set': function(value) { setRate(value); }
                 },
                 'delay': {
                     'set': function(value) { delayTime = setDelay(value); }
                 }
             });
+            
+            return init();
 
         }
         
