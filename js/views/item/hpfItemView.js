@@ -19,6 +19,8 @@ define([
                     2: '29%',
                     3: '1%'
                 };
+                
+                ModuleBaseItemView.prototype.initialize.apply(this);
             },
             
             onShow: function() {

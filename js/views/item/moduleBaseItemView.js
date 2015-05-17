@@ -4,18 +4,10 @@ define([
     
     function(Backbone) {
         return Backbone.Marionette.ItemView.extend({
-                  
-            switchValues: {
-                'dco-range': [0, 1, 2],
-                'pwm-lfo': [0, 1],
-                'vcf-invert': [0, 1],
-                'env-enabled': [0, 1],
-                'dco-lfoPwmEnabled': [0, 1]
-            },
             
             ui: {
                 faderKnob: '.fader__knob',
-                switchEl: '.switch',
+                switchKnob: '.switch__knob',
                 button: '.button'
             },
             
@@ -23,23 +15,36 @@ define([
                 this.$el.parent().addClass('module').addClass(className);
             },
             
+            initialize: function() {
+                var that = this;
+                this.dragging = null;
+                
+                $(window).on('mousemove', function(e) {
+                    if(!_.isNull(that.dragging)) {
+                        that.dragging.addClass('dragging');
+                        
+                        if(that.dragging.hasClass('fader__knob')) {
+                            that.calculateFaderMovement(that.dragging, e.clientY);
+                        } else if(that.dragging.hasClass('switch__knob')) {
+                            that.calculateSwitchMovement(that.dragging, e.clientY);
+                        }
+                    }
+                });
+                
+                $(window).on('mouseup', function(e) {
+                    if(that.dragging) {
+                        that.dragging.removeClass('dragging');
+                    }
+                    that.dragging = null;
+                });
+            },
+            
             bindFaders: function() {
                 var that = this;
-                var target;
                 
                 this.ui.faderKnob.mousedown(function(e) {
-                    target = $(e.currentTarget);
-                    that.clickOffset = e.clientY - target.offset().top;
-                    $(window).on('mousemove', function(e) {
-                        target.addClass('dragging');
-                        that.calculateFaderMovement(target, e.clientY);
-                    });
-                });
-                $(window).mouseup(function(e) {
-                    if(target) {
-                        target.removeClass('dragging');
-                    }
-                    $(window).off('mousemove');
+                    that.dragging = $(e.currentTarget);
+                    that.clickOffset = e.clientY - that.dragging.offset().top;
                 });
             },
             
@@ -51,7 +56,7 @@ define([
                 
                 if(yPos < slotTop) {
                     position = -5;
-                } else if(yPos > (slotTop + this.slotHeight - this.faderThickness)) {
+                } else if(yPos > (slotTop + this.slotHeight + faderCompensation)) {
                     position = 95;
                 } else {
                     position = ((yPos - slotTop) / this.slotHeight * 100) - faderCompensation;
@@ -66,45 +71,64 @@ define([
                 this.triggerUpdate(el.data().param, value);
             },
             
-            bindSwitches: function() {
-                var that = this;
-                var el;
-                var param;
-                var oldValue;
-                var newValue;
-                var currentIndex;
-                var newIndex;
+            updateSwitchUI: function(el, param, newValue) {
+                var switchObject = this.getSwitchObject(el);
+                var offset = switchObject.getOffset(newValue);
                 
-                this.ui.switchEl.click(function(e) {
-                    el = $(this);
-                    param = el.data().param;
-                    oldValue = el.data().value;
-                    _.each(that.switchValues[param], function(element, index) {
-                        if(element === oldValue) {
-                            currentIndex = index;
-                        }
-                    });
-                    newIndex = (currentIndex + 1) % (that.switchValues[param].length);
-                    newValue = that.switchValues[param][newIndex];
-                    that.triggerUpdate(param, newValue);
-                    that.updateSwitchUI(el, param, newValue);
+                el.data('value', newValue);
+                
+                el.css({
+                    bottom: offset
                 });
             },
             
-            updateSwitchUI: function(el, param, newValue) {
-                var knob = el.children();
-                el.data('value', newValue);
+            bindSwitches: function() {
+                var that = this;
                 
-                if(newValue === 0) {
-                    knob.removeClass('switch__knob--middle switch__knob--up');
-                    knob.addClass('switch__knob--down');
-                } else if (newValue === 2 || (param !== 'dco-range' && newValue === 1)) {
-                    knob.removeClass('switch__knob--middle switch__knob--down');
-                    knob.addClass('switch__knob--up');
-                } else if (newValue === 1) {
-                    knob.removeClass('switch__knob--up switch__knob--down');
-                    knob.addClass('switch__knob--middle');
+                this.ui.switchKnob.mousedown(function(e) {
+                    that.dragging = $(e.currentTarget);
+                });   
+            },
+            
+            calculateSwitchMovement: function(el, yPos) {
+                var switchObject = this.getSwitchObject(el);
+                var mouseOffset = switchObject.switchBottom() - yPos;
+                var positions = [];
+                var newPosition = 0;
+                
+                for(var i = 0; i < el.data('length'); i++) {
+                    positions.push(switchObject.getOffset(i));
                 }
+                
+                for(var j = 0; j < el.data('length'); j++) {
+                    if(mouseOffset > positions[j]) {
+                        newPosition = j;
+                    }
+                }
+                
+                el.css({
+                    bottom: positions[newPosition]
+                });
+                
+                if(el.data('value') !== newPosition) {
+                    el.data('value', newPosition);
+                    this.triggerUpdate(el.data().param, newPosition);
+                }
+            },
+            
+            getSwitchObject: function(el) {
+                return {
+                    switchThickness: el.height(),
+                    switchHeight: el.parent().height(),
+                    switchBottom: function() { return el.parent().offset().top + this.switchHeight; },
+                    switchPositions: el.data('length'),
+                    multiplier: function() { return this.switchHeight / this.switchPositions; },
+                    getOffset: function(newValue) {
+                        return newValue === 0 ? 0 : this.multiplier() * newValue + 
+                            (1 / this.switchPositions * newValue * this.switchThickness); 
+                            
+                    }
+                };
             },
             
             bindButtons: function() {
@@ -145,7 +169,7 @@ define([
                 
                 if(el.hasClass('fader__knob')) {
                     this.setupFaderPosition(el, value);
-                } else if(el.hasClass('switch')) {
+                } else if(el.hasClass('switch__knob')) {
                     this.setupSwitchPosition(el, value);
                 } else if(el.hasClass('button')) {
                     this.setupButtonState(el, value);

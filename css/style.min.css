@@ -377,33 +377,19 @@ hr {
   margin: 15px auto;
 }
 
-.switch__knob, .switch__knob--up, .switch__knob--down, .switch__knob--middle {
+.switch__knob {
   background-color: white;
   position: absolute;
   border-radius: 10px;
-  width: 90%;
-  height: 12px;
-  -webkit-transition: all .25s;
-          transition: all .25s;
+  width: 100%;
+  height: 15px;
+  -webkit-transition: all .1s;
+          transition: all .1s;
   cursor: pointer;
 }
-.switch__knob:hover, .switch__knob--up:hover, .switch__knob--down:hover, .switch__knob--middle:hover {
-  box-shadow: 0 0 15px red;
-}
-
-.switch__knob--up {
-  top: 0%;
-  bottom: 90%;
-}
-
-.switch__knob--down {
-  bottom: 0%;
-  top: 90%;
-}
-
-.switch__knob--middle {
-  top: 39%;
-  bottom: 39%;
+.switch__knob.dragging {
+  border: 1px solid #CC3300;
+  box-shadow: 0 0 15px #800000;
 }
 
 .knob-container--range {

@@ -160,7 +160,7 @@ define([
                 }
             },
             
-            synthUpdateHandler: _.throttle(function(update) {                    
+            synthUpdateHandler: function(update) {                    
                 var param = Object.keys(update.changed)[0];
                 var value = update.changed[param];
                 var component = param.slice(0, 3);
@@ -169,7 +169,7 @@ define([
                 _.each(this.activeVoices, function(voice) {
                     voice[component][attr] = value;
                 });
-            }, 15),
+            },
             
             handleReset: function() {
                 this.synth.set(JSON.parse(this.cachedSynth));
