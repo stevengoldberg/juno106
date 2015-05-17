@@ -34,7 +34,7 @@ define([
                 };
             },
             
-            getOptions: function() {
+            getOptions: function(frequency) {
                 return {
                     frequency: this.getCurrentRange(frequency),
                     waveform: this.getCurrentWaveform(),

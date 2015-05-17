@@ -165,7 +165,7 @@ define([
                     var gain = App.context.createGain();
                     detune.start();
                     detune.frequency.value = (0.05 * value);
-                    gain.gain.value = (3 * value);
+                    gain.gain.value = (5 * value);
                     detune.connect(gain);
                     connect(gain, this.dco.input);
                 }

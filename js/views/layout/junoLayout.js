@@ -90,7 +90,7 @@ define([
                 }
             
                 var voice = new Voice({
-                    synthOptions: this.synth.getOptions(),
+                    synthOptions: this.synth.getOptions(frequency),
                     lfo: this.lfo,
                     cho: this.cho
                 });
