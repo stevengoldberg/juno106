@@ -1,4 +1,4 @@
-<div class="button--midi {{#if midi}} pressed {{/if}}" title="Click to request MIDI access again">
+<div class="button--midi {{#if midi}} pressed {{/if}}" {{#unless midi}} title="No MIDI access -- see README for instructions" {{/unless}}>
     <span class="label js-midi-label">MIDI {{#if midi}}<i class="fa fa-check js-midi-success"></i> 
     {{else}}<i class="fa fa-times js-midi-error"></i>{{/if}}
     <i class="fa fa-spinner fa-spin js-midi-spinner"></i></span>

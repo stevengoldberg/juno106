@@ -37,12 +37,8 @@
     color: white;
     border-radius: 4px;
     opacity: .7;
-    cursor: pointer;
     &.pressed {
         box-shadow: 0 0 7px white;
-        opacity: 1;
-    }
-    &:hover {
         opacity: 1;
     }
 }

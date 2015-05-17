@@ -54,7 +54,7 @@ define([
                 var slotTop = el.parent().offset().top;
                 var faderCompensation = this.clickOffset / this.slotHeight * 100;
                 
-                if(yPos < slotTop) {
+                if((yPos - faderCompensation) < slotTop) {
                     position = -5;
                 } else if(yPos > (slotTop + this.slotHeight + faderCompensation)) {
                     position = 95;
@@ -183,7 +183,7 @@ define([
                 
                 var topPercentOffset = 1 - value;
                 var topPxOffset = (topPercentOffset * this.slotHeight) -
-                    (0.25 * this.faderThickness);
+                    (0.5 * this.faderThickness);
                 
                 el.css({
                     top: topPxOffset

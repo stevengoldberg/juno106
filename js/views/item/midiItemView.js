@@ -20,8 +20,7 @@ define([
             },
             
             events: {
-                'change @ui.select': 'selectMidi',
-                'click @ui.midiButton': 'requestMidi'
+                'change @ui.select': 'selectMidi'
             },
             
             initialize: function(options) {
@@ -48,7 +47,7 @@ define([
                 this.ui.midiSpinner.show();
                 
                 try {
-                        navigator.requestMIDIAccess().then(function(access) {
+                    navigator.requestMIDIAccess().then(function(access) {
                         if(access.inputs && access.inputs.size > 0) {
                             that.midi = true;
                             inputs = access.inputs.values();

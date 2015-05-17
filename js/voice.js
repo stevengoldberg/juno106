@@ -163,7 +163,7 @@ define([
                 function setDetune(value) {
                     var detune = App.context.createOscillator();
                     var gain = App.context.createGain();
-                    detune.start();
+                    detune.start(0);
                     detune.frequency.value = (0.05 * value);
                     gain.gain.value = (5 * value);
                     detune.connect(gain);

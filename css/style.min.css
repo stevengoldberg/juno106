@@ -340,13 +340,9 @@ hr {
   color: white;
   border-radius: 4px;
   opacity: .7;
-  cursor: pointer;
 }
 .button--midi.pressed {
   box-shadow: 0 0 7px white;
-  opacity: 1;
-}
-.button--midi:hover {
   opacity: 1;
 }
 
