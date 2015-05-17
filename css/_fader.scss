@@ -95,8 +95,9 @@
     display: flex;
     align-self: flex-start;
     cursor: pointer;
+    box-shadow: 1px 1px 2px black;
     &:hover {
-        box-shadow: 0 0 7px white;
+        box-shadow: 1px 1px 2px black, 0 0 7px white;
     }
     &.dragging {
         border: 1px dashed $led-on-clr;
