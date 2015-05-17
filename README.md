@@ -10,7 +10,7 @@ Minimum window size of 1024x768. Please use an updated version of [Google Chrome
 
 # How to play
 
-106.js is best played with a MIDI keyboard. See [the next section](Readme#midi) for MIDI setup instructions. Notes can also be played with a computer keyboard, or by clicking the keys with a mouse. Like the original hardware synthesizer, the 106.js can play up to 6 notes at a time.
+106.js is best played with a MIDI keyboard. See [the next section](Readme.md#midi) for MIDI setup instructions. Notes can also be played with a computer keyboard, or by clicking the keys with a mouse. Like the original hardware synthesizer, the 106.js can play up to 6 notes at a time.
 
 Please note that due to a phenomenon known as [keyboard ghosting](http://www.microsoft.com/appliedsciences/antighostingexplained.mspx), certain simultaneous combnations of more than 2 keys will not register when held on the computer keyboard. This is a limitation of computer keyboard hardware, and not with 106.js.
 
