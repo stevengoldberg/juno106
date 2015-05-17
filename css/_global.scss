@@ -61,9 +61,7 @@ h4 {
 
 .readme__link {
     color: white;
-    text-decoration: none;
     &:hover {
         color: $led-on-clr;
-        text-decoration: underline;
     }
 }

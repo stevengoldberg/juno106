@@ -52,11 +52,9 @@ h4 {
 
 .readme__link {
   color: white;
-  text-decoration: none;
 }
 .readme__link:hover {
   color: #CC3300;
-  text-decoration: underline;
 }
 
 .module-container {
