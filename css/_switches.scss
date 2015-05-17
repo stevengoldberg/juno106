@@ -16,8 +16,11 @@
     height: 15px;
     transition: all .1s;
     cursor: pointer;
+    &:hover {
+        box-shadow: 0 0 20px $led-off-clr;
+    }
     &.dragging {
-        border: 1px solid $led-on-clr;
         box-shadow: 0 0 15px $led-off-clr;
+        border: 1px solid $led-on-clr;
     }
 }

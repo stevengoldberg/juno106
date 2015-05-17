@@ -34,6 +34,27 @@ define([
                 };
             },
             
+            getOptions: function() {
+                return {
+                    frequency: this.getCurrentRange(frequency),
+                    waveform: this.getCurrentWaveform(),
+                    envelope: this.getCurrentEnvelope(),
+                    vcfInverted: this.isFilterInverted(),
+                    chorusLevel: this.get('cho-chorusToggle'),
+                    lfoPwmEnabled: this.get('dco-lfoPwmEnabled'),
+                    lfoRate: this.get('lfo-rate'),
+                    lfoDelay: this.get('lfo-delay'),
+                    lfoPitchMod: this.get('lfo-pitchMod'),
+                    lfoFreqMod: this.get('lfo-freqMod'),
+                    vcfFreq: this.get('vcf-cutoff'),
+                    keyFollow: this.get('vcf-keyFollow'),
+                    res: this.get('vcf-res'),
+                    vcfEnv: this.get('vcf-envMod'),
+                    volume: this.get('vca-level'),
+                    hpf: this.get('hpf-cutoff'),
+                };
+            },
+            
             getCurrentWaveform: function() {
                 return {
                     sawtoothLevel: this.get('dco-sawtooth'),

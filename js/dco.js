@@ -164,7 +164,7 @@ define([
                 },
                 'lfoPwmEnabled': {
                     'set': function(value) {
-                        if(value) {
+                        if(value === 1) {
                             setPulseWidth(0);
                         } else {
                             setPulseWidth();

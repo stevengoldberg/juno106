@@ -9,9 +9,10 @@ define([
     
     function(App, DCO, VCF, ENV, HPF, VCA) {
         return Backbone.Marionette.Object.extend({
-            initialize: function(options) {
+            initialize: function(data) {
                 
                 var that = this;
+                var options = data.synthOptions;
                 
                 // Envelope constants
                 var envConstants = {
@@ -27,7 +28,6 @@ define([
                     that.trigger('killVoice');
                     that.disconnect();
                 });
-                
         
                 this.vcf = new VCF({
                     frequency: options.vcfFreq,
@@ -60,8 +60,15 @@ define([
                     maxLevel: options.volume
                 });
                 
-                this.lfo = options.lfo;
-                this.cho = options.cho;
+                this.lfo = data.lfo;
+                this.lfo.rate = options.lfoRate;
+                this.lfo.delay = options.lfoDelay;
+                this.lfo.pwmEnabled = options.lfoPwmEnabled;
+                this.lfo.freqMod = options.lfoFreqMod;
+                this.lfo.pitchMod = options.lfoPitchMod;
+                this.lfo.pwmMod = options.waveform.pulseWidth;
+                
+                this.cho = data.cho;
                 
                 if(!_.has(this.cho, 'chorusToggle')) {
                     Object.defineProperties(this.cho, {

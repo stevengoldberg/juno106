@@ -330,9 +330,12 @@ hr {
   transition: all .1s;
   cursor: pointer;
 }
+.switch__knob:hover {
+  box-shadow: 0 0 20px #800000;
+}
 .switch__knob.dragging {
-  border: 1px solid #CC3300;
   box-shadow: 0 0 15px #800000;
+  border: 1px solid #CC3300;
 }
 
 .knob-container--range {

@@ -90,18 +90,7 @@ define([
                 }
             
                 var voice = new Voice({
-                    frequency: this.synth.getCurrentRange(frequency),
-                    waveform: this.synth.getCurrentWaveform(),
-                    envelope: this.synth.getCurrentEnvelope(),
-                    vcfInverted: this.synth.isFilterInverted(),
-                    chorusLevel: this.synth.get('cho-chorusToggle'),
-                    lfoPwmEnabled: this.synth.get('dco-lfoPwmEnabled'),
-                    vcfFreq: this.synth.get('vcf-cutoff'),
-                    keyFollow: this.synth.get('vcf-keyFollow'),
-                    res: this.synth.get('vcf-res'),
-                    vcfEnv: this.synth.get('vcf-envMod'),
-                    volume: this.synth.get('vca-level'),
-                    hpf: this.synth.get('hpf-cutoff'),
+                    synthOptions: this.synth.getOptions(),
                     lfo: this.lfo,
                     cho: this.cho
                 });
