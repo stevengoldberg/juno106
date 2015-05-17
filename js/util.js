@@ -25,10 +25,6 @@ define([
                 return pitch.toString() + octave.toString();   
             },
             
-            escapeIdSelector: function(id) {
-                return "#" + id.replace( /(:|\.|\[|\]|,)/g, "\\$1" );    
-            },
-            
             keyMap: {
                 90: 'Z_',
                 88: 'X_',

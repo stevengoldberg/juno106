@@ -5,8 +5,8 @@ define([
     'views/layout/moduleLayout',
     'views/item/keyboardItemView',
     'views/item/readmeItemView',
-    'voice',
-    'lfo',
+    'synth/voice',
+    'synth/lfo',
     'tuna',
     'models/junoModel',
     'hbs!tmpl/layout/junoLayout-tmpl'
