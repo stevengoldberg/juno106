@@ -6,11 +6,11 @@
 
 # System Requirements
 
-Minimum window size of 1024x768. Please use an updated version of **Google Chrome**.
+Minimum window size of 1024x768. Please use an updated version of [Google Chrome](https://www.google.com/chrome/browser/desktop/).
 
 # How to play
 
-106.js is best played with a MIDI keyboard. See the next section for MIDI setup instructions. Notes can also be played with a computer keyboard, or by clicking the keys with a mouse. Like the original hardware synthesizer, the 106.js can play up to 6 notes at a time.
+106.js is best played with a MIDI keyboard. See [the next section](http://github.com/stevengoldberg/juno106/blob/master/README.md#midi) for MIDI setup instructions. Notes can also be played with a computer keyboard, or by clicking the keys with a mouse. Like the original hardware synthesizer, the 106.js can play up to 6 notes at a time.
 
 Please note that due to a phenomenon known as [keyboard ghosting](http://www.microsoft.com/appliedsciences/antighostingexplained.mspx), certain simultaneous combnations of more than 2 keys will not register when held on the computer keyboard. This is a limitation of computer keyboard hardware, and not with 106.js.
 
@@ -22,6 +22,8 @@ Click `Reset` at the top of the screen at any time to return the 106.js to its i
 
 For MIDI connectivity, you must either use **Chrome 43** or newer ([currently in beta](https://www.chromium.org/getting-involved/dev-channel)), or enable the MIDI feature flag in **Chrome 38** or newer by pointing your browser to `chrome://flags`, searching for "Enable Web MIDI API," clicking "enable," and then restarting the browser.
 
+106.js currently responds to Note On and Note Off messages on any MIDI channel.
+
 # Synthesis Overview
 
 The following is a brief description of each control on the 106.js. Many of these controls are also found on other analog and virtual analog synthesizers. 
@@ -31,19 +33,19 @@ If you've never played with synthesizers before, the controls may seem overwhelm
 For more detailed instructions, consult the [Juno 106 owner's manual](http://www.synthfool.com/docs/Roland/Juno_Series/Roland_Juno_106/Roland_Juno106_Owners_Manual.pdf).
 
 **LFO - Low Frequency Oscillator**   
- Triangle-wave oscillator used to modulate other synth parameters.
+ A triangle-wave oscillator that is heard indirectly, through its effects on other parameters.
  
  * Rate: Controls the speed of the LFO.   
  * Delay: Controls the speed at which the LFO fades in on triggering a note.  
 
 **DCO - Digitally Controlled Oscillator**  
- Oscillators that produce pitches, controlled by the keyboard.
+ Sound sorces that are heard directly.  
  
  * Range: Selects the keyboard octave.  
  * LFO: Selects the extent to which the LFO modulates the oscillator pitch -- i.e., adjusts the depth of vibrato. 
  * PWM: In manual mode, sets the width of the pulse wave, between 5% and 95%. In LFO mode,  
  selects the extent to which the LFO modulates pulse width.  
- * PULSE/SAW: Toggles active waveforms.  
+ * PULSE/SAW: Toggles pulse and sawtooth waveforms.  
  * SUB: Sets volume of square-wave sub-oscillator, one octave below main oscillator.  
  * NOISE: Sets volume of noise generator.  
 
@@ -58,7 +60,7 @@ For more detailed instructions, consult the [Juno 106 owner's manual](http://www
 * KBD: The extent to which the filter cutoff tracks the keyboard pitch.  
 
 **HPF - High Pass Filter**  
- 24 dB/octave non-resonant highpass filter
+ 12 dB/octave non-resonant highpass filter
 
 * FREQ: Set the level higher to filter out more low-frequency content.
 
@@ -99,4 +101,4 @@ Juno-106.js was written in Javascript using the [WebAudio API](http://webaudio.g
 
 # Changelog
 
-* v. 1.0: First public release
+* v. 1.0: First public release - 5/18/2015
