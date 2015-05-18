@@ -11,7 +11,6 @@ define([
             var envelopeOffset = options.envConstants.envelopeOffset;
             var attackMax = options.envConstants.attackMax;
             var decayReleaseMax = options.envConstants.decayReleaseMax;
-            var minSustain = options.envConstants.minSustain;
             var ampMod = App.context.createGain();
             var maxLevel = options.maxLevel;
             var enabled = options.envelope.enabled;
@@ -30,7 +29,7 @@ define([
             this.output = ampMod;
         
             function init() { 
-                ampMod.gain.value = minSustain;
+                ampMod.gain.value = 0;
                 
                 if(enabled) {
                     setSustain(envelope.sustain);
@@ -50,7 +49,7 @@ define([
                 var sustaining = now > timing.attack + attackLength + decayLength && 
                     timing.release === null;
                 
-                sustainLevel = (maxLevel * value) || minSustain;
+                sustainLevel = maxLevel * value;
             
                 if(enabled && sustaining) {
                     ampMod.gain.cancelScheduledValues(now);
@@ -119,9 +118,9 @@ define([
             
                 if(enabled) {
                     timing.release = now;
-                    ampMod.gain.linearRampToValueAtTime(minSustain, now + releaseLength);
+                    ampMod.gain.linearRampToValueAtTime(0, now + releaseLength);
                 } else {
-                    ampMod.gain.linearRampToValueAtTime(minSustain, now + envelopeOffset);
+                    ampMod.gain.linearRampToValueAtTime(0, now + envelopeOffset);
                 }
                 // Set the DCO's stop time
                 this.trigger('noteOff', enabled ? releaseLength : envelopeOffset);

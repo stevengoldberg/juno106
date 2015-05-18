@@ -10,7 +10,6 @@ define([
             var envelopeOffset = options.envConstants.envelopeOffset;
             var attackMax = options.envConstants.attackMax;
             var decayReleaseMax = options.envConstants.decayReleaseMax;
-            var minSustain = options.envConstants.minSustain;
             var filterMinimum = 10;
         
             var filter1 = App.context.createBiquadFilter();
@@ -82,7 +81,7 @@ define([
             }
             
             function getSustainLevel() {
-                return envelope.sustain || minSustain;
+                return envelope.sustain;
             }
             
             function getAttackLength() {
@@ -163,7 +162,7 @@ define([
         
                 filterEnvelope.gain.cancelScheduledValues(now);
                 filterEnvelope.gain.setValueAtTime(initial, now);
-                filterEnvelope.gain.linearRampToValueAtTime(minSustain, now + releaseLength);
+                filterEnvelope.gain.linearRampToValueAtTime(0, now + releaseLength);
             };
             
             Object.defineProperties(this, {

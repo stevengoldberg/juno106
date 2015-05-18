@@ -10,66 +10,10 @@ define([
     function(App, DCO, VCF, ENV, HPF, VCA) {
         return Backbone.Marionette.Object.extend({
             initialize: function(data) {
-                
-                var that = this;
-                var options = data.synthOptions;
-                
-                // Envelope constants
-                var envConstants = {
-                    envelopeOffset: 0.0015,
-                    attackMax: 3,
-                    decayReleaseMax: 12,
-                    minSustain: 0.0001
-                };
-                
-                // After all the oscillators are stopped, remove the voice from the pool
-                // and disconnect it from the graph for garbage collection
-                var triggerKillVoice = _.after(4, function() {
-                    that.trigger('killVoice');
-                    that.disconnect();
-                });
         
-                this.vcf = new VCF({
-                    frequency: options.vcfFreq,
-                    res: options.res,
-                    envelope: options.envelope,
-                    vcfEnv: options.vcfEnv,
-                    envConstants: envConstants,
-                    inverted: options.vcfInverted,
-                    keyFreq: options.frequency,
-                    keyFollow: options.keyFollow
-                });
+                this.createComponents(data);
                 
-                this.env = new ENV({
-                    envelope: options.envelope,
-                    maxLevel: options.volume,
-                    envConstants: envConstants
-                });
-                
-                this.dco = new DCO({
-                    frequency: options.frequency,
-                    waveform: options.waveform,
-                    lfoPwmEnabled: options.lfoPwmEnabled
-                });
-                
-                this.hpf = new HPF({
-                    frequency: options.hpf
-                });
-                
-                this.vca = new VCA({
-                    maxLevel: options.volume
-                });
-                
-                this.lfo = data.lfo;
-                this.lfo.rate = options.lfoRate;
-                this.lfo.delay = options.lfoDelay;
-                this.lfo.pwmEnabled = options.lfoPwmEnabled;
-                this.lfo.freqMod = options.lfoFreqMod;
-                this.lfo.pitchMod = options.lfoPitchMod;
-                this.lfo.pwmMod = options.waveform.pulseWidth;
-                
-                this.cho = data.cho;
-                
+                // Make the tuna.js chorus effect responsive to the UI
                 if(!_.has(this.cho, 'chorusToggle')) {
                     Object.defineProperties(this.cho, {
                         'chorusToggle': {
@@ -82,39 +26,15 @@ define([
                     });
                 }
                 
-                this.cho.chorusToggle = options.chorusLevel;
-                
                 // Mix Backbone.Events into the ENV to sync the amp and filter envelopes
                 _.extend(this.env, Backbone.Events);
-
-                this.listenTo(this.env, 'attack', function(newAttack) {
-                    this.vcf.attack = newAttack;
-                });
-            
-                this.listenTo(this.env, 'decay', function(newDecay) {
-                    this.vcf.decay = newDecay;
-                });
-            
-                this.listenTo(this.env, 'sustain', function(newSustain) {
-                    this.vcf.sustain = newSustain;
-                });
-            
-                this.listenTo(this.env, 'release', function(newRelease) {
-                    this.vcf.release = newRelease;
-                });
 
                 // Mix Backbone.Events into the DCO to sync changes to the LFO
                 // and manage oscillator lifetime
                 _.extend(this.dco, Backbone.Events);
                 
-                this.listenTo(this.dco, 'destroyed', triggerKillVoice);
-                this.listenTo(this.dco, 'pwm', function(pwmValue) {
-                    this.lfo.pwmMod = pwmValue;
-                });
-                this.listenTo(this.dco, 'lfoPwmEnabled', function(enabled) {
-                    this.lfo.pwmEnabled = enabled;
-                });
-                                
+                this.createListeners();
+                   
                 // Connect nodes
                 connect(this.lfo.pitchMod, this.dco.input);
                 connect(this.lfo.pwmMod, this.dco.pwm);
@@ -169,6 +89,93 @@ define([
                     detune.connect(gain);
                     connect(gain, this.dco.input);
                 }
+            },
+            
+            createComponents: function(data) {
+                var options = data.synthOptions;
+                // Envelope constants
+                var envConstants = {
+                    envelopeOffset: 0.0015,
+                    attackMax: 3,
+                    decayReleaseMax: 12
+                };
+                
+                this.vcf = new VCF({
+                    frequency: options.vcfFreq,
+                    res: options.res,
+                    envelope: options.envelope,
+                    vcfEnv: options.vcfEnv,
+                    envConstants: envConstants,
+                    inverted: options.vcfInverted,
+                    keyFreq: options.frequency,
+                    keyFollow: options.keyFollow
+                });
+                
+                this.env = new ENV({
+                    envelope: options.envelope,
+                    maxLevel: options.volume,
+                    envConstants: envConstants
+                });
+                
+                this.dco = new DCO({
+                    frequency: options.frequency,
+                    waveform: options.waveform,
+                    lfoPwmEnabled: options.lfoPwmEnabled
+                });
+                
+                this.hpf = new HPF({
+                    frequency: options.hpf
+                });
+                
+                this.vca = new VCA({
+                    maxLevel: options.volume
+                });
+                
+                this.lfo = data.lfo;
+                this.lfo.rate = options.lfoRate;
+                this.lfo.delay = options.lfoDelay;
+                this.lfo.pwmEnabled = options.lfoPwmEnabled;
+                this.lfo.freqMod = options.lfoFreqMod;
+                this.lfo.pitchMod = options.lfoPitchMod;
+                this.lfo.pwmMod = options.waveform.pulseWidth;
+                
+                this.cho = data.cho;
+                this.cho.chorusToggle = options.chorusLevel;
+            },
+            
+            createListeners: function() {
+                // After all the oscillators are stopped, remove the voice from the pool
+                // and disconnect it from the graph for garbage collection
+                var triggerKillVoice = _.after(4, function() {
+                    this.trigger('killVoice');
+                    this.disconnect();
+                }.bind(this));
+                
+                this.listenTo(this.env, 'attack', function(newAttack) {
+                    this.vcf.attack = newAttack;
+                });
+            
+                this.listenTo(this.env, 'decay', function(newDecay) {
+                    this.vcf.decay = newDecay;
+                });
+            
+                this.listenTo(this.env, 'sustain', function(newSustain) {
+                    this.vcf.sustain = newSustain;
+                });
+            
+                this.listenTo(this.env, 'release', function(newRelease) {
+                    this.vcf.release = newRelease;
+                });
+                
+                this.listenTo(this.dco, 'destroyed', triggerKillVoice);
+                
+                this.listenTo(this.dco, 'pwm', function(pwmValue) {
+                    this.lfo.pwmMod = pwmValue;
+                });
+                
+                this.listenTo(this.dco, 'lfoPwmEnabled', function(enabled) {
+                    this.lfo.pwmEnabled = enabled;
+                });
             },
             
             noteOn: function() {
