@@ -24,9 +24,9 @@ define([
                         that.dragging.addClass('dragging');
                         
                         if(that.dragging.hasClass('fader__knob')) {
-                            that.calculateFaderMovement(that.dragging, e.clientY);
+                            that.calculateFaderMovement(that.dragging, e.pageY);
                         } else if(that.dragging.hasClass('switch__knob')) {
-                            that.calculateSwitchMovement(that.dragging, e.clientY);
+                            that.calculateSwitchMovement(that.dragging, e.pageY);
                         }
                     }
                 });
@@ -44,7 +44,7 @@ define([
                 
                 this.ui.faderKnob.mousedown(function(e) {
                     that.dragging = $(e.currentTarget);
-                    that.clickOffset = e.clientY - that.dragging.offset().top;
+                    that.clickOffset = e.pageY - that.dragging.offset().top;
                 });
             },
             
