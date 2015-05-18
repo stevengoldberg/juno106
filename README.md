@@ -87,7 +87,7 @@ For more detailed instructions, consult the [Juno 106 owner's manual](http://www
 
 # Technology
 
-Juno-106.js was written in Javascript using the [WebAudio API](http://webaudio.github.io/web-audio-api/) and [Backbone.Marionette](marionettejs.com). It also uses some effects from [tuna.js](https://github.com/Dinahmoe/tuna/blob/master/tuna.js).
+Juno-106.js was written in Javascript using the [WebAudio](http://webaudio.github.io/web-audio-api/) and [Web MIDI](http://www.w3.org/TR/webmidi/) APIs as well as [Backbone.Marionette](marionettejs.com). It also uses some effects from [tuna.js](https://github.com/Dinahmoe/tuna/blob/master/tuna.js).
 
 # TO-DO
 
