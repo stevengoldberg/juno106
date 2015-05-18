@@ -424,6 +424,7 @@ hr {
   opacity: 0.6;
   bottom: 5%;
   font-family: 'Audiowide', cursive;
+  cursor: pointer;
 }
 
 .key-label--white {
@@ -451,6 +452,7 @@ hr {
   border-bottom-left-radius: 8px;
   border-bottom-right-radius: 8px;
   transition: background-color 0.1s ease-out;
+  cursor: pointer;
 }
 
 .white-key, .white-key--playing {
