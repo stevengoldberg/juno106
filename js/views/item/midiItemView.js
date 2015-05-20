@@ -24,7 +24,6 @@ define([
             },
             
             initialize: function(options) {
-                this.midiListener = options.midiListener;
                 this.midi = false;
                 this.inputs = [];
                 this.activeDevice = null;
@@ -41,6 +40,7 @@ define([
             requestMidi: function() {
                 var that = this;
                 var inputs; 
+                
                 this.inputs = [];
                 
                 this.ui.midiLabel.hide();
@@ -89,7 +89,7 @@ define([
                     note: note
                 };
                 
-                this.midiListener.trigger('midiMessage', message);
+                Backbone.Wreqr.radio.vent.trigger('midi', 'message', message);
             },
             
             serializeData: function() {

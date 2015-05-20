@@ -53,8 +53,7 @@ define([
                     lfoPwmEnabled: this.synth.get('dco-lfoPwmEnabled'),
                     lfoPwm: this.synth.get('dco-pwm')
                 });
-                this.midiListener = new Backbone.Marionette.Object();
-                
+                this.midiListener = Backbone.Wreqr.radio.channel('midi').vent;
                 this.cachedSynth = JSON.stringify(this.synth.attributes);
             },
             
@@ -62,8 +61,7 @@ define([
                 var readme = new ReadmeItemView();
                 
                 this.moduleLayout = new ModuleLayout({
-                    synth: this.synth,
-                    midiListener: this.midiListener
+                    synth: this.synth
                 });
                 this.synthRegion.show(this.moduleLayout);
                 
@@ -74,7 +72,7 @@ define([
                 
                 this.listenTo(this.keyboardView, 'noteOn', this.noteOnHandler);
                 this.listenTo(this.keyboardView, 'noteOff', this.noteOffHandler);
-                this.listenTo(this.midiListener, 'midiMessage', this.handleMidi);
+                this.listenTo(this.midiListener, 'message', this.handleMidi);
                 this.listenTo(this.synth, 'change', this.synthUpdateHandler);
                 this.listenTo(readme, 'reset', this.handleReset);
             },
@@ -99,14 +97,12 @@ define([
                     currentNote.stealNote();
                     this.stopListening(currentNote);
                     this.activeVoices = _.without(this.activeVoices, currentNote);
-                    console.log(currentNote.note + ' stolen');
                 }
                 
                 if(this.activeVoices.length === this.maxPolyphony) {
                     this.stopListening(this.activeVoices[0]);
                     this.activeVoices[0].stealNote();
                     this.activeVoices.shift();
-                    console.log(this.activeVoices[0].note + ' stolen');
                 }
                 
                 voice.cho.connect(this.drive.input);

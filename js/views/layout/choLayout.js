@@ -20,19 +20,16 @@ define([
                 midiRegion: '.js-midi-region'
             },
             
-            initialize: function(options) {
+            initialize: function() {
                 var base = new ModuleBaseItemView();
                 
-                this.midiListener = options.midiListener;
                 this.styleParent = base.styleParent;
                 this.bindButtons = base.bindButtons;
                 this.updateUIState = base.updateUIState;
                 this.triggerUpdate = base.triggerUpdate;
                 this.setupButtonState = base.setupButtonState;
                 
-                this.midiView = new MidiItemView({
-                    midiListener: this.midiListener
-                });
+                this.midiView = new MidiItemView();
             },
             
             onShow: function() {

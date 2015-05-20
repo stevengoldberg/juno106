@@ -30,7 +30,6 @@ define([
             
             initialize: function(data) {
                 this.synth = data.synth;
-                this.midiListener = data.midiListener;
                 this.modules = this.setupModules();
                 this.currentParam = null;
                 this.currentValue = null;
@@ -44,9 +43,7 @@ define([
                     hpf: new HPFItemView(),
                     vca: new VCAItemView(),
                     env: new ENVItemView(),
-                    cho: new CHOLayout({
-                        midiListener: this.midiListener
-                    })
+                    cho: new CHOLayout()
                 };
             },
             
