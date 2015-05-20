@@ -79,6 +79,7 @@ define([
                 this.listenTo(this.keyboardView, 'noteOn', this.noteOnHandler);
                 this.listenTo(this.keyboardView, 'noteOff', this.noteOffHandler);
                 this.listenTo(readme, 'reset', this.handleReset);
+                this.listenTo(readme, 'share', this.sharePatch);
             },
             
             noteOnHandler: function(note, frequency) {
@@ -166,7 +167,34 @@ define([
             },
             
             loadPatch: function(attributes) {
-                console.log(attributes);
+                var update = {};
+                var temp;
+                
+                _.each(attributes, function(pair) {
+                    temp = pair.split('=');
+                    update[temp[0]] = parseFloat(temp[1]);
+                });
+                
+                this.synth.set(update);
+                if(this.moduleLayout) {
+                    this.moduleLayout.updateUIState();
+                }
+                
+                console.log(update);
+            },
+            
+            sharePatch: function() {
+                var url;
+                var paramString = '';
+                var attributes = _.pairs(this.synth.attributes);
+                
+                _.each(attributes, function(attributePair) {
+                    paramString += '?' + attributePair[0] + '=' + parseFloat(attributePair[1].toFixed(5));
+                });
+                
+                url = window.location.origin + window.location.pathname + '#patch' + paramString;
+                console.log(url);
+                
             }
             
         });
