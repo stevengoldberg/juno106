@@ -33,6 +33,8 @@ define([
                 // Initialize long-lived components
                 var tuna = new Tuna(App.context);
                 this.synth = new JunoModel();
+                // Cache the initialized synth for later resetting
+                this.cachedSynth = JSON.stringify(this.synth.attributes);
                 this.cho = new tuna.Chorus();
                 this.cho.chorusLevel = this.synth.get('cho-chorusToggle');
                 this.drive = new tuna.Overdrive({
@@ -54,7 +56,11 @@ define([
                     lfoPwm: this.synth.get('dco-pwm')
                 });
                 this.midiListener = Backbone.Wreqr.radio.channel('midi').vent;
-                this.cachedSynth = JSON.stringify(this.synth.attributes);
+                this.patchListener = Backbone.Wreqr.radio.channel('patch').vent;
+                
+                this.listenTo(this.patchListener, 'load', this.loadPatch);
+                this.listenTo(this.midiListener, 'message', this.handleMidi);
+                this.listenTo(this.synth, 'change', this.synthUpdateHandler);
             },
             
             onShow: function() {
@@ -72,8 +78,6 @@ define([
                 
                 this.listenTo(this.keyboardView, 'noteOn', this.noteOnHandler);
                 this.listenTo(this.keyboardView, 'noteOff', this.noteOffHandler);
-                this.listenTo(this.midiListener, 'message', this.handleMidi);
-                this.listenTo(this.synth, 'change', this.synthUpdateHandler);
                 this.listenTo(readme, 'reset', this.handleReset);
             },
             
@@ -159,6 +163,10 @@ define([
             handleReset: function() {
                 this.synth.set(JSON.parse(this.cachedSynth));
                 this.moduleLayout.updateUIState();
+            },
+            
+            loadPatch: function(attributes) {
+                console.log(attributes);
             }
             
         });
