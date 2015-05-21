@@ -18,7 +18,8 @@ require.config({
         requireLib: './vendor/require',
         underscore: './vendor/underscore',
         'underscore.string': './vendor/underscore.string',
-        'backbone.modal': './vendor/backbone.modal-bundled-min'
+        'backbone.modal': './vendor/backbone.modal-bundled-min',
+        zeroclipboard: './vendor/ZeroClipboard'
     },
 
     shim: {
@@ -35,7 +36,8 @@ require.config({
         },
 
         'backbone.modal': {
-            deps: ['backbone', 'backbone.marionette']
+            deps: ['backbone', 'backbone.marionette'],
+            exports: 'backbone.modal'
         },
         
         'tuna': {

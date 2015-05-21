@@ -5,6 +5,7 @@ define([
     'views/layout/moduleLayout',
     'views/item/keyboardItemView',
     'views/item/readmeItemView',
+    'views/modal/shareItemView',
     'synth/voice',
     'synth/lfo',
     'tuna',
@@ -12,7 +13,8 @@ define([
     'hbs!tmpl/layout/junoLayout-tmpl'
     ],
     
-    function(Backbone, App, util, ModuleLayout, KeyboardItemView, ReadmeItemView, Voice, LFO, Tuna, JunoModel, Template) {
+    function(Backbone, App, util, ModuleLayout, KeyboardItemView, ReadmeItemView, 
+        ShareItemView, Voice, LFO, Tuna, JunoModel, Template) {
         
         return Backbone.Marionette.LayoutView.extend({
             
@@ -179,8 +181,6 @@ define([
                 if(this.moduleLayout) {
                     this.moduleLayout.updateUIState();
                 }
-                
-                console.log(update);
             },
             
             sharePatch: function() {
@@ -189,11 +189,16 @@ define([
                 var attributes = _.pairs(this.synth.attributes);
                 
                 _.each(attributes, function(attributePair) {
-                    paramString += '?' + attributePair[0] + '=' + parseFloat(attributePair[1].toFixed(5));
+                    paramString += '?' + attributePair[0] + '=' + parseFloat(attributePair[1].toFixed(6));
                 });
                 
                 url = window.location.origin + window.location.pathname + '#patch' + paramString;
-                console.log(url);
+
+                App.modal.show(new ShareItemView({
+                    name: 'Share Your Patch',
+                    url: url
+                }));
+                
                 
             }
             
