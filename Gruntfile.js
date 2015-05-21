@@ -97,6 +97,10 @@ module.exports = function(grunt) {
                     dest: 'dist/js/vendor/modernizr.js'
                 },
                 {
+                    src: 'js/vendor/ZeroClipboard.swf',
+                    dest: 'dist/js/vendor/ZeroClipboard.swf'
+                },
+                {
                     expand: true,
                     src: ['fonts/**'],
                     dest: 'dist/'
