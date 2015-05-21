@@ -9,10 +9,12 @@
         vertical-align: middle;
         cursor: pointer;
     }
+    font-family: Audiowide;
 }
 
 .header__link {
     color: white;
+    font-family: Audiowide;
     &:hover {
         color: $led-on-clr;
     }
@@ -27,10 +29,11 @@
 
 .header__name-input {
     display: none;
-    width: 160px;
+    width: 170px;
     height: 20px;
     vertical-align: middle;
     font-size: 20px;
     padding: 2px;
     margin: 2px;
+    font-family: Audiowide;
 }

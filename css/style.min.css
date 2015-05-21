@@ -80,7 +80,7 @@
   font-weight: normal;
   font-size: 22px;
   line-height: 1em;
-  color: #312D3A;
+  color: #CC3300;
 }
 
 .bbm-modal__section {
@@ -1171,6 +1171,7 @@ hr {
 
 .header__title {
   color: #CC3300;
+  font-family: Audiowide;
 }
 .header__title > i {
   vertical-align: middle;
@@ -1179,6 +1180,7 @@ hr {
 
 .header__link {
   color: white;
+  font-family: Audiowide;
 }
 .header__link:hover {
   color: #CC3300;
@@ -1193,10 +1195,11 @@ hr {
 
 .header__name-input {
   display: none;
-  width: 160px;
+  width: 170px;
   height: 20px;
   vertical-align: middle;
   font-size: 20px;
   padding: 2px;
   margin: 2px;
+  font-family: Audiowide;
 }

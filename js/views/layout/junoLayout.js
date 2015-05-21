@@ -158,16 +158,17 @@ define([
             
             handleReset: function() {
                 this.synth.set(JSON.parse(this.cachedSynth));
+                Backbone.Wreqr.radio.channel('patch').vent.trigger('reset');
                 this.moduleLayout.updateUIState();
             },
             
             loadPatch: function(attributes) {
                 var update = {};
-                var temp;
+                var attr;
                 
-                _.each(attributes, function(pair) {
-                    temp = pair.split('=');
-                    update[temp[0]] = parseFloat(temp[1]);
+                _.each(attributes, function(attributePair) {
+                    attr = attributePair.split('=');
+                    update[attr[0]] = parseFloat(attr[1]);
                 });
                 
                 this.synth.set(update);
@@ -180,19 +181,18 @@ define([
                 var url;
                 var paramString = '';
                 var attributes = _.pairs(this.synth.attributes);
+                var patchName = Backbone.Wreqr.radio.channel('global').reqres.request('patchName');
                 
                 _.each(attributes, function(attributePair) {
                     paramString += '?' + attributePair[0] + '=' + parseFloat(attributePair[1].toFixed(6));
                 });
                 
-                url = window.location.origin + window.location.pathname + '#patch' + paramString;
+                url = window.location.origin + window.location.pathname + '#patch/' + patchName + paramString;
 
                 App.modal.show(new ShareItemView({
-                    name: 'Share Your Patch',
+                    name: patchName,
                     url: url
                 }));
-                
-                
             }
             
         });

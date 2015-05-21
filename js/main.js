@@ -69,6 +69,14 @@ require([
         junoLayout.listenTo(headerView, 'reset', junoLayout.handleReset);
         junoLayout.listenTo(headerView, 'share', junoLayout.sharePatch);
         
+        Backbone.Wreqr.radio.channel('patch').vent.on('reset', function() {
+            headerView.resetName();
+        });
+        
+        Backbone.Wreqr.radio.channel('patch').vent.on('setName', function(name) {
+            headerView.setName(name);
+        });
+        
         ZeroClipboard.config({swfPath: '/js/vendor/ZeroClipboard.swf'});
                 
         App.router = Routers;

@@ -28,6 +28,9 @@ define([
             
             initialize: function() {
                 this.patchName = 'PATCH NAME';
+                Backbone.Wreqr.radio.channel('global').reqres.setHandler('patchName', function() {
+                    return this.patchName;
+                }.bind(this));
             },
             
             serializeData: function() {
@@ -55,6 +58,16 @@ define([
             handleEditComplete: function() {
                 this.patchName = this.ui.nameInput.val();
                 this.ui.nameInput.hide();
+                this.render();
+            },
+            
+            resetName: function() {
+                this.patchName = 'PATCH NAME';
+                this.render();
+            },
+            
+            setName: function(name) {
+                this.patchName = name;
                 this.render();
             }
         });
