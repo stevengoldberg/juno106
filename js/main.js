@@ -4,10 +4,11 @@ require([
     'application',
     'zeroclipboard',
     'routers', // Do not remove. This is required as a dependency. Routers must be loaded prior to App.start();
-    'views/layout/junoLayout'
+    'views/layout/junoLayout',
+    'views/item/headerItemView'
 ],
 
-    function (Backbone, Marionette, App, ZeroClipboard, Routers, JunoLayout) {
+    function (Backbone, Marionette, App, ZeroClipboard, Routers, JunoLayout, HeaderItemView) {
         
         try {
             window.AudioContext = window.AudioContext || window.webkitAudioContext;
@@ -63,10 +64,15 @@ require([
     	};
         
         var junoLayout = new JunoLayout();
+        var headerView = new HeaderItemView();
+        
+        junoLayout.listenTo(headerView, 'reset', junoLayout.handleReset);
+        junoLayout.listenTo(headerView, 'share', junoLayout.sharePatch);
         
         ZeroClipboard.config({swfPath: '/js/vendor/ZeroClipboard.swf'});
                 
         App.router = Routers;
         App.start();
         App.content.show(junoLayout);
+        App.header.show(headerView);
 });

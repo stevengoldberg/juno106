@@ -32,10 +32,6 @@ p, span {
     cursor: default;
 }
 
-i {
-    vertical-align: top;
-}
-
 .juno {
     background-color: $synth-body-clr;
     margin: auto;
@@ -50,27 +46,3 @@ h4 {
     font-size: $header-size;
     margin: 0;
 }
-
-.readme {
-    text-align: center;
-    margin: 10px;
-}
-
-.readme__title {
-    color: $led-on-clr;
-}
-
-.readme__link {
-    color: white;
-    &:hover {
-        color: $led-on-clr;
-    }
-}
-
-/*.clip-button.zeroclipboard-is-hover { 
-    opacity: 0.8;
-}
-
-.clip-button.zeroclipboard-is-active {
-    background-color: #aaa;
-}*/

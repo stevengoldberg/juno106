@@ -53,6 +53,8 @@ define([
             },
             
             keyDownHandler: function(e) {
+                if($('.js-edit-patch-name').is(':focus')) return;
+                
                 var keyCode = e.which;
                 var noteEl = this.$('[id*=' + '"' + util.keyMap[keyCode] + '"]').parent();
                 var noteName = noteEl.attr('id');

@@ -646,10 +646,6 @@ p, span {
   cursor: default;
 }
 
-i {
-  vertical-align: top;
-}
-
 .juno {
   background-color: #5A5F66;
   margin: auto;
@@ -665,29 +661,6 @@ h4 {
   margin: 0;
 }
 
-.readme {
-  text-align: center;
-  margin: 10px;
-}
-
-.readme__title {
-  color: #CC3300;
-}
-
-.readme__link {
-  color: white;
-}
-.readme__link:hover {
-  color: #CC3300;
-}
-
-/*.clip-button.zeroclipboard-is-hover { 
-    opacity: 0.8;
-}
-
-.clip-button.zeroclipboard-is-active {
-    background-color: #aaa;
-}*/
 .module-container {
   display: -webkit-box;
   display: -webkit-flex;
@@ -1189,4 +1162,41 @@ hr {
 .share-info__item {
   font-size: 20px;
   padding: 10px;
+}
+
+.header {
+  text-align: center;
+  margin: 10px;
+}
+
+.header__title {
+  color: #CC3300;
+}
+.header__title > i {
+  vertical-align: middle;
+  cursor: pointer;
+}
+
+.header__link {
+  color: white;
+}
+.header__link:hover {
+  color: #CC3300;
+}
+
+.header__patch-name {
+  cursor: pointer;
+}
+.header__patch-name:hover {
+  text-decoration: underline;
+}
+
+.header__name-input {
+  display: none;
+  width: 160px;
+  height: 20px;
+  vertical-align: middle;
+  font-size: 20px;
+  padding: 2px;
+  margin: 2px;
 }

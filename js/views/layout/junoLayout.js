@@ -4,7 +4,6 @@ define([
     'util',
     'views/layout/moduleLayout',
     'views/item/keyboardItemView',
-    'views/item/readmeItemView',
     'views/modal/shareItemView',
     'synth/voice',
     'synth/lfo',
@@ -13,7 +12,7 @@ define([
     'hbs!tmpl/layout/junoLayout-tmpl'
     ],
     
-    function(Backbone, App, util, ModuleLayout, KeyboardItemView, ReadmeItemView, 
+    function(Backbone, App, util, ModuleLayout, KeyboardItemView, 
         ShareItemView, Voice, LFO, Tuna, JunoModel, Template) {
         
         return Backbone.Marionette.LayoutView.extend({
@@ -66,8 +65,6 @@ define([
             },
             
             onShow: function() {
-                var readme = new ReadmeItemView();
-                
                 this.moduleLayout = new ModuleLayout({
                     synth: this.synth
                 });
@@ -76,12 +73,8 @@ define([
                 this.keyboardView = new KeyboardItemView();
                 this.keyboardRegion.show(this.keyboardView);
                 
-                this.readmeRegion.show(readme);
-                
                 this.listenTo(this.keyboardView, 'noteOn', this.noteOnHandler);
                 this.listenTo(this.keyboardView, 'noteOff', this.noteOffHandler);
-                this.listenTo(readme, 'reset', this.handleReset);
-                this.listenTo(readme, 'share', this.sharePatch);
             },
             
             noteOnHandler: function(note, frequency) {
