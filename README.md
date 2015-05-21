@@ -103,3 +103,4 @@ Juno-106.js was written in Javascript using the [WebAudio](http://webaudio.githu
 # Changelog
 
 * v. 1.0: First public release - 5/18/2015
+* v 1.1: Naming and sharing of user patches - 5/21/2015
