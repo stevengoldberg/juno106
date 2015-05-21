@@ -18,7 +18,7 @@ require.config({
         requireLib: './vendor/require',
         underscore: './vendor/underscore',
         'underscore.string': './vendor/underscore.string',
-        'backbone.modal': './vendor/backbone.modal-bundled-min',
+        'backbone.modal': './vendor/backbone.modal',
         zeroclipboard: './vendor/ZeroClipboard'
     },
 
