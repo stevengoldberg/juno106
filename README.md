@@ -20,7 +20,7 @@ Click `Reset` at the top of the screen at any time to return the 106.js to its i
 
 # MIDI
 
-For MIDI connectivity, you must either use **Chrome 43** or newer ([currently in beta](https://www.chromium.org/getting-involved/dev-channel)), or enable the MIDI feature flag in **Chrome 38** or newer by pointing your browser to `chrome://flags`, searching for "Enable Web MIDI API," clicking "enable," and then restarting the browser.
+For MIDI connectivity, you must either use **Chrome 43** or newer, or enable the MIDI feature flag in **Chrome 38** or newer by pointing your browser to `chrome://flags`, searching for "Enable Web MIDI API," clicking "enable," and then restarting the browser.
 
 106.js currently responds to Note On and Note Off messages on any MIDI channel.
 
