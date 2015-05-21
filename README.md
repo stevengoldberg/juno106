@@ -100,7 +100,6 @@ Juno-106.js was written in Javascript using the [WebAudio](http://webaudio.githu
 * Deeper MIDI implementation
 * Portamento
 * Bender
-* Save/load patches
 
 # Changelog
 
