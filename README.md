@@ -18,6 +18,8 @@ Also note that in addition to the labeled keyboard assignments, the key mappings
 
 Click `Reset` at the top of the screen at any time to return the 106.js to its initial state.
 
+When you've found a sound that you like, click on the `PATCH NAME` text at the top of the screen to edit the name of your patch. Then click `SHARE` and click the icon to copy a special URL to your clipboard. Anyone who loads that URL will load your patch.
+
 # MIDI
 
 For MIDI connectivity, you must either use **Chrome 43** or newer, or enable the MIDI feature flag in **Chrome 38** or newer by pointing your browser to `chrome://flags`, searching for "Enable Web MIDI API," clicking "enable," and then restarting the browser.
