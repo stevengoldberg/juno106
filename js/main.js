@@ -2,13 +2,12 @@ require([
     'backbone',
     'backbone.marionette',
     'application',
-    'zeroclipboard',
     'routers', // Do not remove. This is required as a dependency. Routers must be loaded prior to App.start();
     'views/layout/junoLayout',
     'views/item/headerItemView'
 ],
 
-    function (Backbone, Marionette, App, ZeroClipboard, Routers, JunoLayout, HeaderItemView) {
+    function (Backbone, Marionette, App, Routers, JunoLayout, HeaderItemView) {
         
         try {
             window.AudioContext = window.AudioContext || window.webkitAudioContext;
@@ -76,8 +75,6 @@ require([
         Backbone.Wreqr.radio.channel('patch').vent.on('setName', function(name) {
             headerView.setName(name);
         });
-        
-        ZeroClipboard.config({swfPath: '/js/vendor/ZeroClipboard.swf'});
                 
         App.router = Routers;
         App.start();

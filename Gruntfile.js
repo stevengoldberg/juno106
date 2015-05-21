@@ -98,7 +98,7 @@ module.exports = function(grunt) {
                 },
                 {
                     src: 'js/vendor/ZeroClipboard.swf',
-                    dest: 'dist/js/vendor/ZeroClipboard.swf'
+                    dest: 'dist/js/ZeroClipboard.swf'
                 },
                 {
                     expand: true,
