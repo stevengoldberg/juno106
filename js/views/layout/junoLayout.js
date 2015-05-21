@@ -187,7 +187,7 @@ define([
                     paramString += '?' + attributePair[0] + '=' + parseFloat(attributePair[1].toFixed(6));
                 });
                 
-                url = window.location.origin + window.location.pathname + '#patch/' + patchName + paramString;
+                url = window.location.origin + window.location.pathname + '#patch/' + encodeURIComponent(patchName) + paramString;
 
                 App.modal.show(new ShareItemView({
                     name: patchName,

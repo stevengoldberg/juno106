@@ -12,7 +12,7 @@ define(['backbone', 'backbone.marionette'],
                 var attributes = param.split('?');
                 
                 Backbone.Wreqr.radio.channel('patch').vent.trigger('load', attributes);
-                Backbone.Wreqr.radio.channel('patch').vent.trigger('setName', patchName);
+                Backbone.Wreqr.radio.channel('patch').vent.trigger('setName', decodeURIComponent(patchName));
             }
         });
     });
