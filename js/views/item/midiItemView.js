@@ -72,24 +72,31 @@ define([
             },
             
             handleMidi: function(e) {
-                var significantNibble = +(e.data[0].toString(2).slice(0, 4));
-                var note = e.data[1];
-                var velocity = e.data[2];
+                var firstByte = +(e.data[0].toString(2).slice(0, 4));
+                var secondByte = e.data[1];
+                var thirdByte = e.data[2];
                 var type;
-                var message;
+                var midi;
                 
-                if(significantNibble === 1000 || (significantNibble === 1001 && velocity === 0)) {
+                if(firstByte === 1000 || (firstByte === 1001 && thirdByte === 0)) {
                     type = 'noteOff';
-                } else if(significantNibble === 1001) {
+                } else if(firstByte === 1001) {
                     type = 'noteOn';
-                } 
+                } else if(firstByte === 1011 && secondByte < 120) {
+                    type = 'CC';
+                } else if(firstByte === 1110) {
+                    type = 'pitchBend';
+                }
                 
-                message = {
+                console.log(type);
+                console.log(e.data);
+                
+                midi = {
                     type: type,
-                    note: note
+                    note: secondByte
                 };
                 
-                Backbone.Wreqr.radio.vent.trigger('midi', 'message', message);
+                Backbone.Wreqr.radio.vent.trigger('midi', 'message', midi);
             },
             
             serializeData: function() {
