@@ -6,7 +6,7 @@
   "devDependencies": {
     "connect": "^3.3.5",
     "grunt": "~0.4.1",
-    "grunt-autoprefixer": "^2.2.0",
+    "grunt-autoprefixer": "^3.0.0",
     "grunt-compile-handlebars": "~0.7.8",
     "grunt-concurrent": "~1.0.0",
     "grunt-contrib-clean": "~0.5.0",

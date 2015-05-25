@@ -140,6 +140,8 @@ module.exports = function(grunt) {
         autoprefixer: {
 
             prod: {
+                src: 'css/style.css',
+                dest: 'dist/css/style.css'
             },
 
             dev: {
@@ -162,37 +164,6 @@ module.exports = function(grunt) {
 
             prod: {}
         },
-
-        // Run the JS unit tests.
-        /*jasmine: {
-
-            options: {
-                display: 'full',
-                outfile: '_SpecRunner.html',
-                keepRunner: true,*/
-                //specs: 'spec/**/*-spec.js',
-                /*helpers: [ 'spec/*helper.js'],
-                template: require('grunt-template-jasmine-requirejs'),
-                templateOptions: {
-                    requireConfigFile: 'js/init.js',
-                    requireConfig: {
-                        deps: ['jquery', 'underscore', 'backbone', 'backbone.marionette'],
-                        baseUrl: 'js',
-                        map: {
-                            config: {
-                                communicator: 'communicator'
-                            }
-
-                        },
-                        paths: {
-                            specdir: '../spec'
-                        }
-                    }
-                }
-            },
-
-            prod: {}
-        },*/
 
         // Run these tasks concurrently.
         concurrent: {
@@ -254,7 +225,7 @@ module.exports = function(grunt) {
     }
 
     // Tasks run on the build server for integration and production.
-    grunt.registerTask('build', ['clean:prod', 'compile-handlebars:prod', 'copy:prod', 'concurrent:prod']);
+    grunt.registerTask('build', ['clean:prod', 'compile-handlebars:prod', 'copy:prod', 'autoprefixer:prod', 'concurrent:prod']);
 
     // Tasks to run in local development environment.
     grunt.registerTask('build:dev', ['clean:dev', 'compile-handlebars:dev', 'sass:dev', 'autoprefixer:dev']);
