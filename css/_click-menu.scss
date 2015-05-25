@@ -1,0 +1,50 @@
+.click-menu {
+    display: none;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 150px;
+    background-color: white;
+    ul {
+        list-style: none;
+        margin: 0;
+        width: 100%;
+        li {
+            position: relative;
+            float: left;
+            display: block;
+            padding: 5px 5px 5px 20px;
+            margin-bottom: 5px;
+            background-color: white;
+            cursor: pointer;
+            margin: 0;
+            width: 100%;
+            color: black;
+            i {
+                float: right;
+                padding-right: 10px;
+            }
+            ul {
+                display: none;
+                left: 100%;
+                top: 0;
+            }
+            &:hover {
+                background-color: $highlight-clr;
+                color: white;
+                > ul {
+                    display: block;
+                    position: absolute;
+                }
+                li {
+                    float: none;
+                }
+            }
+        }
+    }
+}
+
+.click-menu--shown {
+    @extend .click-menu;
+    display: block;
+}

@@ -1,0 +1,17 @@
+<div class="js-click-menu click-menu">
+    <ul>
+        {{#each options}}
+            {{#if this.isSubmenu}}
+                <li>{{this.name}} <i class="fa fa-caret-right"></i>
+                    <ul>
+                        {{#each this.event}}
+                            <li data-click="{{this.event}}">{{this.name}}</li>
+                        {{/each}}
+                    </ul>
+                </li>
+            {{else}}
+                <li data-click="{{this.event}}">{{this.name}}</li>
+            {{/if}}
+        {{/each}}
+    </ul>
+</div>

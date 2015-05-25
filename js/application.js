@@ -16,7 +16,8 @@ define([
                     header: '#top-bar',
                     content: '#reg-content',
                     footer: '#reg-footer',
-                    modal: '#reg-modal'
+                    modal: '#reg-modal',
+                    menu: '#menu'
                 });
 
                 JN.views = {};

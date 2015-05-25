@@ -1151,4 +1151,54 @@ hr {
   font-family: Audiowide;
 }
 
+.click-menu, .click-menu--shown {
+  display: none;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 150px;
+  background-color: white;
+}
+.click-menu ul, .click-menu--shown ul {
+  list-style: none;
+  margin: 0;
+  width: 100%;
+}
+.click-menu ul li, .click-menu--shown ul li {
+  position: relative;
+  float: left;
+  display: block;
+  padding: 5px 5px 5px 20px;
+  margin-bottom: 5px;
+  background-color: white;
+  cursor: pointer;
+  margin: 0;
+  width: 100%;
+  color: black;
+}
+.click-menu ul li i, .click-menu--shown ul li i {
+  float: right;
+  padding-right: 10px;
+}
+.click-menu ul li ul, .click-menu--shown ul li ul {
+  display: none;
+  left: 100%;
+  top: 0;
+}
+.click-menu ul li:hover, .click-menu--shown ul li:hover {
+  background-color: #99CCFF;
+  color: white;
+}
+.click-menu ul li:hover > ul, .click-menu--shown ul li:hover > ul {
+  display: block;
+  position: absolute;
+}
+.click-menu ul li:hover li, .click-menu--shown ul li:hover li {
+  float: none;
+}
+
+.click-menu--shown {
+  display: block;
+}
+
 /*# sourceMappingURL=style.css.map */
