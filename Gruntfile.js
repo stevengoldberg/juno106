@@ -149,6 +149,14 @@ module.exports = function(grunt) {
                 dest: 'css/style.min.css'
             }
         },
+        
+        cssmin: {
+            target: {
+                files: {
+                    'dist/css/style.min.css': ['dist/css/style.css']
+                }
+            }
+        },
 
         // Concat and uglify the code the JS code and output the result to the
         // dist folder.
@@ -173,7 +181,7 @@ module.exports = function(grunt) {
             },
 
             prod: {
-                tasks: ['sass:prod', 'requirejs:prod']
+                tasks: ['build:styles', 'requirejs:prod']
             },
 
             dev: {
@@ -225,7 +233,9 @@ module.exports = function(grunt) {
     }
 
     // Tasks run on the build server for integration and production.
-    grunt.registerTask('build', ['clean:prod', 'compile-handlebars:prod', 'copy:prod', 'autoprefixer:prod', 'concurrent:prod']);
+    grunt.registerTask('build', ['clean:prod', 'compile-handlebars:prod', 'copy:prod', 'concurrent:prod']);
+    
+    grunt.registerTask('build:styles', ['sass:prod', 'autoprefixer:prod', 'cssmin']);
 
     // Tasks to run in local development environment.
     grunt.registerTask('build:dev', ['clean:dev', 'compile-handlebars:dev', 'sass:dev', 'autoprefixer:dev']);
