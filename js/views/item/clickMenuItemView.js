@@ -17,6 +17,10 @@ define([
             events: {
                 'click @ui.item': 'triggerClickEvent'
             },
+            
+            initialize: function() {
+                this.menuChannel = Backbone.Wreqr.radio.channel('menu');
+            },
 
             setup: function(options) {
                 this.menuOptions = options.menuOptions;
@@ -28,6 +32,9 @@ define([
                 });
 
                 this.header = options.header;
+                this.param = options.param;
+                this.assignment = options.assignment;
+                
                 this.offsetX = options.offsetX || 0;
                 this.offsetY = options.offsetY || 0;
                 this.render();
@@ -40,7 +47,7 @@ define([
                     e.stopPropagation();
                     return;
                 }
-                this.trigger('clicked', eventData);
+                this.menuChannel.vent.trigger('click', eventData);
                 this.hide();
                 $(window).off('click.context');
             },
@@ -48,7 +55,9 @@ define([
             serializeData: function() {
                 return {
                     options: this.menuOptions,
-                    header: this.header
+                    header: this.header,
+                    param: this.param,
+                    assignment: this.assignment
                 };
             },
 

@@ -1,14 +1,21 @@
 define([
-    'backbone'
+    'backbone',
+    'application'
     ],
     
-    function(Backbone) {
+    function(Backbone, App) {
         return Backbone.Marionette.ItemView.extend({
             
             ui: {
                 faderKnob: '.fader__knob',
                 switchKnob: '.switch__knob',
                 button: '.button'
+            },
+            
+            events: {
+                'contextmenu @ui.switchKnob': 'showContextMenu',
+                'contextmenu @ui.faderKnob': 'showContextMenu',
+                'contextmenu @ui.button': 'showContextMenu'
             },
             
             styleParent: function(className) {
@@ -212,6 +219,41 @@ define([
                     el.data('value', value);
                 }
                 this.triggerUpdate(el.data().param, value);
+            },
+            
+            showContextMenu: function(e) {
+                var param = $(e.currentTarget).data().param;
+                var parsedParam = param.split('-');
+                parsedParam[0] = parsedParam[0].toUpperCase();
+                parsedParam = parsedParam[0] + ' ' + parsedParam[1];
+                
+                var options = { 
+                    offsetX: 50,
+                    param: parsedParam
+                };
+                
+                var CC = Backbone.Wreqr.radio.channel('midi').reqres.request('midiAssignment', param);
+                
+                if(_.isUndefined(CC)) {
+                    options.assignment = 'Un-assigned';
+                    options.menuOptions = [
+                        {
+                            name: 'Assign...',
+                            event: 'assign:' + param
+                        }
+                    ];
+                } else {
+                    options.assignment = 'CC# ' + CC;
+                    options.menuOptions = [
+                        {
+                            name: 'Re-assign...',
+                            event: 'assign:' + param
+                        }
+                    ];
+                }
+                App.contextMenu.setup(options);
+                App.contextMenu.rightClickHandler(e);
+                e.preventDefault();
             }
             
         });

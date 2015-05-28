@@ -1,4 +1,8 @@
 <div class="js-click-menu click-menu">
+    <div class="click-menu__header">{{param}}</div>
+    {{#if assignment}}
+    <div class="click-menu__header">{{assignment}}</div>
+    {{/if}}
     <ul>
         {{#each options}}
             {{#if this.isSubmenu}}

@@ -76,6 +76,6 @@ define([
                 this.synth.set(update.param, update.value);
                 this.currentParam = update.param;
                 this.currentValue = update.value;
-            },
+            }
         });
     });

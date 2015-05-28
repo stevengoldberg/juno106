@@ -23,11 +23,13 @@ define([
             initialize: function() {
                 var base = new ModuleBaseItemView();
                 
+                this.events = base.events;
                 this.styleParent = base.styleParent;
                 this.bindButtons = base.bindButtons;
                 this.updateUIState = base.updateUIState;
                 this.triggerUpdate = base.triggerUpdate;
                 this.setupButtonState = base.setupButtonState;
+                this.showContextMenu = base.showContextMenu;
                 
                 this.midiView = new MidiItemView();
             },

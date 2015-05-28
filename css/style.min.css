@@ -1205,17 +1205,20 @@ hr {
 }
 
 .click-menu, .click-menu--shown {
+  border: 2px solid #800000;
   display: none;
   position: absolute;
   left: 0;
   top: 0;
-  width: 150px;
+  max-width: 200px;
   background-color: white;
+  z-index: 9999;
 }
 .click-menu ul, .click-menu--shown ul {
   list-style: none;
   margin: 0;
   width: 100%;
+  padding: 0;
 }
 .click-menu ul li, .click-menu--shown ul li {
   position: relative;
@@ -1228,6 +1231,7 @@ hr {
   margin: 0;
   width: 100%;
   color: black;
+  box-sizing: border-box;
 }
 .click-menu ul li i, .click-menu--shown ul li i {
   float: right;
@@ -1252,4 +1256,10 @@ hr {
 
 .click-menu--shown {
   display: block;
+}
+
+.click-menu__header {
+  margin: 5px;
+  color: black;
+  border-bottom: 1px solid grey;
 }

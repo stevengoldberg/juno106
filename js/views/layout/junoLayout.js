@@ -136,11 +136,11 @@ define([
                 var frequency;
                 
                 if(message.type === 'noteOn') {
-                    frequency = util.frequencyFromMidiNote(message.note);
-                    note = util.noteFromMidiNumber(message.note);
+                    frequency = util.frequencyFromMidiNote(message.value);
+                    note = util.noteFromMidiNumber(message.value);
                     this.noteOnHandler(note, frequency);
                 } else if(message.type === 'noteOff') {
-                    note = util.noteFromMidiNumber(message.note);
+                    note = util.noteFromMidiNumber(message.value);
                     this.noteOffHandler(note);
                 }
             },

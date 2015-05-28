@@ -67,7 +67,7 @@ require([
         var junoLayout = new JunoLayout();
         var headerView = new HeaderItemView();
         var unsupported = new UnsupportedItemView();
-        var contextMenu = new ClickMenuItemView();
+        App.contextMenu = new ClickMenuItemView();
         
         
         junoLayout.listenTo(headerView, 'reset', junoLayout.handleReset);
@@ -91,6 +91,6 @@ require([
         } else {
             App.content.show(junoLayout);
             App.header.show(headerView);
-            App.menu.show(contextMenu);
+            App.menu.show(App.contextMenu);
         }        
 });
