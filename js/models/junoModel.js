@@ -92,12 +92,6 @@ define([
             
             isFilterInverted: function() {
                 return !this.get('vcf-invert');
-            },
-            
-            // Faders register 0.0775 at their lowest position, so convert that to 0
-            get: function(attr) {
-                var value = Backbone.Model.prototype.get.call(this, attr);
-                return value > 0.0775 ? value : 0;
             }
             
         });

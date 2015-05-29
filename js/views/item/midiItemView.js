@@ -106,10 +106,6 @@ define([
                 } else if(type === 'noteOn' || type === 'noteOff') {
                     this.midiChannel.vent.trigger('message', {type: type, value: secondByte});
                 }
-                
-                //console.log(type);
-                //console.log(e.data);
-                
             },
             
             getMidiAssignment: function(param) {
