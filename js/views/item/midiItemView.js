@@ -15,7 +15,6 @@ define([
                 select: '.js-active-midi',
                 midiButton: '.button--midi',
                 midiLabel: '.js-midi-label',
-                midiSpinner: '.js-midi-spinner',
                 check: '.js-midi-check',
                 error: '.js-midi-error'
             },
@@ -30,6 +29,8 @@ define([
                 this.activeDevice = null;
                 this.mappings = new Backbone.Collection();
                 this.menuChannel = Backbone.Wreqr.radio.channel('menu');
+                this.midiChannel = Backbone.Wreqr.radio.channel('midi');
+                this.messageBuffer = [];
                 
                 this.menuChannel.vent.on('click', function(event) {
                     if(event.indexOf('assign') !== -1) {
@@ -37,14 +38,9 @@ define([
                     }
                 }.bind(this));
                 
-                
-                Backbone.Wreqr.radio.channel('midi').reqres.setHandler('midiAssignment', function(param){
+                this.midiChannel.reqres.setHandler('midiAssignment', function(param){
                     return this.getMidiAssignment(param);
                 }.bind(this));
-            },
-            
-            onRender: function() {
-                this.ui.midiSpinner.hide();
             },
             
             onShow: function() {
@@ -58,7 +54,6 @@ define([
                 this.inputs = [];
                 
                 this.ui.midiLabel.hide();
-                this.ui.midiSpinner.show();
                 
                 try {
                     navigator.requestMIDIAccess().then(function(access) {
@@ -88,15 +83,21 @@ define([
             handleMidi: function(e) {
                 var secondByte = e.data[1];
                 var type = this.getMessageType(e);
-                var midi = {
-                    type: type,
-                    value: e.data[1]
-                };
+                
+                if(type === 'CC') {
+                    if(this.messageBuffer.length < 2) {
+                        this.messageBuffer.push(e.data);
+                    } else {
+                        this.handleCCUpdate(this.messageBuffer);
+                        this.messageBuffer = [];
+                    }
+                } else if(type === 'noteOn' || type === 'noteOff') {
+                    this.midiChannel.vent.trigger('message', {type: type, value: secondByte});
+                }
                 
                 //console.log(type);
                 //console.log(e.data);
                 
-                Backbone.Wreqr.radio.vent.trigger('midi', 'message', midi);
             },
             
             getMidiAssignment: function(param) {
@@ -127,33 +128,45 @@ define([
                 }.bind(this);
             },
             
-            assignMidiCC: function(messages, param) {
-                var MSBController = messages[0][1];
-                var LSBController = messages[1][1];
+            assignMidiCC: function(midiMessage, param) {
+                var controllers = this.determineMSB(midiMessage);
                 
-                if(MSBController === LSBController) {
-                    LSBController = null;
+                if(controllers.MSB === controllers.LSB) {
+                    controllers.LSB = null;
                 }
                 
                 // If the synth parameter or the CC were previously assigned,
                 // clear the old mapping
-                this.removeOldMapping(MSBController, LSBController, param);
+                this.removeOldMapping(controllers.MSB, param);
                 
                 this.mappings.add(new MidiModel({
-                    MSBController: MSBController,
-                    LSBController: LSBController,
+                    MSBController: controllers.MSB,
+                    LSBController: controllers.LSB,
                     param: param
                 }));
             },
             
-            removeOldMapping: function(MSBController, LSBController, param) {
-                var previousCCMapping = this.mappings.findWhere({
-                    MSBController: MSBController,
-                    LSBController: LSBController
-                });
-                var previousParamMapping = this.mappings.findWhere({
-                    param: param
-                });
+            determineMSB: function(midiMessage) {
+                if(midiMessage[0][1] > midiMessage[1][1]) {
+                    return {
+                        MSB: midiMessage[0][1],
+                        MSBValue: midiMessage[0][2],
+                        LSB: midiMessage[1][1],
+                        LSBValue: midiMessage[1][2]
+                    };
+                } else {
+                    return {
+                        LSB: midiMessage[0][1],
+                        LSBValue: midiMessage[0][2],
+                        MSB: midiMessage[1][1],
+                        MSBValue: midiMessage[1][2]
+                    };
+                }
+            },
+            
+            removeOldMapping: function(midiMessage, param) {
+                var previousCCMapping = this.getModelForMessage(midiMessage);
+                var previousParamMapping = this.getModelForParam(param);
                 if(previousCCMapping) {
                     this.mappings.remove(previousCCMapping);
                 }
@@ -176,6 +189,28 @@ define([
                 } else if(firstByte === 1110) {
                     return 'pitchBend';
                 }
+            },
+            
+            handleCCUpdate: function(messages) {
+                var mapping = this.getModelForMessage(this.determineMSB(messages).MSB);
+                var value;
+                
+                if(mapping) {
+                    value = mapping.getValue(this.determineMSB(messages));
+                    this.midiChannel.vent.trigger('message', {type: 'CC', param: mapping.get('param'), value: value});
+                }
+            },
+            
+            getModelForMessage: function(MSBController) {
+                return this.mappings.findWhere({
+                    MSBController: MSBController
+                });
+            },
+            
+            getModelForParam: function(param) {
+                return this.mappings.findWhere({
+                    param: param
+                });
             },
             
             serializeData: function() {

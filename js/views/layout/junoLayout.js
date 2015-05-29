@@ -142,6 +142,9 @@ define([
                 } else if(message.type === 'noteOff') {
                     note = util.noteFromMidiNumber(message.value);
                     this.noteOffHandler(note);
+                } else if(message.type === 'CC') {
+                    this.synth.set(message.param, message.value);
+                    this.moduleLayout.updateComponentUIState(message.param);
                 }
             },
             

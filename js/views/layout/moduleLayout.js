@@ -63,11 +63,14 @@ define([
             },
             
             updateUIState: function() {
-                var component;
                 _.each(this.synth.attributes, function(value, key) {
-                    component = key.slice(0, 3);
-                    this.modules[component].updateUIState(key, this.synth.get(key));
+                    this.updateComponentUIState(key);
                 }, this);
+            },
+            
+            updateComponentUIState: function(param) {
+                var component = param.slice(0, 3);
+                this.modules[component].updateUIState(param, this.synth.get(param));
             },
             
             handleModuleUpdate: function(update) {
