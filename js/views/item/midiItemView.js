@@ -76,8 +76,20 @@ define([
             },
             
             selectMidi: function() {
+                var storedMappings;
                 this.activeDevice = _.findWhere(this.inputs, {name: this.ui.select.val() });
                 this.activeDevice.onmidimessage = this.handleMidi.bind(this);
+                if(window.localStorage.getItem(this.activeDevice.name)) {
+                    storedMappings = JSON.parse(window.localStorage.getItem(this.activeDevice.name));
+                }
+                
+                _.each(storedMappings, function(storedMapping) {
+                    this.mappings.add(new MidiModel({
+                        MSBController: storedMapping.MSBController,
+                        LSBController: storedMapping.LSBController,
+                        param: storedMapping.param
+                    }));
+                }, this);
             },
             
             handleMidi: function(e) {
@@ -144,6 +156,8 @@ define([
                     LSBController: controllers.LSB,
                     param: param
                 }));
+                
+                window.localStorage.setItem(this.activeDevice.name, JSON.stringify(this.mappings));
             },
             
             determineMSB: function(midiMessage) {
