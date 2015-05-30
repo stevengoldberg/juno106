@@ -98,13 +98,37 @@ define([
             handleMidi: function(e) {
                 var secondByte = e.data[1];
                 var type = this.getMessageType(e);
+                var update = {};
+                var mapping = this.getModelForMessage(e.data[1]);
+                var MSB;
                 
                 if(type === 'CC') {
-                    if(this.messageBuffer.length < 2) {
+                    if(mapping && mapping.get('LSBController') !== null &&
+                        this.messageBuffer.length === 0) {
                         this.messageBuffer.push(e.data);
                     } else {
-                        this.handleCCUpdate(this.messageBuffer);
-                        this.messageBuffer = [];
+                        if(this.messageBuffer.length > 0) {
+                            this.messageBuffer.push(e.data);
+                            
+                            _.each(this.messageBuffer, function(message, i) {
+                                if(message[1] === mapping.get('MSBController')) {
+                                    update.MSB = this.messageBuffer[i][1];
+                                    update.MSBValue = this.messageBuffer[i][2];
+                                } else if (message[1] === mapping.get('LSBController')) {
+                                    update.LSB = this.messageBuffer[i][1];
+                                    update.LSBValue = this.messageBuffer[i][2];
+                                }
+                             }, this);
+                             
+                            this.messageBuffer = [];
+                        } else {
+                            update = {
+                                MSB: e.data[1],
+                                MSBValue: e.data[2]
+                            };
+                        }
+                        console.log(update);
+                        this.handleCCUpdate(update);
                     }
                 } else if(type === 'noteOn' || type === 'noteOff') {
                     this.midiChannel.vent.trigger('message', {type: type, value: secondByte});
@@ -201,19 +225,23 @@ define([
                 }
             },
             
-            handleCCUpdate: function(messages) {
-                var mapping = this.getModelForMessage(util.determineMSB(messages).MSB);
+            handleCCUpdate: function(message) {
+                var mapping;
                 var value;
                 
+                mapping = this.getModelForMessage(message.MSB);
+                
                 if(mapping) {
-                    value = mapping.getValue(util.determineMSB(messages));
+                    value = mapping.getValue(message);
                     this.midiChannel.vent.trigger('message', {type: 'CC', param: mapping.get('param'), value: value});
                 }
             },
             
-            getModelForMessage: function(MSBController) {
+            getModelForMessage: function(controller) {
                 return this.mappings.findWhere({
-                    MSBController: MSBController
+                    MSBController: controller
+                }) || this.mappings.findWhere({
+                    LSBController: controller
                 });
             },
             
