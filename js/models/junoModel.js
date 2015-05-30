@@ -70,7 +70,7 @@ define([
                 
                 if(range === 0) {
                     return frequency / 2;
-                } else if(range === 2) {
+                } else if(range === 1) {
                     return frequency * 2;
                 }
                 return frequency;

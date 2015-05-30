@@ -103,12 +103,14 @@ define([
                 var mouseOffset = switchObject.switchBottom() - yPos;
                 var positions = [];
                 var newPosition = 0;
+                var length = el.data('length');
+                var newValue;
                 
-                for(var i = 0; i < el.data('length'); i++) {
+                for(var i = 0; i < length; i++) {
                     positions.push(switchObject.getOffset(i));
                 }
                 
-                for(var j = 0; j < el.data('length'); j++) {
+                for(var j = 0; j < length; j++) {
                     if(mouseOffset > positions[j]) {
                         newPosition = j;
                     }
@@ -118,9 +120,12 @@ define([
                     bottom: positions[newPosition]
                 });
                 
+                // Keep synth values between 0 and 1
+                newValue = newPosition / (length - 1);
+                
                 if(el.data('value') !== newPosition) {
-                    el.data('value', newPosition);
-                    this.triggerUpdate(el.data().param, newPosition);
+                    el.data('value', newValue);
+                    this.triggerUpdate(el.data().param, newValue);
                 }
             },
             
