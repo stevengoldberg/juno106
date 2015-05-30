@@ -32,6 +32,10 @@ p, span {
     cursor: default;
 }
 
+.underline {
+    text-decoration: underline;
+}
+
 .juno {
     background-color: $synth-body-clr;
     margin: auto;

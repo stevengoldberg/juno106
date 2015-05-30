@@ -62,6 +62,30 @@ define([
                 76: 'L_',
                 186: ';_',
                 49: '1_'
+            },
+            
+            parseParamName: function(param) {
+                var parsedParam = param.split('-');
+                parsedParam[0] = parsedParam[0].toUpperCase();
+                return parsedParam[0] + ' ' + parsedParam[1];
+            },
+            
+            determineMSB: function(midiMessage) {
+                if(midiMessage[0][1] > midiMessage[1][1]) {
+                    return {
+                        MSB: midiMessage[0][1],
+                        MSBValue: midiMessage[0][2],
+                        LSB: midiMessage[1][1],
+                        LSBValue: midiMessage[1][2]
+                    };
+                } else {
+                    return {
+                        LSB: midiMessage[0][1],
+                        LSBValue: midiMessage[0][2],
+                        MSB: midiMessage[1][1],
+                        MSBValue: midiMessage[1][2]
+                    };
+                }
             }
         };
     

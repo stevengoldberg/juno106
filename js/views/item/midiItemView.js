@@ -1,10 +1,13 @@
 define([
     'backbone',
+    'application',
+    'util',
     'models/midiModel',
+    'views/modal/midiAssignItemView',
     'hbs!tmpl/item/midiItemView-tmpl'
     ],
     
-    function(Backbone, MidiModel, Template) {
+    function(Backbone, App, util, MidiModel, AssignItemView, Template) {
         return Marionette.ItemView.extend({
             
             className: 'midi',
@@ -119,8 +122,22 @@ define([
             handleMidiLearn: function(param) {
                 var messages = [];
                 var firstByte;
+                var listening = false;
+                
+                var assignModal = new AssignItemView({
+                    param: util.parseParamName(param),
+                });
+                
+                assignModal.onDestroy = function() {
+                    if(listening) {
+                        this.activeDevice.onmidimessage = this.handleMidi.bind(this);
+                    }
+                }.bind(this);
+                
+                App.modal.show(assignModal);
+                listening = true;
+                
                 this.activeDevice.onmidimessage = function(e) {
-                    
                     if(this.getMessageType(e) !== 'CC') {
                         return;
                     }
@@ -132,12 +149,13 @@ define([
                     } else {
                         this.activeDevice.onmidimessage = this.handleMidi.bind(this);
                         this.assignMidiCC(messages, param);
+                        assignModal.success();
                     }
                 }.bind(this);
             },
             
             assignMidiCC: function(midiMessage, param) {
-                var controllers = this.determineMSB(midiMessage);
+                var controllers = util.determineMSB(midiMessage);
                 
                 if(controllers.MSB === controllers.LSB) {
                     controllers.LSB = null;
@@ -154,24 +172,6 @@ define([
                 }));
                 
                 window.localStorage.setItem(this.activeDevice.name, JSON.stringify(this.mappings));
-            },
-            
-            determineMSB: function(midiMessage) {
-                if(midiMessage[0][1] > midiMessage[1][1]) {
-                    return {
-                        MSB: midiMessage[0][1],
-                        MSBValue: midiMessage[0][2],
-                        LSB: midiMessage[1][1],
-                        LSBValue: midiMessage[1][2]
-                    };
-                } else {
-                    return {
-                        LSB: midiMessage[0][1],
-                        LSBValue: midiMessage[0][2],
-                        MSB: midiMessage[1][1],
-                        MSBValue: midiMessage[1][2]
-                    };
-                }
             },
             
             removeOldMapping: function(midiMessage, param) {
@@ -202,11 +202,11 @@ define([
             },
             
             handleCCUpdate: function(messages) {
-                var mapping = this.getModelForMessage(this.determineMSB(messages).MSB);
+                var mapping = this.getModelForMessage(util.determineMSB(messages).MSB);
                 var value;
                 
                 if(mapping) {
-                    value = mapping.getValue(this.determineMSB(messages));
+                    value = mapping.getValue(util.determineMSB(messages));
                     this.midiChannel.vent.trigger('message', {type: 'CC', param: mapping.get('param'), value: value});
                 }
             },

@@ -22,13 +22,11 @@ define([
             
             get7BitValue: function(message) {
                 var value = message.MSBValue / 127;
-                console.log(value);
                 return value;
             },
             
             get14BitValue: function(messages) {
                 var value = (messages.LSBValue / 127) + (messages.MSBValue / Math.pow(127, 2));
-                console.log(value);
                 return value;
             },
             

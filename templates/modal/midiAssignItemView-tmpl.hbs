@@ -1,0 +1,17 @@
+<div class="bbm-modal__topbar">
+    <h3 class="bbm-modal__title">{{param}}</h3>
+</div>
+
+<div class="bbm-modal__section">
+    <ul class="modal-info"> 
+        <li class="modal-info__item">Move a control on your MIDI device to assign it to <span class="modal-info__item--emphasis">{{param}}</span></li>
+        <li class="modal-info__item"><i class="fa fa-4x js-assign fa-sliders"></i></li>
+        {{#if MSB}}
+        <li class="modal-info__item">{{param}} assigned to {{MSB}} {{#if LSB}}, {{LSB}} {{/if}}</li>
+        {{/if}}
+    </ul>
+</div>
+
+<div class="bbm-modal__bottombar">
+    <a href="javascript:;" class="js-cancel bbm-button">CANCEL</a>
+</div>

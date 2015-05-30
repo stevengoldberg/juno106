@@ -17,9 +17,7 @@ define([
             
             template: Template,
             
-            events: {
-                'click .js-close': 'closeModal'
-            },
+            cancelEl:  '.js-close',
             
             serializeData: function() {
                 return {
@@ -37,9 +35,8 @@ define([
                 }
             },
             
-            closeModal: function() {
+            cancel: function() {
                 ZeroClipboard.destroy();
-                this.destroy();
             }
             
         });

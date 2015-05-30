@@ -1,9 +1,10 @@
 define([
     'backbone',
-    'application'
+    'application',
+    'util'
     ],
     
-    function(Backbone, App) {
+    function(Backbone, App, util) {
         return Backbone.Marionette.ItemView.extend({
             
             ui: {
@@ -223,9 +224,7 @@ define([
             
             showContextMenu: function(e) {
                 var param = $(e.currentTarget).data().param;
-                var parsedParam = param.split('-');
-                parsedParam[0] = parsedParam[0].toUpperCase();
-                parsedParam = parsedParam[0] + ' ' + parsedParam[1];
+                var parsedParam = util.parseParamName(param);
                 
                 var options = { 
                     offsetX: 50,

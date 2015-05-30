@@ -1,16 +1,21 @@
-.share-info {
+.modal-info {
     list-style: none;
     padding: 0;
     text-align: center;
     margin: 0;
 }
 
-.share-info__icon {
+.modal-info__icon {
     vertical-align: middle;
     cursor: pointer;
 }
 
-.share-info__item {
+.modal-info__item {
     font-size: 20px;
     padding: 10px;
+}
+
+.modal-info__item--emphasis {
+    font-family: 'Audiowide';
+    text-decoration: underline;
 }
