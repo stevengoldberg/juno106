@@ -113,6 +113,7 @@ define([
                 var MSB;
                 
                 if(type === 'CC') {
+                    // If it's a 14-bit MIDI message, we need to get the MSB and LSB
                     if(mapping && mapping.get('LSBController') !== null &&
                         this.messageBuffer.length === 0) {
                         this.messageBuffer.push(e.data);
