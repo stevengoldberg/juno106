@@ -778,6 +778,14 @@ h4 {
   margin-top: 3px;
 }
 
+.sub-noise {
+  margin-top: 2px;
+}
+.sub-noise .label-container {
+  margin-top: 11px;
+  margin-bottom: 2px;
+}
+
 .fader-container, .fader-container--slim {
   height: 75%;
   width: 95%;
@@ -1011,7 +1019,7 @@ hr {
 
 .label-container {
   height: 10%;
-  margin: 15px 0 0 0;
+  margin: 13px 0 0 0;
 }
 
 .led, .led--lit {
@@ -1035,7 +1043,7 @@ hr {
 }
 
 .range {
-  margin-top: 8px;
+  margin-top: 10px;
 }
 
 .key-label, .key-label--white, .key-label--black {

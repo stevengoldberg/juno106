@@ -123,7 +123,7 @@ define([
                 // Keep synth values between 0 and 1
                 newValue = newPosition / (length - 1);
                 
-                if(el.data('value') !== newPosition) {
+                if(el.data('value') !== newValue) {
                     el.data('value', newValue);
                     this.triggerUpdate(el.data().param, newValue);
                 }
