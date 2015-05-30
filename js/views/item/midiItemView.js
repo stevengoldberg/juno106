@@ -78,10 +78,20 @@ define([
                 }
             },
             
-            selectMidi: function() {
+            selectMidi: function(e) {
                 var storedMappings;
-                this.activeDevice = _.findWhere(this.inputs, {name: this.ui.select.val() });
+                var lastMidiDevice = window.localStorage.getItem('lastMidiDevice');
+                
+                if(!e && lastMidiDevice) {
+                    this.activeDevice = _.findWhere(this.inputs, {name: lastMidiDevice});
+                    this.ui.select.val(lastMidiDevice);
+                } else {
+                    this.activeDevice = _.findWhere(this.inputs, {name: this.ui.select.val() });
+                    window.localStorage.setItem('lastMidiDevice', this.activeDevice.name);
+                }
+                
                 this.activeDevice.onmidimessage = this.handleMidi.bind(this);
+                
                 if(window.localStorage.getItem(this.activeDevice.name)) {
                     storedMappings = JSON.parse(window.localStorage.getItem(this.activeDevice.name));
                 }
@@ -127,7 +137,6 @@ define([
                                 MSBValue: e.data[2]
                             };
                         }
-                        console.log(update);
                         this.handleCCUpdate(update);
                     }
                 } else if(type === 'noteOn' || type === 'noteOff') {
