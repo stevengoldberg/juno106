@@ -157,7 +157,7 @@ define([
             },
             
             getMidiAssignment: function(param) {
-                var midiObject = this.mappings.findWhere({param: param});
+                var midiObject = this.mappings.findWhere({param: param, device: this.activeDevice.name});
                 if(midiObject) {
                     return midiObject.get('MSBController') + (midiObject.get('LSBController') ?
                         ', ' + midiObject.get('LSBController') : '');
@@ -211,6 +211,7 @@ define([
                 this.removeOldMapping(controllers.MSB, param);
                 
                 this.mappings.add(new MidiModel({
+                    device: this.activeDevice.name,
                     MSBController: controllers.MSB,
                     LSBController: controllers.LSB,
                     param: param

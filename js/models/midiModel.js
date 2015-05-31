@@ -6,6 +6,7 @@ define([
         return Backbone.Model.extend({
             defaults: function() {
                 return {
+                    device: null,
                     MSBController: null,
                     LSBController: null,
                     param: null
