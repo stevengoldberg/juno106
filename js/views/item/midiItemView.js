@@ -111,7 +111,8 @@ define([
                     this.mappings.add(new MidiModel({
                         MSBController: storedMapping.MSBController,
                         LSBController: storedMapping.LSBController,
-                        param: storedMapping.param
+                        param: storedMapping.param,
+                        device: storedMapping.device
                     }));
                 }, this);
             },
