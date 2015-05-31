@@ -57,7 +57,7 @@ define([
                 var el = this.$('[data-param="' + param + '"]');
                 
                 el.css({
-                    top: this.positionMap[value]
+                    top: this.positionMap[Math.floor(value)]
                 });
             }
             

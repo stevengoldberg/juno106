@@ -33,6 +33,7 @@ define([
                 this.modules = this.setupModules();
                 this.currentParam = null;
                 this.currentValue = null;
+
             },
             
             setupModules: function() {
@@ -70,7 +71,9 @@ define([
             
             updateComponentUIState: function(param) {
                 var component = param.slice(0, 3);
-                this.modules[component].updateUIState(param, this.synth.get(param));
+                var value = this.synth.get(param);
+                
+                this.modules[component].updateUIState(param, value);
             },
             
             handleModuleUpdate: function(update) {

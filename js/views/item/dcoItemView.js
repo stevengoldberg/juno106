@@ -16,6 +16,8 @@ define([
                 this.bindSwitches();
                 this.bindButtons();
                 this.bindFaders();
+                
+                this.setupSwitchPositions();
             }
             
         });

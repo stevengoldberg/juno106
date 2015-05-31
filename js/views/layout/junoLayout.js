@@ -30,6 +30,7 @@ define([
             initialize: function() {
                 this.maxPolyphony = 6;
                 this.activeVoices = [];
+                this.steppedParams = ['hpf-cutoff', 'dco-range', 'vca-envEnabled', 'vcf-invert', 'dco-lfoPwmEnabled'];
                 
                 // Initialize long-lived components
                 var tuna = new Tuna(App.context);
@@ -134,6 +135,7 @@ define([
             handleMidi: function(message) {
                 var note;
                 var frequency;
+                var length;
                 
                 if(message.type === 'noteOn') {
                     frequency = util.frequencyFromMidiNote(message.value);
@@ -143,6 +145,14 @@ define([
                     note = util.noteFromMidiNumber(message.value);
                     this.noteOffHandler(note);
                 } else if(message.type === 'CC') {
+                    length = $('[data-param="' + message.param + '"]').data().length;
+                    if(_.contains(this.steppedParams, message.param)) {
+                        if(message.value === 1) {
+                            message.value = length - 1;
+                        } else {
+                            message.value = Math.floor(message.value * length);
+                        }
+                    }
                     this.synth.set(message.param, message.value);
                     this.moduleLayout.updateComponentUIState(message.param);
                 }

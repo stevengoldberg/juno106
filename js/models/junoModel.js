@@ -12,7 +12,7 @@ define([
                     'env-decay': 0,
                     'env-sustain': 1,
                     'env-release': 0,
-                    'env-enabled': 1,
+                    'vca-envEnabled': 1,
                     'dco-sawtooth': 1,
                     'dco-pulse': 0,
                     'dco-noise': 0,
@@ -51,7 +51,7 @@ define([
                     res: this.get('vcf-res'),
                     vcfEnv: this.get('vcf-envMod'),
                     volume: this.get('vca-level'),
-                    hpf: this.get('hpf-cutoff'),
+                    hpf: Math.floor(this.get('hpf-cutoff')),
                 };
             },
             
@@ -70,7 +70,7 @@ define([
                 
                 if(range === 0) {
                     return frequency / 2;
-                } else if(range === 1) {
+                } else if(range === 2) {
                     return frequency * 2;
                 }
                 return frequency;
@@ -78,7 +78,7 @@ define([
             
             getCurrentEnvelope: function() {
                 return {
-                    enabled: this.get('env-enabled'),
+                    enabled: this.get('vca-envEnabled'),
                     attack: this.get('env-attack'),
                     decay: this.get('env-decay'),
                     sustain: this.get('env-sustain'),

@@ -15,6 +15,7 @@ define([
                 this.styleParent('three');
                 this.bindFaders();
                 this.bindSwitches();
+                this.setupSwitchPositions();
             }
             
         });

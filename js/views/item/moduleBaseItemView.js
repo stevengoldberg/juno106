@@ -25,6 +25,8 @@ define([
             
             initialize: function() {
                 var that = this;
+                var multiplier;
+                
                 this.dragging = null;
                 
                 $(window).on('mousemove', function(e) {
@@ -82,12 +84,37 @@ define([
             updateSwitchUI: function(el, param, newValue) {
                 var switchObject = this.getSwitchObject(el);
                 var offset = switchObject.getOffset(newValue);
+                var positionIndex = 0;
                 
                 el.data('value', newValue);
                 
-                el.css({
-                    bottom: offset
+                for(var i = 0; i < this.positions[param].length; i++) {
+                    if(offset > this.positions[param][i]) {
+                        positionIndex = i;
+                    }
+                }
+                
+                if(positionIndex !== -1) {
+                    el.css({
+                         bottom: this.positions[param][positionIndex] + (switchObject.switchThickness * 
+                             (1 / switchObject.switchPositions))
+                    });
+                }        
+            },
+            
+            setupSwitchPositions: function() {
+                var that = this;
+                var positionArray;
+                this.positions = {};
+                this.ui.switchKnob.each(function(i, knob) {
+                    positionArray = [];
+                    multiplier = $(this).parent().height() / $(this).data().length;
+                    for(var j = 0; j < $(this).data().length; j++) {
+                        positionArray.push((j * multiplier));
+                    }
+                    that.positions[$(this).data('param')] = positionArray;
                 });
+                
             },
             
             bindSwitches: function() {
@@ -101,31 +128,21 @@ define([
             calculateSwitchMovement: function(el, yPos) {
                 var switchObject = this.getSwitchObject(el);
                 var mouseOffset = switchObject.switchBottom() - yPos;
-                var positions = [];
                 var newPosition = 0;
-                var length = el.data('length');
-                var newValue;
-                
-                for(var i = 0; i < length; i++) {
-                    positions.push(switchObject.getOffset(i));
-                }
-                
-                for(var j = 0; j < length; j++) {
-                    if(mouseOffset > positions[j]) {
+            
+                for(var j = 0; j < el.data('length'); j++) {
+                    if(mouseOffset > this.positions[el.data('param')][j]) {
                         newPosition = j;
                     }
                 }
-                
                 el.css({
-                    bottom: positions[newPosition]
+                    bottom: this.positions[el.data('param')][newPosition] + 
+                        0.5 * switchObject.switchThickness
                 });
-                
-                // Keep synth values between 0 and 1
-                newValue = newPosition / (length - 1);
-                
-                if(el.data('value') !== newValue) {
-                    el.data('value', newValue);
-                    this.triggerUpdate(el.data().param, newValue);
+            
+                if(el.data('value') !== newPosition) {
+                    el.data('value', newPosition);
+                    this.triggerUpdate(el.data().param, newPosition);
                 }
             },
             
@@ -138,8 +155,7 @@ define([
                     multiplier: function() { return this.switchHeight / this.switchPositions; },
                     getOffset: function(newValue) {
                         return newValue === 0 ? 0 : this.multiplier() * newValue + 
-                            (1 / this.switchPositions * newValue * this.switchThickness); 
-                            
+                            (1 / this.switchPositions * newValue * this.switchThickness);
                     }
                 };
             },
