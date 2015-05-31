@@ -10,7 +10,7 @@ define([
     function(Backbone, App, util, MidiModel, AssignItemView, Template) {
         return Marionette.ItemView.extend({
             
-            className: 'midi',
+            className: 'midiView',
             
             template: Template,
             
@@ -44,6 +44,10 @@ define([
                 this.midiChannel.reqres.setHandler('midiAssignment', function(param){
                     return this.getMidiAssignment(param);
                 }.bind(this));
+                
+                this.midiChannel.reqres.setHandler('input', function() {
+                    return this.inputs.length;
+                }.bind(this));
             },
             
             onShow: function() {
@@ -67,6 +71,7 @@ define([
                                 that.inputs.push(input.value);
                             }
                             that.render();
+                            that.setCursor();
                             that.selectMidi();
                         } else {
                             that.render();
@@ -76,6 +81,12 @@ define([
                     console.log('No MIDI access');
                     this.render();
                 }
+            },
+            
+            setCursor: function() {
+                $('.midi').css({
+                    cursor:  'url(/images/midi-cursor.png), pointer'
+                });
             },
             
             selectMidi: function(e) {

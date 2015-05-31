@@ -234,6 +234,9 @@ define([
             },
             
             showContextMenu: function(e) {
+                var midiChannel = Backbone.Wreqr.radio.channel('midi');
+                if(!midiChannel.reqres.request('input')) return;
+                
                 var param = $(e.currentTarget).data().param;
                 var parsedParam = util.parseParamName(param);
                 
@@ -242,7 +245,7 @@ define([
                     param: parsedParam
                 };
                 
-                var CC = Backbone.Wreqr.radio.channel('midi').reqres.request('midiAssignment', param);
+                var CC = midiChannel.reqres.request('midiAssignment', param);
                 
                 if(_.isUndefined(CC)) {
                     options.assignment = 'Un-assigned';
