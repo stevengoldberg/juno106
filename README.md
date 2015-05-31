@@ -22,9 +22,11 @@ When you've found a sound that you like, click on the `PATCH NAME` text at the t
 
 # MIDI
 
-For MIDI connectivity, you must either use **Chrome 43** or newer, or enable the MIDI feature flag in **Chrome 38** or newer by pointing your browser to `chrome://flags`, searching for "Enable Web MIDI API," clicking "enable," and then restarting the browser.
+For MIDI connectivity, you must use **Chrome 43** or newer.
 
-106.js currently responds to Note On and Note Off messages on any MIDI channel.
+Every control on the 106.js is mappable to respond to MIDI CC messages, and your MIDI mappings will be remembered when you leave the page. This means that once you've mapped the on-screen controls to your hardware controller, you can play 106.js without touching the mouse and keyboard. If you have multiple MIDI inputs, 106.js will remember all of your mappings separately. 106.js supports both 7-bit and 14-bit MIDI messages. Simply right-click a control to begin mapping.
+
+Note that if you're mapping a button or switch on your controller that only sends one message at a time, you'll have to press it a few times in order for the mapping to be assigned.
 
 # Synthesis Overview
 
@@ -97,7 +99,6 @@ Juno-106.js was written in Javascript using the [WebAudio](http://webaudio.githu
 * Tweak chorus
 * Alternate PWM Implementation
 * Filter self-resonance
-* Deeper MIDI implementation
 * Portamento
 * Bender
 
@@ -105,3 +106,4 @@ Juno-106.js was written in Javascript using the [WebAudio](http://webaudio.githu
 
 * v. 1.0: First public release - 5/18/2015
 * v 1.1: Naming and sharing of user patches - 5/21/2015
+* v 1.2: MIDI CC mapping - 5/31/2015
