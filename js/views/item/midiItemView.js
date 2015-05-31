@@ -85,7 +85,7 @@ define([
             
             setCursor: function() {
                 $('.midi').css({
-                    cursor:  'url(/images/midi-cursor.png), pointer'
+                    cursor:  'url(images/midi-cursor.png), pointer'
                 });
             },
             
