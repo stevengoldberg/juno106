@@ -56,7 +56,31 @@ define([
                     attackMax: 3,
                     decayReleaseMax: 12
                 };
+                
+                var chorusLevels = [
+                    'chorusOff',
+                    'chorusI',
+                    'chorusII'
+                ];
+                
+                var newLevel = chorusLevels[options.chorusLevel];
+                
+                var chorusSetup = function(value) {
+                    setDetune(value);
+                    chorusToggle.call(this.cho, value);
+                }.bind(this);
 
+                // Additional detune for chorus effect
+                var setDetune = function(value) {
+                    var detune = App.context.createOscillator();
+                    var gain = App.context.createGain();
+                    detune.start(0);
+                    detune.frequency.value = (0.05 * value);
+                    gain.gain.value = (5 * value);
+                    detune.connect(gain);
+                    this.connect(gain, this.dco.input);
+                }.bind(this);
+                
                 this.vcf = new VCF({
                     frequency: options.vcfFreq,
                     res: options.res,
@@ -98,8 +122,8 @@ define([
 
                 this.cho = data.cho;
 
-                function chorusToggle() {
-                    switch(this.chorusLevel) {
+                function chorusToggle(value) {
+                    switch(value) {
                         case 0:
                             this.bypass = 1;
                             break;
@@ -118,31 +142,28 @@ define([
                     }
                 }
 
-                // Additional detune for chorus effect
-                function setDetune(value) {
-                    var detune = App.context.createOscillator();
-                    var gain = App.context.createGain();
-                    detune.start(0);
-                    detune.frequency.value = (0.05 * value);
-                    gain.gain.value = (5 * value);
-                    detune.connect(gain);
-                    this.connect(gain, this.dco.input);
-                }
-
                 // Make the tuna.js chorus effect responsive to the UI
-                if(!_.has(this.cho, 'chorusToggle')) {
+                if(!_.has(this.cho, 'chorusOff')) {
                     Object.defineProperties(this.cho, {
-                        'chorusToggle': {
-                            'set': function(value) {
-                                setDetune.call(this, value);
-                                this.cho.chorusLevel = value;
-                                chorusToggle.call(this.cho);
-                            }.bind(this)
+                        'chorusOff': {
+                            'set': function() {
+                                chorusSetup(0);
+                            }
+                        },
+                        'chorusI': {
+                            'set': function() {
+                                chorusSetup(1);
+                            }
+                        },
+                        'chorusII': {
+                            'set': function() {
+                                chorusSetup(2);
+                            }
                         }
                     });
                 }
-
-                this.cho.chorusToggle = options.chorusLevel;
+                
+                this.cho[newLevel] = true;
             },
 
             createListeners: function() {

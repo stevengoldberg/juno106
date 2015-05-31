@@ -37,7 +37,8 @@ define([
                     'vcf-invert',
                     'dco-lfoPwmEnabled',
                     'dco-pulse',
-                    'dco-sawtooth'
+                    'dco-sawtooth',
+                    'cho-chorusOff'
                 ];
                 
                 // Initialize long-lived components
@@ -154,7 +155,7 @@ define([
                     this.noteOffHandler(note);
                 } else if(message.type === 'CC') {
                     length = $('[data-param="' + message.param + '"]').data().length;
-                    if(_.contains(this.steppedParams, message.param)) {
+                    if(length !== undefined) {
                         if(message.value === 1) {
                             message.value = length - 1;
                         } else {

@@ -20,7 +20,9 @@ define([
                     'dco-range': 1,
                     'dco-sub': 0,
                     'dco-lfoPwmEnabled': 0,
-                    'cho-chorusToggle': 0,
+                    'cho-chorusOff': 1,
+                    'cho-chorusI': 0,
+                    'cho-chorusII': 0,
                     'vcf-cutoff': 1,
                     'vcf-res': 0,
                     'vcf-envMod': 0,
@@ -40,7 +42,7 @@ define([
                     waveform: this.getCurrentWaveform(),
                     envelope: this.getCurrentEnvelope(),
                     vcfInverted: this.isFilterInverted(),
-                    chorusLevel: this.get('cho-chorusToggle'),
+                    chorusLevel: this.getChorusLevel(),
                     lfoPwmEnabled: this.get('dco-lfoPwmEnabled'),
                     lfoRate: this.get('lfo-rate'),
                     lfoDelay: this.get('lfo-delay'),
@@ -92,6 +94,36 @@ define([
             
             isFilterInverted: function() {
                 return !this.get('vcf-invert');
+            },
+            
+            getChorusLevel: function() {
+                if(this.get('cho-chorusOff')) {
+                    return 0;
+                } else if(this.get('cho-chorusI')) {
+                    return 1;
+                } else if(this.get('cho-chorusII')) {
+                    return 2;
+                }
+            },
+            
+            setChorus: function(attribute, value) {
+                var chorusValues = ['cho-chorusOff', 'cho-chorusI', 'cho-chorusII'];
+                var newValue = chorusValues.indexOf(attribute);
+                for(var i = 0; i < chorusValues.length; i++) {
+                    if(i === newValue) {
+                        Backbone.Model.prototype.set.call(this, chorusValues[i], 1);
+                    } else {
+                        Backbone.Model.prototype.set.call(this, chorusValues[i], 0, {silent: true});
+                    }
+                }
+            },
+            
+            set: function(attributes, options) {
+                if(typeof attributes === 'string' && attributes.indexOf('cho') !== -1) {
+                    this.setChorus(attributes, options);
+                } else {
+                    Backbone.Model.prototype.set.call(this, attributes, options);
+                }
             }
             
         });

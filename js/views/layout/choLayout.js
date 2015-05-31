@@ -29,6 +29,7 @@ define([
                 this.updateUIState = base.updateUIState;
                 this.triggerUpdate = base.triggerUpdate;
                 this.setupButtonState = base.setupButtonState;
+                this.triggerButton = base.triggerButton;
                 this.showContextMenu = base.showContextMenu;
                 
                 this.midiView = new MidiItemView();

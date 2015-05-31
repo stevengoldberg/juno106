@@ -161,27 +161,36 @@ define([
             },
             
             bindButtons: function() {
-                var that = this;
-                var button;
-                var data;
-                var newValue;
-                
                 this.ui.button.click(function(e) {
-                    button = $(this);
-                    data = button.data();
-                    
-                    if(button.hasClass('js-chorus')) {
-                        button.addClass('pressed');
-                        button.siblings('.led').addClass('led--lit');
-                        button.parent().siblings().children().removeClass('pressed led--lit');
-                    } else {
-                        button.toggleClass('pressed');
-                        button.siblings('.led').toggleClass('led--lit');
-                        newValue = (data.value + 1) % 2;
-                        button.data('value', newValue);
-                    }
-                    that.triggerUpdate(data.param, data.value);
-                });
+                    this.triggerButton($(e.currentTarget));
+                }.bind(this));
+            },
+            
+            setupButtonState: function(el, value) {
+                var data;
+
+                el.toggleClass('pressed', !!value);
+                el.siblings('.led').toggleClass('led--lit', !!value);
+                el.data('value', value);
+                if(el.hasClass('js-chorus') &&  value === 1) {
+                    el.parent().siblings().children().removeClass('pressed led--lit');
+                }
+                this.triggerUpdate(el.data().param, value);
+            },
+            
+            triggerButton: function(button, value) {
+                var data = button.data();
+                var newValue;
+    
+                if(button.hasClass('js-chorus')) {
+                    if(button.hasClass('pressed')) return;
+                    button.parent().siblings().children().removeClass('pressed led--lit').data('value', 0);
+                }
+                button.toggleClass('pressed');
+                button.siblings('.led').toggleClass('led--lit');
+                newValue = (data.value + 1) % 2;
+                button.data('value', newValue);
+                this.triggerUpdate(data.param, data.value);
             },
             
             triggerUpdate: function(param, value) {
@@ -222,25 +231,6 @@ define([
             setupSwitchPosition: function(el, value) {
                 var param = el.data().param;
                 this.updateSwitchUI(el, param, value);
-            },
-            
-            setupButtonState: function(el, value) {
-                var chorusOn;
-                var data;
-                
-                if(el.length === 3) {
-                    chorusOn = el.filter(function(i) { return $(this).data().value === value; });
-                    this.$('.led').removeClass('led--lit');
-                    this.$('.button').removeClass('pressed');
-                    chorusOn.addClass('pressed');
-                    chorusOn.siblings('.led').addClass('led--lit');
-                    value = chorusOn.data().value;
-                } else {
-                    el.toggleClass('pressed', !!value);
-                    el.siblings('.led').toggleClass('led--lit', !!value);
-                    el.data('value', value);
-                }
-                this.triggerUpdate(el.data().param, value);
             },
             
             showContextMenu: function(e) {
