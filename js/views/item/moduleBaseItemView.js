@@ -174,8 +174,10 @@ define([
                 el.data('value', value);
                 if(el.hasClass('js-chorus') &&  value === 1) {
                     el.parent().siblings().children().removeClass('pressed led--lit');
+                } else if(!el.hasClass('js-chorus')) {
+                    this.triggerUpdate(el.data().param, value);
                 }
-                this.triggerUpdate(el.data().param, value);
+                
             },
             
             triggerButton: function(button, value) {
