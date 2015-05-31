@@ -30,7 +30,15 @@ define([
             initialize: function() {
                 this.maxPolyphony = 6;
                 this.activeVoices = [];
-                this.steppedParams = ['hpf-cutoff', 'dco-range', 'vca-envEnabled', 'vcf-invert', 'dco-lfoPwmEnabled'];
+                this.steppedParams = [
+                    'hpf-cutoff',
+                    'dco-range',
+                    'vca-envEnabled',
+                    'vcf-invert',
+                    'dco-lfoPwmEnabled',
+                    'dco-pulse',
+                    'dco-sawtooth'
+                ];
                 
                 // Initialize long-lived components
                 var tuna = new Tuna(App.context);
