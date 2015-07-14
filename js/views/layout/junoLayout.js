@@ -14,6 +14,8 @@ define([
     
     function(Backbone, App, util, ModuleLayout, KeyboardItemView, 
         ShareItemView, Voice, LFO, Tuna, JunoModel, Template) {
+
+        var MAX_POLYPHONY = 6;
         
         return Backbone.Marionette.LayoutView.extend({
             
@@ -28,18 +30,7 @@ define([
             },
             
             initialize: function() {
-                this.maxPolyphony = 6;
                 this.activeVoices = [];
-                this.steppedParams = [
-                    'hpf-cutoff',
-                    'dco-range',
-                    'vca-envEnabled',
-                    'vcf-invert',
-                    'dco-lfoPwmEnabled',
-                    'dco-pulse',
-                    'dco-sawtooth',
-                    'cho-chorusOff'
-                ];
                 
                 // Initialize long-lived components
                 var tuna = new Tuna(App.context);
@@ -109,7 +100,7 @@ define([
                     this.activeVoices = _.without(this.activeVoices, currentNote);
                 }
                 
-                if(this.activeVoices.length === this.maxPolyphony) {
+                if(this.activeVoices.length === MAX_POLYPHONY) {
                     this.stopListening(this.activeVoices[0]);
                     this.activeVoices[0].stealNote();
                     this.activeVoices.shift();

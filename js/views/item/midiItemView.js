@@ -93,7 +93,8 @@ define([
                 var storedMappings;
                 var lastMidiDevice = window.localStorage.getItem('lastMidiDevice');
                 
-                if(!e && lastMidiDevice) {
+                // Set the MIDI device to the last-used device if it's still connected
+                if(!e && lastMidiDevice && _.findWhere(this.inputs, {name: lastMidiDevice})) {
                     this.activeDevice = _.findWhere(this.inputs, {name: lastMidiDevice});
                     this.ui.select.val(lastMidiDevice);
                 } else {
