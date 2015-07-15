@@ -21,7 +21,6 @@ define([
             var releaseLength;           
             var timing = {
                 attack: null,
-                decay: null,
                 release: null
             };
             

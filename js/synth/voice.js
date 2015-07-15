@@ -169,7 +169,7 @@ define([
             createListeners: function() {
                 // After all the oscillators are stopped, remove the voice from the pool
                 // and disconnect it from the graph for garbage collection
-                var triggerKillVoice = _.after(4, function() {
+                var triggerKillVoice = _.after(this.dco.NUM_OSCILLATORS, function() {
                     this.trigger('killVoice');
                     this.disconnect();
                 }.bind(this));
