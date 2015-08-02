@@ -9,6 +9,7 @@ define([
             this.input = [];
             this.output = [];
             this.oscillators = [];
+            this.NUM_OSCILLATORS;
             
             var that = this;
             
@@ -30,6 +31,8 @@ define([
                         that.input.push(oscillator.detune);
                     }
                 });
+
+                that.NUM_OSCILLATORS = that.oscillators.length;
             }
             
             function setSubLevel(level) {
