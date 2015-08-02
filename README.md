@@ -43,7 +43,7 @@ For more detailed instructions, consult the [Juno 106 owner's manual](http://www
  * Delay: Controls the speed at which the LFO fades in on triggering a note.  
 
 **DCO - Digitally Controlled Oscillator**  
- Sound sorces that are heard directly.  
+ Sound sources that are heard directly.  
  
  * Range: Selects the keyboard octave.  
  * LFO: Selects the extent to which the LFO modulates the oscillator pitch -- i.e., adjusts the depth of vibrato. 
