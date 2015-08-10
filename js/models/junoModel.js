@@ -1,10 +1,8 @@
 define([
     'backbone'
     ],
-    
     function(Backbone) {
         return Backbone.Model.extend({
-            
             defaults: function() {
                 return {
                     'vca-level': 0.5,
