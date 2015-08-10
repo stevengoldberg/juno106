@@ -23,7 +23,8 @@ define([
                 'click @ui.share': 'triggerSharePatch',
                 'click @ui.name': 'handleEditName',
                 'click @ui.editIcon': 'handleEditName',
-                'blur @ui.nameInput': 'handleEditComplete'
+                'blur @ui.nameInput': 'handleEditComplete',
+                'keyup @ui.nameInput': 'handleKeyup'
             },
             
             initialize: function() {
@@ -53,6 +54,12 @@ define([
                 this.ui.nameInput.val(this.patchName);
                 this.ui.nameInput.focus();
                 this.ui.nameInput.select();
+            },
+
+            handleKeyup: function(e) {
+                if(e.which === 13) {
+                    this.handleEditComplete();
+                }
             },
             
             handleEditComplete: function() {

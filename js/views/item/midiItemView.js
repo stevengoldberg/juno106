@@ -168,7 +168,6 @@ define([
             
             handleMidiLearn: function(param) {
                 var messages = [];
-                var firstByte;
                 var listening = false;
                 
                 var assignModal = new AssignItemView({
@@ -189,7 +188,6 @@ define([
                         return;
                     }
                     
-                    firstByte = +(e.data[0].toString(2).slice(0, 4));
                     // Listen to the first two messages to allow for 14-bit MIDI
                     if(messages.length < 2) {
                         messages.push(e.data);
