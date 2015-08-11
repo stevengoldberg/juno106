@@ -4,7 +4,7 @@ define([
 ],
     
     function(App, util) {
-        function ENV(options) { 
+        function ENV(options) {
                       
             var that = this;
         
@@ -18,7 +18,7 @@ define([
             var attackLength;
             var decayLength;
             var sustainLevel;
-            var releaseLength;           
+            var releaseLength;
             var timing = {
                 attack: null,
                 release: null
@@ -27,7 +27,7 @@ define([
             this.input = ampMod;
             this.output = ampMod;
         
-            function init() { 
+            function init() {
                 ampMod.gain.value = 0;
                 
                 if(enabled) {
@@ -45,7 +45,7 @@ define([
         
             function setSustain(value) {
                 var now = App.context.currentTime;
-                var sustaining = now > timing.attack + attackLength + decayLength && 
+                var sustaining = now > timing.attack + attackLength + decayLength &&
                     timing.release === null;
                 
                 sustainLevel = maxLevel * value;
@@ -80,7 +80,7 @@ define([
         
             function setRelease(value) {
                 var now = App.context.currentTime;
-                var releasing = timing.release && 
+                var releasing = timing.release &&
                     now < timing.release + releaseLength;
                 
                 releaseLength = util.getFaderCurve(value) * decayReleaseMax + envelopeOffset;
@@ -110,7 +110,6 @@ define([
             // Release the envelope on keyup
             this.noteOff = function() {
                 var now = App.context.currentTime;
-                var that = this;
             
                 ampMod.gain.cancelScheduledValues(now);
                 ampMod.gain.setValueAtTime(ampMod.gain.value, now);
@@ -127,7 +126,7 @@ define([
         
             Object.defineProperties(this, {
                 'attack': {
-                    'set': function(value) { 
+                    'set': function(value) {
                         var e = {
                             value: value,
                             timing: timing
@@ -165,9 +164,6 @@ define([
                         setRelease(value);
                         this.trigger('release', e);
                     }
-                },
-                'ampMod': {
-                    'set': function() { ampMod.gain.value = value; }
                 },
                 'enabled': {
                     'set': function(value) { enabled = value; }
