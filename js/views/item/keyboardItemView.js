@@ -40,7 +40,6 @@ define([
             keyUpHandler: function(e) {
                 var keyCode = e.which;
                 var noteEl;
-                var frequency;
                 var noteName;
                 
                 if(!_.has(util.keyMap, keyCode)) {
@@ -58,7 +57,6 @@ define([
                 var keyCode = e.which;
                 var noteEl = this.$('[id*=' + '"' + util.keyMap[keyCode] + '"]').parent();
                 var noteName = noteEl.attr('id');
-                var frequency;
                 
                 if(_.contains(this.keysDown, noteName)) {
                     return;
@@ -70,6 +68,8 @@ define([
             },
             
             playNote: function(noteName, noteEl) {
+                var frequency;
+
                 this.keysDown.push(noteName);
                 
                 if(noteEl.hasClass('white-key')) {
@@ -82,6 +82,8 @@ define([
             },
             
             stopNote: function(noteName, noteEl) {
+                var frequency;
+
                 this.keysDown = _.without(this.keysDown, noteName);
                 frequency = this.getFrequency(noteName);
                 noteEl.removeClass('white-key--playing black-key--playing');
@@ -98,7 +100,7 @@ define([
                     this.mouseNote = noteName;
                     this.playNote(noteName, noteEl);
                     
-                    $(window).on('mouseup.keyboard', function(e) {
+                    $(window).on('mouseup.keyboard', function() {
                         this.stopNote(noteName, noteEl);
                         $(window).off('mouseup.keyboard');
                     }.bind(this));
@@ -134,14 +136,14 @@ define([
                 var thisKey;
                 var whiteKeyCounter = 0;
                 
-                this.ui.whiteKeys.each(function(i, key) {
+                this.ui.whiteKeys.each(function(i) {
                 thisKey = $(this);
                     thisKey.css({
                         left: i * thisKey.width()
                     });
                 });
                 
-                this.ui.keys.each(function(i, key) {
+                this.ui.keys.each(function() {
                     thisKey = $(this);
                     if(thisKey.hasClass('white-key')) {
                         whiteKeyCounter++;

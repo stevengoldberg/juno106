@@ -12,7 +12,7 @@ define([
     'hbs!tmpl/layout/junoLayout-tmpl'
     ],
     
-    function(Backbone, App, util, ModuleLayout, KeyboardItemView, 
+    function(Backbone, App, util, ModuleLayout, KeyboardItemView,
         ShareItemView, Voice, LFO, Tuna, JunoModel, Template) {
 
         var MAX_POLYPHONY = 6;
@@ -31,12 +31,13 @@ define([
             
             initialize: function() {
                 this.activeVoices = [];
-                
-                // Initialize long-lived components
-                var tuna = new Tuna(App.context);
                 this.synth = new JunoModel();
+
                 // Cache the initialized synth for later resetting
                 this.cachedSynth = JSON.stringify(this.synth.attributes);
+                
+                // The Tuna library provides overdrive and chorus effects
+                var tuna = new Tuna(App.context);
                 this.cho = new tuna.Chorus();
                 this.cho.chorusLevel = this.synth.get('cho-chorusToggle');
                 this.drive = new tuna.Overdrive({
@@ -44,11 +45,13 @@ define([
                     drive: 0.1,
                     curveAmount: 0.2,
                     algorithmIndex: 3,
-                    bypass: 0 
+                    bypass: 0
                 });
+                                
                 this.masterGain = App.context.createGain();
                 this.masterGain.gain.value = 0.5;
                 this.masterGain.connect(App.context.destination);
+
                 this.lfo = new LFO({
                     lfoRate: this.synth.get('lfo-rate'),
                     lfoPitch: this.synth.get('lfo-pitch'),
@@ -57,6 +60,7 @@ define([
                     lfoPwmEnabled: this.synth.get('dco-lfoPwmEnabled'),
                     lfoPwm: this.synth.get('dco-pwm')
                 });
+
                 this.midiListener = Backbone.Wreqr.radio.channel('midi').vent;
                 this.patchListener = Backbone.Wreqr.radio.channel('patch').vent;
                 
@@ -76,10 +80,17 @@ define([
                 
                 this.listenTo(this.keyboardView, 'noteOn', this.noteOnHandler);
                 this.listenTo(this.keyboardView, 'noteOff', this.noteOffHandler);
+
+
+                // Stop all notes when the window is hidden
+                document.addEventListener('visibilitychange', function() {
+                    if(document.hidden) {
+                        this.allNotesOff();
+                    }
+                }.bind(this), false);
             },
             
             noteOnHandler: function(note, frequency) {
-                var that = this;
                 var currentNote;
                 
                 for(var i = 0; i < this.activeVoices.length; i++) {
@@ -99,7 +110,8 @@ define([
                     this.stopListening(currentNote);
                     this.activeVoices = _.without(this.activeVoices, currentNote);
                 }
-                
+
+                // Kill the oldest note if we hit the max number of simultaneous notes
                 if(this.activeVoices.length === MAX_POLYPHONY) {
                     this.stopListening(this.activeVoices[0]);
                     this.activeVoices[0].stealNote();
@@ -131,6 +143,12 @@ define([
                 }
 
             },
+
+            allNotesOff: function() {
+                this.activeVoices.forEach(function(voice) {
+                    voice.stealNote();
+                }, this);
+            },
             
             handleMidi: function(message) {
                 var note;
@@ -158,7 +176,7 @@ define([
                 }
             },
             
-            synthUpdateHandler: function(update) {                    
+            synthUpdateHandler: function(update) {
                 var param = Object.keys(update.changed)[0];
                 var value = update.changed[param];
                 var component = param.slice(0, 3);
@@ -200,7 +218,7 @@ define([
                     paramString += '?' + attributePair[0] + '=' + parseFloat(attributePair[1].toFixed(6));
                 });
                 
-                url = window.location.origin + window.location.pathname + '#patch/' + 
+                url = window.location.origin + window.location.pathname + '#patch/' +
                     encodeURIComponent(patchName) + paramString;
 
                 App.modal.show(new ShareItemView({
