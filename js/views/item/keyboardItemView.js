@@ -14,31 +14,46 @@ define([
             template: Template,
             
             ui: {
-                keys: 'li',
+                keys: '.white-key, .black-key',
                 whiteKeys: '.white-key',
                 blackKeys: '.black-key',
-                labels: 'span'
+                labels: 'span',
+                octaveDown: '.js-octave-down',
+                octaveUp: '.js-octave-up'
             },
-            
+
             events: {
-                'mousedown @ui.keys': 'mouseDownHandler'
+                'mousedown @ui.keys': 'mouseDownHandler',
+                'click @ui.octaveDown': 'shiftOctaveDown',
+                'click @ui.octaveUp': 'shiftOctaveUp'
             },
-            
+
+            MIN_OCTAVE_SHIFT: -3,
+            MAX_OCTAVE_SHIFT: 3,
+
             initialize: function() {
                 this.keysDown = [];
                 this.mouseNote = null;
+                this.octaveShift = 0;
             },
 
             onShow: function() {
                 this.positionKeys();
-                
-                $(window).on('keydown', this.keyDownHandler.bind(this));
-                $(window).on('keyup', this.keyUpHandler.bind(this));
-                
+                this.updateOctaveButtons();
+
+                this._boundKeyDown = this.keyDownHandler.bind(this);
+                this._boundKeyUp = this.keyUpHandler.bind(this);
+                $(window).on('keydown.keyboard', this._boundKeyDown);
+                $(window).on('keyup.keyboard', this._boundKeyUp);
+            },
+
+            onDestroy: function() {
+                $(window).off('keydown.keyboard');
+                $(window).off('keyup.keyboard');
             },
             
             keyUpHandler: function(e) {
-                var keyCode = e.which;
+                var keyCode = e.originalEvent.code;
                 var noteEl;
                 var noteName;
                 
@@ -54,7 +69,7 @@ define([
             keyDownHandler: function(e) {
                 if($('.js-edit-patch-name').is(':focus')) return;
                 
-                var keyCode = e.which;
+                var keyCode = e.originalEvent.code;
                 var noteEl = this.$('[id*=' + '"' + util.keyMap[keyCode] + '"]').parent();
                 var noteName = noteEl.attr('id');
                 
@@ -126,10 +141,29 @@ define([
                     keyNumber = keyNumber + ((octave - 1) * 12) + 1;
                 }
 
-                return 440 * Math.pow(2, (keyNumber - 49) / 12);
+                return 440 * Math.pow(2, (keyNumber - 49) / 12) * Math.pow(2, this.octaveShift);
             },
-            
-            
+
+            // Octave shift only affects notes played from here on — held notes
+            // keep the pitch they started at, matching how a hardware synth's
+            // octave switch behaves.
+            shiftOctaveDown: function() {
+                if(this.octaveShift <= this.MIN_OCTAVE_SHIFT) return;
+                this.octaveShift--;
+                this.updateOctaveButtons();
+            },
+
+            shiftOctaveUp: function() {
+                if(this.octaveShift >= this.MAX_OCTAVE_SHIFT) return;
+                this.octaveShift++;
+                this.updateOctaveButtons();
+            },
+
+            updateOctaveButtons: function() {
+                this.ui.octaveDown.toggleClass('octave-shift--disabled', this.octaveShift <= this.MIN_OCTAVE_SHIFT);
+                this.ui.octaveUp.toggleClass('octave-shift--disabled', this.octaveShift >= this.MAX_OCTAVE_SHIFT);
+            },
+
             positionKeys: function() {
                 var whiteWidth = this.ui.whiteKeys.first().width();
                 var blackWidth = this.ui.blackKeys.first().width();
@@ -152,6 +186,14 @@ define([
                             left: (whiteKeyCounter * whiteWidth) - (0.5 * blackWidth)
                         });
                     }
+                });
+
+                // Positioned from the same measured whiteWidth as the keys
+                // themselves (rather than a fixed CSS offset) so it sits
+                // flush against the last white key regardless of exactly how
+                // much room the keyboard-container leaves past its keys.
+                this.ui.octaveUp.css({
+                    left: this.ui.whiteKeys.length * whiteWidth
                 });
             }
 

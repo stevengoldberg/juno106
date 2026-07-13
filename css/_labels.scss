@@ -22,8 +22,22 @@
 }
 
 .label-container {
+    // Lay the labels out with the same even distribution as the faders below
+    // (flex, equal columns) so each label sits directly over its own fader.
+    // Previously labels used inline-block flow with percentage margins, which
+    // did not line up with the flex-distributed faders — in the ENV module the
+    // misaligned columns meant the "R" (release) slider actually drove
+    // prt-time (portamento), producing an unexpected pitch glide.
+    display: flex;
     height: 10%;
-    margin: 13px 0 0 0;
+    margin: 13px auto 0 auto;
+    width: 90%;
+    > span {
+        flex: 1 1 0;
+        min-width: 0;
+        text-align: center;
+        margin: 0;
+    }
 }
 
 .led {

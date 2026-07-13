@@ -63,3 +63,46 @@
     @extend .black-key;
     background-color: $led-off-clr;
 }
+
+// The keyboard doesn't quite reach the panel's own edges (its container is
+// narrower than the panel, centred with margin on each side). Fill that
+// leftover strip with octave-shift buttons instead of leaving it empty.
+.octave-shift {
+    position: absolute;
+    top: 0;
+    height: 100px;
+    width: 16px;
+    background-color: $fader-knob-clr;
+    color: $fader-knob-line-clr;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: Audiowide;
+    font-size: 14px;
+    line-height: 1;
+    cursor: pointer;
+    user-select: none;
+    z-index: 1;
+    transition: background-color 0.1s ease-out, color 0.1s ease-out;
+    &:hover {
+        background-color: $led-on-clr;
+        color: white;
+    }
+}
+
+.octave-shift--down {
+    left: -16px;
+    border-bottom-left-radius: 8px;
+}
+
+.octave-shift--up {
+    // left is set at runtime in positionKeys(), flush against the last
+    // white key's measured right edge.
+    border-bottom-right-radius: 8px;
+}
+
+.octave-shift--disabled {
+    opacity: 0.35;
+    cursor: default;
+    pointer-events: none;
+}

@@ -1,0 +1,46 @@
+/*
+ * Self-hosted subset of Font Awesome 4 (by Dave Gandy - http://fontawesome.io)
+ * Font files: SIL OFL 1.1, CSS: MIT — see http://fontawesome.io/license/
+ *
+ * Replaces the maxcdn.bootstrapcdn.com CDN stylesheet with only the rules
+ * 106.js actually uses, served from this repository's own fonts/ directory.
+ * Icon codepoints are stable across all Font Awesome 4.x releases.
+ */
+@font-face {
+  font-family: 'FontAwesome';
+  src: url('../fonts/fontawesome-webfont.eot');
+  src: url('../fonts/fontawesome-webfont.eot?#iefix') format('embedded-opentype'),
+       url('../fonts/fontawesome-webfont.woff2') format('woff2'),
+       url('../fonts/fontawesome-webfont.woff') format('woff'),
+       url('../fonts/fontawesome-webfont.ttf') format('truetype'),
+       url('../fonts/fontawesome-webfont.svg#fontawesomeregular') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+.fa {
+  display: inline-block;
+  font: normal normal normal 14px/1 FontAwesome;
+  font-size: inherit;
+  text-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.fa-3x {
+  font-size: 3em;
+}
+
+.fa-4x {
+  font-size: 4em;
+}
+
+.fa-check:before { content: "\f00c"; }
+.fa-times:before { content: "\f00d"; }
+.fa-pencil-square-o:before { content: "\f044"; }
+.fa-caret-right:before { content: "\f0da"; }
+.fa-undo:before { content: "\f0e2"; }
+.fa-check-square:before { content: "\f14a"; }
+.fa-share-square:before { content: "\f14d"; }
+.fa-sliders:before { content: "\f1de"; }
+.fa-share-alt:before { content: "\f1e0"; }

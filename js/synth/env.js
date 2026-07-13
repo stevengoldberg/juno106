@@ -90,37 +90,43 @@ define([
                 }
             }
         
-            // Trigger the envelope on a keypress
+            // Trigger the envelope on a keypress.
+            // RC-like curves: attack uses setTargetAtTime (concave-down, starts fast),
+            // decay also uses setTargetAtTime for the same authentic RC character.
             this.noteOn = function(initial) {
                 var now = App.context.currentTime;
                 initial = initial || 0;
-                
+
                 ampMod.gain.cancelScheduledValues(now);
                 ampMod.gain.setValueAtTime(initial, now);
-            
+
                 if(enabled) {
                     timing.attack = now;
-                    ampMod.gain.linearRampToValueAtTime(maxLevel, now + attackLength);
-                    ampMod.gain.linearRampToValueAtTime(sustainLevel, now + attackLength + decayLength);
+                    // Attack: RC charge curve — approaches maxLevel with time constant = attackLength/4
+                    // (reaches ~98% at 4 time constants = attackLength)
+                    ampMod.gain.setTargetAtTime(maxLevel, now, attackLength / 4);
+                    // Decay: RC discharge starting at attack end
+                    ampMod.gain.setTargetAtTime(sustainLevel, now + attackLength, decayLength / 4);
                 } else {
                     ampMod.gain.linearRampToValueAtTime(maxLevel, now + envelopeOffset);
                 }
             };
-        
+
             // Release the envelope on keyup
             this.noteOff = function() {
                 var now = App.context.currentTime;
-            
+
                 ampMod.gain.cancelScheduledValues(now);
                 ampMod.gain.setValueAtTime(ampMod.gain.value, now);
-            
+
                 if(enabled) {
                     timing.release = now;
-                    ampMod.gain.linearRampToValueAtTime(0, now + releaseLength);
+                    // Release: exponential decay toward silence
+                    ampMod.gain.setTargetAtTime(0.0001, now, releaseLength / 4);
                 } else {
                     ampMod.gain.linearRampToValueAtTime(0, now + envelopeOffset);
                 }
-                // Set the DCO's stop time
+                // Signal DCO stop time (after ~4 time constants the level is inaudible)
                 this.trigger('noteOff', enabled ? releaseLength : envelopeOffset);
             };
         

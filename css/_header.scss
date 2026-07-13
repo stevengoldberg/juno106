@@ -3,6 +3,20 @@
     margin: 10px;
 }
 
+.header__toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.header__divider {
+    width: 1px;
+    height: 18px;
+    background-color: rgba(255, 255, 255, 0.25);
+}
+
 .header__title {
     color: $led-on-clr;
     >i {
@@ -15,15 +29,39 @@
 .header__link {
     color: white;
     font-family: Audiowide;
+    text-decoration: none;
     &:hover {
         color: $led-on-clr;
+        text-decoration: underline;
+    }
+}
+
+.header__patch-field {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 6px;
+    background-color: rgba(255, 255, 255, 0.06);
+    cursor: pointer;
+    transition: border-color .15s ease, background-color .15s ease;
+    &:hover {
+        border-color: $led-on-clr;
+        background-color: rgba(255, 255, 255, 0.1);
     }
 }
 
 .header__patch-name {
     cursor: pointer;
+}
+
+.header__patch-field-icon {
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 13px;
+    cursor: pointer;
     &:hover {
-        text-decoration: underline;
+        color: $led-on-clr;
     }
 }
 
@@ -34,6 +72,40 @@
     vertical-align: middle;
     font-size: 20px;
     padding: 2px;
-    margin: 2px;
+    margin: 0;
     font-family: Audiowide;
+    border: none;
+    background: transparent;
+    color: $led-on-clr;
+    outline: none;
+}
+
+.header__button {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-family: Audiowide;
+    font-size: 13px;
+    color: white;
+    text-decoration: none;
+    background-color: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    transition: background-color .15s ease, box-shadow .15s ease;
+    i {
+        font-size: 13px;
+    }
+    &:hover {
+        background-color: rgba(255, 255, 255, 0.16);
+        box-shadow: 0 0 7px rgba(255, 255, 255, 0.4);
+    }
+}
+
+.header__button--accent {
+    background-color: $led-on-clr;
+    border-color: $led-on-clr;
+    &:hover {
+        box-shadow: 0 0 10px $led-on-clr;
+    }
 }

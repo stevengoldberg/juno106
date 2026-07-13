@@ -1,8 +1,8 @@
 // Backbone.Wreqr (Backbone.Marionette)
 // ----------------------------------
-// v1.3.2
+// v1.4.0
 //
-// Copyright (c)2014 Derick Bailey, Muted Solutions, LLC.
+// Copyright (c)2016 Derick Bailey, Muted Solutions, LLC.
 // Distributed under MIT license
 //
 // http://github.com/marionettejs/backbone.wreqr
@@ -29,7 +29,7 @@
 
   var Wreqr = Backbone.Wreqr = {};
 
-  Backbone.Wreqr.VERSION = '1.3.2';
+  Backbone.Wreqr.VERSION = '1.4.0';
 
   Backbone.Wreqr.noConflict = function () {
     Backbone.Wreqr = previousWreqr;
@@ -64,7 +64,7 @@
   
       // Add multiple handlers using an object literal configuration
       setHandlers: function(handlers){
-        _.each(handlers, function(handler, name){
+        _.each(handlers, _.bind(function(handler, name){
           var context = null;
   
           if (_.isObject(handler) && !_.isFunction(handler)){
@@ -73,7 +73,7 @@
           }
   
           this.setHandler(name, handler, context);
-        }, this);
+        }, this));
       },
   
       // Add a handler for the given name, with an
@@ -333,9 +333,9 @@
         context = context || this;
         var method = (type === 'vent') ? 'on' : 'setHandler';
   
-        _.each(hash, function(fn, eventName) {
+        _.each(hash, _.bind(function(fn, eventName) {
           this[type][method](eventName, _.bind(fn, context));
-        }, this);
+        }, this));
       }
     });
   
@@ -380,11 +380,11 @@
       },
   
       _proxyMethods: function() {
-        _.each(['vent', 'commands', 'reqres'], function(system) {
-          _.each( messageSystems[system], function(method) {
+        _.each(['vent', 'commands', 'reqres'], _.bind(function(system) {
+          _.each( messageSystems[system], _.bind(function(method) {
             this[system][method] = proxyMethod(this, system, method);
-          }, this);
-        }, this);
+          }, this));
+        }, this));
       }
     });
   

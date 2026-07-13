@@ -29,7 +29,6 @@ define([
             },
             
             calculateFaderMovement: function(el, yPos) {
-                var position;
                 var slotTop = el.parent().offset().top;
                 var slotHeight = el.parent().height();
                 var slotBottom = slotTop + slotHeight;

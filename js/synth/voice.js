@@ -65,22 +65,18 @@ define([
                 
                 var newLevel = chorusLevels[options.chorusLevel];
                 
+                // A per-voice chorus "detune" oscillator used to be created
+                // here. It was started but never stopped — leaking a running
+                // oscillator on every note — and, because its closure was
+                // captured once by the shared chorus object's setters, it only
+                // ever detuned the first voice while adding an audible pitch
+                // drift to it. Removed entirely: dco.js already applies a
+                // static per-voice ±8-cent detune for analogue warmth, without
+                // the drift or the leak.
                 var chorusSetup = function(value) {
-                    setDetune(value);
                     chorusToggle.call(this.cho, value);
                 }.bind(this);
 
-                // Additional detune for chorus effect
-                var setDetune = function(value) {
-                    var detune = App.context.createOscillator();
-                    var gain = App.context.createGain();
-                    detune.start(0);
-                    detune.frequency.value = (0.05 * value);
-                    gain.gain.value = (5 * value);
-                    detune.connect(gain);
-                    this.connect(gain, this.dco.input);
-                }.bind(this);
-                
                 this.vcf = new VCF({
                     frequency: options.vcfFreq,
                     res: options.res,
@@ -129,15 +125,15 @@ define([
                             break;
                         case 1:
                             this.bypass = 0;
-                            this.feedback = 0.1;
+                            this.feedback = 0;
                             this.delay = 0.3;
-                            this.rate = 0.05;
+                            this.rate = 0.5;
                             break;
                         case 2:
                             this.bypass = 0;
-                            this.feedback = 0.35;
+                            this.feedback = 0;
                             this.delay = 0.6;
-                            this.rate = 0.15;
+                            this.rate = 0.8;
                             break;
                     }
                 }
@@ -218,7 +214,24 @@ define([
             },
 
             disconnect: function() {
-                this.env.output.disconnect(this.cho.input);
+                try { this.env.output.disconnect(this.cho.input); } catch(e) {}
+                try { this.vca.output.disconnect(this.env.input); } catch(e) {}
+                try { this.vcf.disconnect(); } catch(e) {}
+                try { this.hpf.output.disconnect(); } catch(e) {}
+
+                // Disconnect LFO modulation routes
+                try { this.lfo.pitchMod.disconnect(); } catch(e) {}
+                try { this.lfo.freqMod.disconnect(); } catch(e) {}
+                try { this.lfo.pwmMod.disconnect(); } catch(e) {}
+
+                // Disconnect DCO outputs
+                if (this.dco.output) {
+                    _.forEach(this.dco.output, function(node) {
+                        try { node.disconnect(); } catch(e) {}
+                    });
+                }
+
+                this.stopListening();
             }
     });
 });

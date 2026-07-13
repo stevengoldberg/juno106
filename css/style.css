@@ -1,6 +1,6 @@
 /* COLORS */
 /* Modal positioning */
-@import url(http://fonts.googleapis.com/css?family=Raleway:400,600,700);
+@import url(https://fonts.googleapis.com/css?family=Raleway:400,600,700);
 .bbm-wrapper {
   box-sizing: border-box;
   position: fixed;
@@ -945,6 +945,7 @@ hr {
   width: 10px;
   background-color: black;
   margin: 15px auto;
+  cursor: pointer;
 }
 
 .switch__knob {
@@ -954,8 +955,9 @@ hr {
   width: 100%;
   height: 15px;
   transition: all .1s;
+  pointer-events: none;
 }
-.switch__knob:hover {
+.switch:hover .switch__knob {
   box-shadow: 0 0 20px #800000;
 }
 .switch__knob.dragging {
@@ -1019,8 +1021,16 @@ hr {
 }
 
 .label-container {
+  display: flex;
   height: 10%;
-  margin: 13px 0 0 0;
+  margin: 13px auto 0 auto;
+  width: 90%;
+}
+.label-container > span {
+  flex: 1 1 0;
+  min-width: 0;
+  text-align: center;
+  margin: 0;
 }
 
 .led, .led--lit {
@@ -1107,6 +1117,44 @@ hr {
   background-color: #800000;
 }
 
+.octave-shift {
+  position: absolute;
+  top: 0;
+  height: 100px;
+  width: 16px;
+  background-color: #33353C;
+  color: #CFCFCF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: Audiowide;
+  font-size: 14px;
+  line-height: 1;
+  cursor: pointer;
+  user-select: none;
+  z-index: 1;
+  transition: background-color 0.1s ease-out, color 0.1s ease-out;
+}
+.octave-shift:hover {
+  background-color: #CC3300;
+  color: white;
+}
+
+.octave-shift--down {
+  left: -16px;
+  border-bottom-left-radius: 8px;
+}
+
+.octave-shift--up {
+  border-bottom-right-radius: 8px;
+}
+
+.octave-shift--disabled {
+  opacity: 0.35;
+  cursor: default;
+  pointer-events: none;
+}
+
 .modal-info {
   list-style: none;
   padding: 0;
@@ -1134,6 +1182,20 @@ hr {
   margin: 10px;
 }
 
+.header__toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.header__divider {
+  width: 1px;
+  height: 18px;
+  background-color: rgba(255, 255, 255, 0.25);
+}
+
 .header__title {
   color: #CC3300;
   font-family: Audiowide;
@@ -1146,16 +1208,40 @@ hr {
 .header__link {
   color: white;
   font-family: Audiowide;
+  text-decoration: none;
 }
 .header__link:hover {
   color: #CC3300;
+  text-decoration: underline;
+}
+
+.header__patch-field {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 6px;
+  background-color: rgba(255, 255, 255, 0.06);
+  cursor: pointer;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+.header__patch-field:hover {
+  border-color: #CC3300;
+  background-color: rgba(255, 255, 255, 0.1);
 }
 
 .header__patch-name {
   cursor: pointer;
 }
-.header__patch-name:hover {
-  text-decoration: underline;
+
+.header__patch-field-icon {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 13px;
+  cursor: pointer;
+}
+.header__patch-field-icon:hover {
+  color: #CC3300;
 }
 
 .header__name-input {
@@ -1165,8 +1251,42 @@ hr {
   vertical-align: middle;
   font-size: 20px;
   padding: 2px;
-  margin: 2px;
+  margin: 0;
   font-family: Audiowide;
+  border: none;
+  background: transparent;
+  color: #CC3300;
+  outline: none;
+}
+
+.header__button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-family: Audiowide;
+  font-size: 13px;
+  color: white;
+  text-decoration: none;
+  background-color: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: background-color 0.15s ease, box-shadow 0.15s ease;
+}
+.header__button i {
+  font-size: 13px;
+}
+.header__button:hover {
+  background-color: rgba(255, 255, 255, 0.16);
+  box-shadow: 0 0 7px rgba(255, 255, 255, 0.4);
+}
+
+.header__button--accent {
+  background-color: #CC3300;
+  border-color: #CC3300;
+}
+.header__button--accent:hover {
+  box-shadow: 0 0 10px #CC3300;
 }
 
 .click-menu, .click-menu--shown {

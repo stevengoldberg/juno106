@@ -3,7 +3,52 @@ define([
     ],
     function(Backbone) {
         return Backbone.Model.extend({
+            // Default patch loaded when the URL carries no parameters — a lush,
+            // chorused Juno-106 pad/strings that shows off the synth's character
+            // the moment a chord is played: saw + pulse + sub through a filter
+            // that blooms ~2.4 octaves on attack, gentle LFO pulse-width shimmer,
+            // and the signature deep Chorus II. Responsive enough for single
+            // notes (~0.08s attack) with a smooth 0.75s release tail.
             defaults: function() {
+                return {
+                    'vca-level': 0.5,
+                    'env-attack': 0.4,
+                    'env-decay': 0.55,
+                    'env-sustain': 0.8,
+                    'env-release': 0.5,
+                    'vca-envEnabled': 1,
+                    'dco-sawtooth': 1,
+                    'dco-pulse': 1,
+                    'dco-noise': 0,
+                    'dco-pwm': 0.35,
+                    'dco-range': 1,
+                    'dco-sub': 0.3,
+                    'dco-lfoPwmEnabled': 1,
+                    'cho-chorusOff': 0,
+                    'cho-chorusI': 0,
+                    'cho-chorusII': 1,
+                    'vcf-cutoff': 0.6,
+                    'vcf-res': 0.3,
+                    'vcf-envMod': 0.22,
+                    'vcf-invert': 1,
+                    'vcf-keyFollow': 0.4,
+                    'lfo-pitchMod': 0,
+                    'lfo-rate': 0.45,
+                    'lfo-delay': 0,
+                    'lfo-freqMod': 0,
+                    'hpf-cutoff': 0,
+                    'prt-time': 0,
+                    'uni-enabled': 0
+                };
+            },
+
+            // Blank "init" patch used by the Reset button — a single raw
+            // sawtooth with the filter fully open and no modulation or effects,
+            // so experts get a predictable clean slate to build from. Page load
+            // uses the richer defaults() patch above; Reset uses this. Level,
+            // cutoff and sustain stay at their raw/neutral positions rather than
+            // literally zero, since zero there would just be silence.
+            initPatch: function() {
                 return {
                     'vca-level': 0.5,
                     'env-attack': 0,
@@ -30,10 +75,12 @@ define([
                     'lfo-rate': 0,
                     'lfo-delay': 0,
                     'lfo-freqMod': 0,
-                    'hpf-cutoff': 0
+                    'hpf-cutoff': 0,
+                    'prt-time': 0,
+                    'uni-enabled': 0
                 };
             },
-            
+
             getOptions: function(frequency) {
                 return {
                     frequency: this.getCurrentRange(frequency),

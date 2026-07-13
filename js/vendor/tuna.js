@@ -145,9 +145,9 @@
             l = 0.0,
             l2 = 0.0;
 
-        tmp = x.toExponential().match(/^.\.?(.*)e(.+)$/);
+        tmp = x.toExponential().match(/^\.?(.*)e(.+)$/);
         p = parseInt(tmp[2], 10) - (tmp[1] + '').length;
-        tmp = y.toExponential().match(/^.\.?(.*)e(.+)$/);
+        tmp = y.toExponential().match(/^\.?(.*)e(.+)$/);
         pY = parseInt(tmp[2], 10) - (tmp[1] + '').length;
 
         if(pY > p) {
@@ -429,7 +429,8 @@
                 this._delay = 0.0002 * (Math.pow(10, value) * 2);
                 this.lfoL.offset = this._delay;
                 this.lfoR.offset = this._delay;
-                this._depth = this._depth;
+                this.lfoL.oscillation = this._depth * this._delay;
+                this.lfoR.oscillation = this._depth * this._delay;
             }
         },
         depth: {
@@ -1187,7 +1188,8 @@
                 this._baseModulationFrequency = value;
                 this.lfoL.offset = this._baseModulationFrequency;
                 this.lfoR.offset = this._baseModulationFrequency;
-                this._depth = this._depth;
+                this.lfoL.oscillation = this._baseModulationFrequency * this._depth;
+                this.lfoR.oscillation = this._baseModulationFrequency * this._depth;
             }
         },
         feedback: {

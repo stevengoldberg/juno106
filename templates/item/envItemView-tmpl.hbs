@@ -7,10 +7,11 @@
         <span class="label--wide">D</span>
         <span class="label--wide">S</span>
         <span class="label--wide">R</span>
+        <span class="label--wide">PORTA</span>
     </div>
-    
+
     <div class="fader-container">
-        <div class="fader">  
+        <div class="fader">
             <div class="fader__scale--heavy"></div>
             <div class="fader__scale--light">
                 <div class="fader__slot">
@@ -33,7 +34,17 @@
                         <hr>
                     </div>
                 </div>
+                <div class="fader__slot">
+                    <div class="fader__knob midi" data-param="prt-time" data-value="0" title="Portamento time">
+                        <hr>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
+</div>
+<div class="button-container--top">
+    <p class="wave-label">UNISON</p>
+    <div class="led"></div>
+    <div class="button button--yellow midi" data-param="uni-enabled" data-value="0" data-length="2" title="Unison mode: all voices play the same note"></div>
 </div>

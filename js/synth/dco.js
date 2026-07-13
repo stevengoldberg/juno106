@@ -4,15 +4,33 @@ define([
 ],
     
     function(App, util) {
+
+        // Shared noise buffer — allocated once, reused by all voices
+        var sharedNoiseBuffer = null;
+        function getSharedNoiseBuffer() {
+            if (!sharedNoiseBuffer) {
+                var bufferSize = App.context.sampleRate;
+                sharedNoiseBuffer = App.context.createBuffer(1, bufferSize, App.context.sampleRate);
+                var output = sharedNoiseBuffer.getChannelData(0);
+                for (var i = 0; i < bufferSize; i++) {
+                    output[i] = Math.random() * 2 - 1;
+                }
+            }
+            return sharedNoiseBuffer;
+        }
+
         function DCO(options) {
-            
+
             this.input = [];
             this.output = [];
             this.oscillators = [];
             this.NUM_OSCILLATORS;
-            
+
             var that = this;
-            
+            // Small random per-voice detuning for analogue warmth (±8 cents)
+            var voiceDetune = (Math.random() * 2 - 1) * 8;
+            var pitchBendCents = 0;
+
             var lfoPwmEnabled = options.lfoPwmEnabled;
             var sawtooth = createOsc(options.frequency, 'sawtooth', options.waveform.sawtoothLevel);
             var pulseWidth;
@@ -22,12 +40,14 @@ define([
             var noise = createNoise(options.waveform.noiseLevel);
             
             
-            function init() { 
+            function init() {
                 // Start the oscillators, set up mod inputs
                 _.each(that.oscillators, function(oscillator) {
                     oscillator.start(0);
                     oscillator.onended = destroyOscillator;
                     if(oscillator.frequency) {
+                        // Apply per-voice static detuning for analogue warmth
+                        oscillator.detune.value = voiceDetune;
                         that.input.push(oscillator.detune);
                     }
                 });
@@ -70,16 +90,10 @@ define([
             }
             
             function createNoise(level) {
-                var bufferSize = App.context.sampleRate;
-                var noiseBuffer = App.context.createBuffer(1, bufferSize, App.context.sampleRate);
-                var output = noiseBuffer.getChannelData(0);
                 var gain;
-                
-                for (var i = 0; i < bufferSize; i++) {
-                    output[i] = Math.random() * 2 - 1;       
-                }
+
                 whiteNoise = App.context.createBufferSource();
-                whiteNoise.buffer = noiseBuffer;
+                whiteNoise.buffer = getSharedNoiseBuffer();
                 whiteNoise.loop = true;
                 
                 gain = App.context.createGain();
@@ -142,6 +156,20 @@ define([
                 });
             };
         
+            // Glide all pitched oscillators from fromFreq to toFreq over glideTime seconds
+            this.portamento = function(fromFreq, toFreq, glideTime) {
+                var now = App.context.currentTime;
+                _.each(that.oscillators, function(oscillator) {
+                    if(!oscillator.frequency) return; // skip noise
+                    var targetFreq = oscillator.frequency.value;
+                    var ratio = toFreq / fromFreq;
+                    var startFreq = targetFreq / ratio;
+                    oscillator.frequency.cancelScheduledValues(now);
+                    oscillator.frequency.setValueAtTime(startFreq, now);
+                    oscillator.frequency.linearRampToValueAtTime(targetFreq, now + glideTime);
+                });
+            };
+
             Object.defineProperties(this, {
                 'sawtooth': {
                     'set': function(value) { setSawtoothLevel(0.5 * value); }
@@ -157,7 +185,7 @@ define([
                 },
                 'pwm': {
                     'get': function() { return pulseWidthNode; },
-                    'set': function(value) { 
+                    'set': function(value) {
                         pulseWidth = value * 0.8;
                         if(!lfoPwmEnabled) {
                             setPulseWidth();
@@ -174,9 +202,21 @@ define([
                         }
                         that.trigger('lfoPwmEnabled', value);
                     }
+                },
+                'pitchBend': {
+                    'set': function(semitones) {
+                        pitchBendCents = semitones * 100;
+                        var totalCents = voiceDetune + pitchBendCents;
+                        var now = App.context.currentTime;
+                        _.each(that.oscillators, function(oscillator) {
+                            if(!oscillator.detune) return;
+                            oscillator.detune.cancelScheduledValues(now);
+                            oscillator.detune.setValueAtTime(totalCents, now);
+                        });
+                    }
                 }
             });
-            
+
             return init();
            
         }

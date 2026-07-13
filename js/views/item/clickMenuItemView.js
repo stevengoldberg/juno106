@@ -62,7 +62,6 @@ define([
             },
 
             rightClickHandler: function(e) {
-                var target = $(e.target);
                 var boundaryOffset;
 
                 this.ui.clickMenu.addClass('click-menu--shown')
